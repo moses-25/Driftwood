@@ -1,6 +1,5 @@
-import { BrowserRouter as Router } from 'react-router-dom'
 import Navbar from './components/Navbar'
-// import Hero from './pages/Hero'
+import Hero from './pages/Hero'
 // import About from './pages/About'
 // import Menu from './pages/Menu'
 // import Gallery from './pages/Gallery'
@@ -10,20 +9,18 @@ import Navbar from './components/Navbar'
 
 function App() {
   return (
-    <Router>
-      <div className="font-sans">
-        <Navbar />
-        <main>
-          {/* <Hero /> */}
-          {/* <About /> */}
-          {/* <Menu /> */}
-          {/* <Gallery /> */}
-          {/* <Reviews /> */}
-          {/* <VisitUs /> */}
-        </main>
-        {/* <Footer /> */}
-      </div>
-    </Router>
+    <div className="font-sans min-h-full">
+      <Navbar />
+      <main>
+         <section id="home"><Hero /></section> 
+        {/* <section id="about"><About /></section> */}
+        {/* <section id="menu"><Menu /></section> */}
+        {/* <section id="gallery"><Gallery /></section> */}
+        {/* <section id="reviews"><Reviews /></section> */}
+        {/* <section id="visit"><VisitUs /></section> */}
+      </main>
+      {/* <Footer /> */}
+    </div>
   )
 }
 
