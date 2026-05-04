@@ -6,9 +6,9 @@ export default function Hero() {
     <div className="relative w-full h-screen overflow-hidden">
 
       {/* Background Video - two side by side to fill landscape screen */}
-      <div className="absolute inset-0 flex bg-black">
-        <video src={heroVideo} autoPlay loop muted playsInline className="h-full w-1/2 object-contain scale-110" />
-        <video src={heroVideo2} autoPlay loop muted playsInline className="h-full w-1/2 object-contain scale-125" />
+      <div className="absolute inset-0 flex flex-col md:flex-row bg-black">
+        <video src={heroVideo} autoPlay loop muted playsInline className="w-full h-1/2 md:h-full md:w-1/2 object-cover" />
+        <video src={heroVideo2} autoPlay loop muted playsInline className="w-full h-1/2 md:h-full md:w-1/2 object-cover" />
       </div>
 
       {/* Dark Overlay */}
