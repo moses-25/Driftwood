@@ -49,26 +49,6 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* Scroll Down Chevron */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10
-        animate-bounce">
-        <a href="#about" aria-label="Scroll down">
-          <svg
-            className="w-8 h-8 text-white"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M19 9l-7 7-7-7"
-            />
-          </svg>
-        </a>
-      </div>
-
     </div>
   )
 }
