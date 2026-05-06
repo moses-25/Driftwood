@@ -1,3 +1,4 @@
+import Cursor from './components/Cursor'
 import Navbar from './components/Navbar'
 import Hero from './pages/Hero'
 import About from './pages/About'
@@ -9,7 +10,8 @@ import Footer from './pages/Footer'
 
 function App() {
   return (
-    <div className="font-sans min-h-full">
+    <div className="font-sans min-h-full" style={{ cursor: 'none' }}>
+      <Cursor />
       <Navbar />
       <main>
         <section id="home"><Hero /></section>
