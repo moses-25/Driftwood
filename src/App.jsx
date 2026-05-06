@@ -1,6 +1,6 @@
 import Navbar from './components/Navbar'
 import Hero from './pages/Hero'
-// import About from './pages/About'
+import About from './pages/About'
 // import Menu from './pages/Menu'
 // import Gallery from './pages/Gallery'
 // import Reviews from './pages/Reviews'
@@ -12,8 +12,8 @@ function App() {
     <div className="font-sans min-h-full">
       <Navbar />
       <main>
-         <section id="home"><Hero /></section> 
-        {/* <section id="about"><About /></section> */}
+        <section id="home"><Hero /></section>
+        <section id="about"><About /></section>
         {/* <section id="menu"><Menu /></section> */}
         {/* <section id="gallery"><Gallery /></section> */}
         {/* <section id="reviews"><Reviews /></section> */}
