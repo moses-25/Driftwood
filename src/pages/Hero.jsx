@@ -15,38 +15,38 @@ export default function Hero() {
       <div className="absolute inset-0 bg-black/40" />
 
       {/* Content */}
-      <div className="relative z-10 flex flex-col items-center justify-center
-        h-full text-center px-6">
+      <div className="relative z-10 flex flex-col items-center justify-center h-full text-center px-6">
+        
+        {/* Overline */}
+        <p className="text-sm md:text-base uppercase tracking-[0.3em] text-orange-400 mb-6 font-semibold" style={{ fontFamily: 'Oswald, sans-serif' }}>
+          Premium Coffee Experience
+        </p>
 
-        {/* Heading */}
-        <h1 className="text-4xl md:text-6xl font-bold text-white mb-4 leading-tight">
+        {/* Main Heading */}
+        <h1 
+          className="text-6xl md:text-8xl text-white mb-6 leading-[0.95] max-w-5xl drop-shadow-xl"
+          style={{
+            fontFamily: 'Bebas Neue, sans-serif',
+            letterSpacing: '0.02em',
+            textShadow: `
+              -2px -2px 0 rgba(0, 0, 0, 0.4),
+              2px -2px 0 rgba(0, 0, 0, 0.4),
+              -2px 2px 0 rgba(0, 0, 0, 0.4),
+              2px 2px 0 rgba(0, 0, 0, 0.4),
+              -3px 0 2px rgba(249, 115, 22, 0.15),
+              3px 0 2px rgba(249, 115, 22, 0.15)
+            `,
+            fontWeight: '400'
+          }}
+        >
           Experience the Perfect Brew
         </h1>
 
         {/* Subheading */}
-        <p className="text-lg text-gray-200 mb-10 max-w-xl">
-          A warm sanctuary where every cup tells a story.
-          Crafted with care, served with love.
+        <p className="text-lg md:text-xl text-slate-200 max-w-2xl leading-relaxed" style={{ fontFamily: 'Oswald, sans-serif', fontWeight: '400' }}>
+          A warm sanctuary where every cup tells a story.<br />
+          <span className="text-white font-bold">Crafted with care, served with love.</span>
         </p>
-
-        {/* CTA Buttons */}
-        <div className="flex items-center gap-4 flex-wrap justify-center">
-          <a
-            href="#menu"
-            className="bg-primary text-white px-8 py-3 rounded-lg
-              font-medium hover:bg-orange-700 transition-colors"
-          >
-            View Menu
-          </a>
-          <a
-            href="#visit"
-            className="border-2 border-white text-white px-8 py-3
-              rounded-lg font-medium hover:bg-white hover:text-gray-900
-              transition-colors"
-          >
-            Reserve a Table
-          </a>
-        </div>
       </div>
 
     </div>

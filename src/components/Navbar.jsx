@@ -74,6 +74,13 @@ export default function Navbar() {
             </svg>
             Search
           </a>
+          <a
+            href="#visit"
+            className="hidden md:inline-flex items-center bg-primary text-white text-sm px-5 py-2.5 rounded-lg hover:bg-orange-700 transition-colors font-bold"
+            aria-label="Reserve a table"
+          >
+            Reserve a Table
+          </a>
 
           <button
             onClick={() => setMenuOpen(!menuOpen)}
