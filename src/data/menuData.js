@@ -103,3 +103,65 @@ export const menuItems = [
     image: "https://images.unsplash.com/photo-1485808191679-5f86510cbae9?w=400&q=80",
   },
 ];
+
+export const galleryImages = [
+  { id: 1, src: '/src/assets/gallary/1.jpg', alt: 'Barista at work', size: 'tall' },
+  { id: 2, src: '/src/assets/gallary/2.jpg', alt: 'Café interior', size: 'wide' },
+  { id: 3, src: '/src/assets/gallary/3.jpg', alt: 'Coffee roaster', size: 'normal' },
+  { id: 4, src: '/src/assets/gallary/4.jpg', alt: 'Coffee tools', size: 'normal' },
+  { id: 5, src: '/src/assets/gallary/5.jpg', alt: 'Pastry display', size: 'normal' },
+  { id: 6, src: '/src/assets/gallary/6.jpg', alt: 'Espresso pour', size: 'wide' },
+  { id: 7, src: '/src/assets/gallary/7.jpg', alt: 'Latte art', size: 'normal' },
+  { id: 8, src: '/src/assets/gallary/8.jpg', alt: 'Coffee cupping', size: 'normal' },
+];
+
+export const reviews = [
+  {
+    id: 1,
+    name: 'Sarah Johnson',
+    date: 'February 10, 2026',
+    rating: 5,
+    review: 'The atmosphere is so inviting, and their cappuccino is absolutely perfect! I love working remotely from here — the vibe keeps me productive and calm.',
+    avatar: 'SJ',
+  },
+  {
+    id: 2,
+    name: 'Michael Chen',
+    date: 'January 15, 2026',
+    rating: 5,
+    review: 'Their cold brew is the best I\'ve had in the city — smooth with no bitterness. The pastries are baked fresh daily and pair perfectly with any drink.',
+    avatar: 'MC',
+  },
+  {
+    id: 3,
+    name: 'Amara Osei',
+    date: 'February 20, 2026',
+    rating: 5,
+    review: 'Driftwood Café is my go-to spot. The staff remembers my order and the seasonal specials are always worth trying. Truly a hidden gem.',
+    avatar: 'AO',
+  },
+  {
+    id: 4,
+    name: 'Lena Fischer',
+    date: 'February 22, 2026',
+    rating: 4,
+    review: 'Lovely space with incredible attention to detail. The lavender honey latte is unlike anything I\'ve tasted. Will definitely be coming back.',
+    avatar: 'LF',
+  },
+  {
+    id: 5,
+    name: 'James Mwangi',
+    date: 'March 28, 2025',
+    rating: 5,
+    review: 'As someone who takes coffee seriously, I\'m impressed. The single origin pour-over was flawlessly executed. Knowledgeable baristas too.',
+    avatar: 'JM',
+  },
+  {
+    id: 6,
+    name: 'Priya Sharma',
+    date: 'March 28, 2025',
+    rating: 5,
+    review: 'Perfect spot for a date or a quiet afternoon. The cardamom rose cold brew is poetry in a glass. Already recommended it to everyone I know.',
+    avatar: 'PS',
+  },
+]
