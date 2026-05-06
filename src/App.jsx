@@ -5,7 +5,7 @@ import Menu from './pages/Menu'
 import Gallery from './pages/Gallery'
 import Reviews from './pages/Reviews'
 import VisitUs from './pages/VisitUs'
-// import Footer from './pages/Footer'
+import Footer from './pages/Footer'
 
 function App() {
   return (
@@ -19,7 +19,7 @@ function App() {
         <section id="reviews"><Reviews /></section>
         <section id="visit"><VisitUs /></section> 
       </main>
-      {/* <Footer /> */}
+      <Footer />
     </div>
   )
 }

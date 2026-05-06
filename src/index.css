@@ -7,6 +7,10 @@
   --color-dark: #1e2330;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 html, body, #root {
   height: 100%;
 }

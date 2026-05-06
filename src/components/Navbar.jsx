@@ -19,6 +19,10 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
+  const handleNavClick = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
   return (
     <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 backdrop-blur-xl border-b border-white/10 ${
       scrolled ? 'bg-slate-900/80 shadow-md' : 'bg-slate-900/20'
@@ -26,7 +30,7 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
 
         {/* Logo */}
-        <a href="#home" className="flex items-center gap-3">
+        <a href="#home" onClick={handleNavClick} className="flex items-center gap-3">
           <img src="/Driftwood.png" alt="Driftwood Café" className="h-27 w-auto" />
           <span className="text-xl font-bold text-white">
             <span className="text-primary">Driftwood</span>
@@ -40,6 +44,7 @@ export default function Navbar() {
             <li key={link.label}>
               <a
                 href={link.href}
+                onClick={handleNavClick}
                 className="text-base font-bold text-white hover:text-primary transition-colors"
               >
                 {link.label}
@@ -117,7 +122,10 @@ export default function Navbar() {
               <li key={link.label}>
                 <a
                   href={link.href}
-                  onClick={() => setMenuOpen(false)}
+                  onClick={() => {
+                    setMenuOpen(false)
+                    handleNavClick()
+                  }}
                   className="block text-base font-bold text-white hover:text-primary transition-colors"
                 >
                   {link.label}
