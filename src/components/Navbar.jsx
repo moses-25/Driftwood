@@ -49,12 +49,30 @@ export default function Navbar() {
         </ul>
 
         {/* Right Side */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
           <a
-            href="#visit"
-            className="hidden md:inline-block bg-primary text-white text-sm px-5 py-2.5 rounded-lg hover:bg-orange-700 transition-colors font-medium"
+            href="#cart"
+            className="hidden md:inline-flex items-center gap-2 bg-white/10 text-white text-sm px-4 py-2.5 rounded-lg hover:bg-white/20 transition-colors font-bold"
+            aria-label="Add to cart"
           >
-            Reserve a Table
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+              <path d="M6 6h15l-1.5 9h-13z" />
+              <path d="M6 6l-2 0" />
+              <circle cx="9" cy="20" r="1" />
+              <circle cx="18" cy="20" r="1" />
+            </svg>
+            Add to Cart
+          </a>
+          <a
+            href="#search"
+            className="hidden md:inline-flex items-center gap-2 bg-white/10 text-white text-sm px-4 py-2.5 rounded-lg hover:bg-white/20 transition-colors font-bold"
+            aria-label="Search"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+              <circle cx="11" cy="11" r="7" />
+              <path d="M21 21l-4.35-4.35" />
+            </svg>
+            Search
           </a>
 
           <button
