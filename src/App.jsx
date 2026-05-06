@@ -4,7 +4,7 @@ import About from './pages/About'
 import Menu from './pages/Menu'
 import Gallery from './pages/Gallery'
 import Reviews from './pages/Reviews'
-// import VisitUs from './pages/VisitUs'
+import VisitUs from './pages/VisitUs'
 // import Footer from './pages/Footer'
 
 function App() {
@@ -17,7 +17,7 @@ function App() {
         <section id="menu"><Menu /></section>
         <section id="gallery"><Gallery /></section>
         <section id="reviews"><Reviews /></section>
-        {/* <section id="visit"><VisitUs /></section> */}
+        <section id="visit"><VisitUs /></section> 
       </main>
       {/* <Footer /> */}
     </div>
