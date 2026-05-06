@@ -4,11 +4,11 @@ const MenuCard = ({ item, onAddToCart }) => {
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-slate-950/20 to-slate-950/95" />
 
       {/* Image */}
-      <div className="relative h-56 overflow-hidden rounded-t-[1.75rem]">
+      <div className="relative aspect-[4/3] overflow-hidden rounded-t-[1.75rem] bg-slate-950">
         <img
           src={item.image}
           alt={item.name}
-          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+          className="absolute inset-0 h-full w-full object-contain object-center transition-transform duration-700 group-hover:scale-[1.02]"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent" />
         <div className="absolute left-5 bottom-5 rounded-full bg-black/50 px-4 py-2 text-xs uppercase tracking-[0.25em] text-amber-200 font-bold shadow-lg">
