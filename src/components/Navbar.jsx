@@ -52,31 +52,35 @@ export default function Navbar() {
         <div className="flex items-center gap-3">
           <a
             href="#cart"
-            className="hidden md:inline-flex items-center gap-2 bg-white/10 text-white text-sm px-4 py-2.5 rounded-lg hover:bg-white/20 transition-colors font-bold"
+            className="hidden md:inline-flex items-center gap-3 bg-white/10 text-white text-sm px-4 py-2.5 rounded-full hover:bg-white/20 transition-all duration-200 shadow-sm border border-white/10 font-bold"
             aria-label="Add to cart"
           >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
-              <path d="M6 6h15l-1.5 9h-13z" />
-              <path d="M6 6l-2 0" />
-              <circle cx="9" cy="20" r="1" />
-              <circle cx="18" cy="20" r="1" />
-            </svg>
+            <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-amber-300 ring-1 ring-white/15">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+                <path d="M6 6h15l-1.5 9h-13z" />
+                <path d="M6 6l-2 0" />
+                <circle cx="9" cy="20" r="1" />
+                <circle cx="18" cy="20" r="1" />
+              </svg>
+            </span>
             Add to Cart
           </a>
           <a
             href="#search"
-            className="hidden md:inline-flex items-center gap-2 bg-white/10 text-white text-sm px-4 py-2.5 rounded-lg hover:bg-white/20 transition-colors font-bold"
+            className="hidden md:inline-flex items-center gap-3 bg-white/10 text-white text-sm px-4 py-2.5 rounded-full hover:bg-white/20 transition-all duration-200 shadow-sm border border-white/10 font-bold"
             aria-label="Search"
           >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
-              <circle cx="11" cy="11" r="7" />
-              <path d="M21 21l-4.35-4.35" />
-            </svg>
+            <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-slate-100 ring-1 ring-white/15">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+                <circle cx="11" cy="11" r="7" />
+                <path d="M21 21l-4.35-4.35" />
+              </svg>
+            </span>
             Search
           </a>
           <a
             href="#visit"
-            className="hidden md:inline-flex items-center bg-primary text-white text-sm px-5 py-2.5 rounded-lg hover:bg-orange-700 transition-colors font-bold"
+            className="hidden md:inline-flex items-center justify-center bg-primary text-white text-sm px-6 py-2.5 rounded-full hover:bg-orange-700 transition-all duration-200 font-bold shadow-lg"
             aria-label="Reserve a table"
           >
             Reserve a Table
@@ -84,22 +88,22 @@ export default function Navbar() {
 
           <button
             onClick={() => setMenuOpen(!menuOpen)}
-            className="md:hidden flex flex-col gap-2 p-2"
+            className="md:hidden flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-white/10 p-2 transition-all duration-200 hover:bg-white/20"
             aria-label="Toggle menu"
           >
             <span
-              className={`block w-8 h-0.5 bg-white transition-all duration-300 ${
-                menuOpen ? 'rotate-45 translate-y-2' : ''
+              className={`block w-6 h-0.5 rounded-full bg-white transition-all duration-300 ${
+                menuOpen ? 'rotate-45 translate-y-1.5' : ''
               }`}
             />
             <span
-              className={`block w-8 h-0.5 bg-white transition-all duration-300 ${
+              className={`block w-6 h-0.5 rounded-full bg-white transition-all duration-300 ${
                 menuOpen ? 'opacity-0' : ''
               }`}
             />
             <span
-              className={`block w-8 h-0.5 bg-white transition-all duration-300 ${
-                menuOpen ? '-rotate-45 -translate-y-2' : ''
+              className={`block w-6 h-0.5 rounded-full bg-white transition-all duration-300 ${
+                menuOpen ? '-rotate-45 -translate-y-1.5' : ''
               }`}
             />
           </button>
