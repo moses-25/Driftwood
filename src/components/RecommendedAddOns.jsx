@@ -1,45 +1,26 @@
+import { useMemo } from 'react'
 import { useCart } from '../hooks/useCart'
-
-const recommendedItems = [
-  {
-    id: 'croissant-1',
-    name: 'Butter Croissant',
-    price: '$3.50',
-    image: '/api/placeholder/120/120',
-    category: 'pastries',
-    description: 'Flaky, buttery perfection'
-  },
-  {
-    id: 'muffin-1',
-    name: 'Blueberry Muffin',
-    price: '$4.25',
-    image: '/api/placeholder/120/120',
-    category: 'pastries',
-    description: 'Fresh blueberries in every bite'
-  },
-  {
-    id: 'cookie-1',
-    name: 'Chocolate Chip Cookie',
-    price: '$2.75',
-    image: '/api/placeholder/120/120',
-    category: 'pastries',
-    description: 'Warm, gooey, and irresistible'
-  },
-  {
-    id: 'sandwich-1',
-    name: 'Avocado Toast',
-    price: '$8.50',
-    image: '/api/placeholder/120/120',
-    category: 'specials',
-    description: 'Smashed avocado on artisan bread'
-  }
-]
+import { menuItems } from '../data/menuData'
 
 const RecommendedAddOns = () => {
-  const { addToCart } = useCart()
+  const { addToCart, items } = useCart()
+
+  // Get random items from menu, excluding items already in cart
+  const recommendedItems = useMemo(() => {
+    const cartItemIds = items.map(item => item.id)
+    const availableItems = menuItems.filter(item => !cartItemIds.includes(item.id))
+    
+    // Shuffle array and take first 4 items
+    const shuffled = [...availableItems].sort(() => 0.5 - Math.random())
+    return shuffled.slice(0, 4)
+  }, [items])
 
   const handleAddToCart = (item) => {
     addToCart(item)
+  }
+
+  if (recommendedItems.length === 0) {
+    return null // Don't show section if no recommendations available
   }
 
   return (
