@@ -24,31 +24,31 @@ const RecommendedAddOns = () => {
   }
 
   return (
-    <div className="bg-white/5 backdrop-blur-xl rounded-3xl border border-white/10 p-6 shadow-2xl">
-      <h3 className="text-xl font-semibold text-white mb-2">Perfect With Your Order</h3>
-      <p className="text-slate-400 text-sm mb-6">Complete your coffee moment with these customer favorites</p>
+    <div className="bg-white/5 backdrop-blur-xl rounded-3xl border border-white/10 p-6 md:p-8 shadow-2xl">
+      <h3 className="text-xl md:text-2xl font-bold text-white mb-2 md:mb-3">Perfect With Your Order</h3>
+      <p className="text-slate-300 text-sm md:text-base mb-6 md:mb-8">Complete your coffee moment with these customer favorites</p>
       
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 md:gap-6">
         {recommendedItems.map((item) => (
-          <div key={item.id} className="group bg-white/5 rounded-2xl border border-white/10 p-4 hover:bg-white/10 transition-all duration-200">
-            <div className="flex gap-3">
+          <div key={item.id} className="group bg-white/8 rounded-2xl border border-white/15 p-4 md:p-6 hover:bg-white/12 transition-all duration-200 hover:scale-[1.02] hover:shadow-xl">
+            <div className="flex gap-3 md:gap-4">
               <img
                 src={item.image}
                 alt={item.name}
-                className="w-16 h-16 object-cover rounded-xl bg-slate-800 flex-shrink-0"
+                className="w-16 h-16 md:w-20 md:h-20 object-cover rounded-xl bg-slate-800 flex-shrink-0 group-hover:scale-105 transition-transform duration-200"
               />
               
               <div className="flex-1 min-w-0">
-                <h4 className="font-semibold text-white text-sm mb-1 truncate">{item.name}</h4>
-                <p className="text-slate-400 text-xs mb-2 line-clamp-2">{item.description}</p>
+                <h4 className="font-bold text-white text-sm md:text-base mb-1 md:mb-2 truncate">{item.name}</h4>
+                <p className="text-slate-300 text-xs md:text-sm mb-3 md:mb-4 line-clamp-2 leading-relaxed">{item.description}</p>
                 
-                <div className="flex items-center justify-between">
-                  <span className="text-amber-300 font-semibold text-sm">{item.price}</span>
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-amber-300 font-bold text-base md:text-lg">{item.price}</span>
                   <button
                     onClick={() => handleAddToCart(item)}
-                    className="bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 text-xs font-medium px-3 py-1.5 rounded-lg transition-all duration-200 hover:scale-105 border border-amber-500/30"
+                    className="bg-gradient-to-r from-amber-500/30 to-orange-500/30 hover:from-amber-500/40 hover:to-orange-500/40 text-amber-200 text-xs md:text-sm font-semibold px-3 py-2 md:px-4 md:py-2.5 rounded-xl transition-all duration-200 hover:scale-105 border border-amber-500/40 shadow-lg hover:shadow-amber-500/25 whitespace-nowrap"
                   >
-                    Add
+                    Add to Cart
                   </button>
                 </div>
               </div>
