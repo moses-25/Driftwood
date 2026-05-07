@@ -7,7 +7,6 @@ import EmptyCart from '../components/EmptyCart'
 
 const Cart = () => {
   const { items, totalItems } = useCart()
-  const [promoCode] = useState('')
   const [deliveryOption, setDeliveryOption] = useState('pickup')
 
   if (totalItems === 0) {
