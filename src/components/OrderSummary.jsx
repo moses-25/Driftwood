@@ -52,32 +52,6 @@ const OrderSummary = ({ deliveryOption }) => {
         </div>
       </button>
 
-      {/* Payment Methods */}
-      <div className="text-center">
-        <p className="text-slate-400 text-xs mb-3">We accept</p>
-        <div className="flex justify-center gap-2">
-          {['💳', '🍎', '📱', '💰'].map((icon, index) => (
-            <div key={index} className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center text-sm">
-              {icon}
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Estimated Time */}
-      <div className="mt-6 p-4 bg-amber-500/10 border border-amber-500/20 rounded-xl">
-        <div className="flex items-center gap-2 text-amber-300">
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <circle cx="12" cy="12" r="10" />
-            <polyline points="12,6 12,12 16,14" />
-          </svg>
-          <span className="text-sm font-medium">
-            {deliveryOption === 'pickup' && 'Ready in 15-20 minutes'}
-            {deliveryOption === 'delivery' && 'Delivered in 30-45 minutes'}
-            {deliveryOption === 'schedule' && 'Choose your preferred time'}
-          </span>
-        </div>
-      </div>
     </div>
   )
 }

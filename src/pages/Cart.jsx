@@ -50,8 +50,7 @@ const Cart = () => {
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 {[
                   { id: 'pickup', label: 'Pickup', time: '15-20 min', icon: '🏪' },
-                  { id: 'delivery', label: 'Delivery', time: '30-45 min', icon: '🚗' },
-                  { id: 'schedule', label: 'Schedule', time: 'Choose time', icon: '⏰' }
+                  { id: 'delivery', label: 'Delivery', time: '30-45 min', icon: '🚗' }
                 ].map((option) => (
                   <button
                     key={option.id}
@@ -80,23 +79,6 @@ const Cart = () => {
               </div>
             </div>
 
-            {/* Promo Code */}
-            <div className="bg-white/5 backdrop-blur-xl rounded-3xl border border-white/10 p-6 shadow-2xl">
-              <h3 className="text-xl font-semibold text-white mb-4">Promo Code</h3>
-              <div className="flex gap-3">
-                <input
-                  type="text"
-                  value={promoCode}
-                  onChange={(e) => setPromoCode(e.target.value)}
-                  placeholder="Enter promo code"
-                  className="flex-1 bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-slate-400 focus:outline-none focus:border-amber-500 focus:bg-white/15 transition-all"
-                />
-                <button className="bg-amber-500 hover:bg-amber-600 text-slate-900 font-semibold px-6 py-3 rounded-xl transition-all duration-200 hover:scale-105">
-                  Apply
-                </button>
-              </div>
-            </div>
-
             {/* Recommended Add-ons */}
             <RecommendedAddOns />
           </div>
@@ -107,23 +89,6 @@ const Cart = () => {
           </div>
         </div>
 
-        {/* Trust Indicators */}
-        <div className="mt-16 bg-white/5 backdrop-blur-xl rounded-3xl border border-white/10 p-8 shadow-2xl">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-            {[
-              { icon: '🔒', title: 'Secure Checkout', desc: 'SSL encrypted' },
-              { icon: '🌱', title: 'Fresh Ingredients', desc: 'Daily sourced' },
-              { icon: '⚡', title: 'Fast Service', desc: 'Quick preparation' },
-              { icon: '👨‍🍳', title: 'Handcrafted', desc: 'Made with care' }
-            ].map((trust, index) => (
-              <div key={index} className="text-center">
-                <div className="text-3xl mb-2">{trust.icon}</div>
-                <div className="font-semibold text-white text-sm">{trust.title}</div>
-                <div className="text-slate-400 text-xs">{trust.desc}</div>
-              </div>
-            ))}
-          </div>
-        </div>
       </div>
     </div>
   )
