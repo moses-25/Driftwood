@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useCart } from '../hooks/useCart'
 
 const navLinks = [
   { label: 'Home', href: '#home' },
@@ -12,6 +13,7 @@ const navLinks = [
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
+  const { totalItems } = useCart()
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20)
@@ -57,7 +59,7 @@ export default function Navbar() {
         <div className="flex items-center gap-3">
           <a
             href="#cart"
-            className="hidden md:inline-flex items-center gap-3 bg-white/10 text-white text-sm px-4 py-2.5 rounded-full hover:bg-white/20 transition-all duration-200 shadow-sm border border-white/10 font-bold"
+            className="hidden md:inline-flex items-center gap-3 bg-white/10 text-white text-sm px-4 py-2.5 rounded-full hover:bg-white/20 transition-all duration-200 shadow-sm border border-white/10 font-bold relative"
             aria-label="Add to cart"
           >
             <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-amber-300 ring-1 ring-white/15">
@@ -68,7 +70,12 @@ export default function Navbar() {
                 <circle cx="18" cy="20" r="1" />
               </svg>
             </span>
-            Add to Cart
+            Cart {totalItems > 0 && `(${totalItems})`}
+            {totalItems > 0 && (
+              <span className="absolute -top-2 -right-2 bg-amber-500 text-slate-900 text-xs font-bold rounded-full h-6 w-6 flex items-center justify-center">
+                {totalItems}
+              </span>
+            )}
           </a>
           <a
             href="#search"

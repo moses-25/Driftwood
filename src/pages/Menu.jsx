@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { menuItems } from "../data/menuData";
 import MenuCard from "../components/MenuCard";
+import { useCart } from "../hooks/useCart";
 
 const TABS = [
   { key: "hot",      label: "Hot" },
@@ -47,12 +48,12 @@ const getTabIcon = (key) => {
 
 const Menu = () => {
   const [activeTab, setActiveTab] = useState("hot");
+  const { addToCart } = useCart();
 
   const filtered = menuItems.filter((item) => item.category === activeTab);
 
   const handleAddToCart = (item) => {
-    // Placeholder — Phase 7 will wire up global cart state
-    console.log("Added to cart:", item.name);
+    addToCart(item);
   };
 
   return (

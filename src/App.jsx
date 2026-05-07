@@ -7,25 +7,37 @@ import Gallery from './pages/Gallery'
 import Reviews from './pages/Reviews'
 import VisitUs from './pages/VisitUs'
 import Footer from './pages/Footer'
+import Cart from './pages/Cart'
 import useSmoothScroll from './hooks/useSmoothScroll'
+import { useRouter } from './hooks/useRouter'
+import { CartProvider } from './context/CartContext'
 
 function App() {
   useSmoothScroll()
+  const { currentPath } = useRouter()
   
   return (
-    <div className="font-sans min-h-full" style={{ cursor: 'none' }}>
-      <Cursor />
-      <Navbar />
-      <main>
-        <section id="home"><Hero /></section>
-        <section id="about"><About /></section>
-        <section id="menu"><Menu /></section>
-        <section id="gallery"><Gallery /></section>
-        <section id="reviews"><Reviews /></section>
-        <section id="visit"><VisitUs /></section> 
-      </main>
-      <Footer />
-    </div>
+    <CartProvider>
+      <div className="font-sans min-h-full" style={{ cursor: 'none' }}>
+        <Cursor />
+        <Navbar />
+        
+        {currentPath === '#cart' ? (
+          <Cart />
+        ) : (
+          <main>
+            <section id="home"><Hero /></section>
+            <section id="about"><About /></section>
+            <section id="menu"><Menu /></section>
+            <section id="gallery"><Gallery /></section>
+            <section id="reviews"><Reviews /></section>
+            <section id="visit"><VisitUs /></section> 
+          </main>
+        )}
+        
+        {currentPath !== '#cart' && <Footer />}
+      </div>
+    </CartProvider>
   )
 }
 
