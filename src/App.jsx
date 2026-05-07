@@ -7,8 +7,11 @@ import Gallery from './pages/Gallery'
 import Reviews from './pages/Reviews'
 import VisitUs from './pages/VisitUs'
 import Footer from './pages/Footer'
+import useSmoothScroll from './hooks/useSmoothScroll'
 
 function App() {
+  useSmoothScroll()
+  
   return (
     <div className="font-sans min-h-full" style={{ cursor: 'none' }}>
       <Cursor />

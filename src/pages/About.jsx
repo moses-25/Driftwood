@@ -1,5 +1,6 @@
 import barista from '../assets/barista.jpg'
 import beans from '../assets/beans.jpg'
+import FadeUp from '../animations/FadeUp'
 
 export default function About() {
   return (
@@ -10,51 +11,55 @@ export default function About() {
 
           {/* Left - Story Content */}
           <div className="space-y-8">
-            <p className="text-sm uppercase tracking-[0.32em] text-orange-300">
-              Our Story
-            </p>
+            <FadeUp delay={0}>
+              <p className="text-sm uppercase tracking-[0.32em] text-orange-300">
+                Our Story
+              </p>
+            </FadeUp>
 
-            <div className="space-y-5">
-              <h2 className="text-4xl sm:text-5xl font-semibold tracking-tight text-white">
-                From humble beginnings to a coffee destination.
-              </h2>
-              <p className="max-w-3xl text-slate-300 text-lg leading-8">
-                Founded in 2026, Driftwood Café began as a small corner shop with a bold dream: to create a warm, inviting sanctuary where every cup feels handcrafted, every sip feels unforgettable.
-              </p>
-            </div>
+            <FadeUp delay={0.1}>
+              <div className="space-y-5">
+                <h2 className="text-4xl sm:text-5xl font-semibold tracking-tight text-white">
+                  From humble beginnings to a coffee destination.
+                </h2>
+                <p className="max-w-3xl text-slate-300 text-lg leading-8">
+                  Founded in 2026, Driftwood Café began as a small corner shop with a bold dream:
+                  to create a warm, inviting sanctuary where every cup feels handcrafted,
+                  every sip feels unforgettable.
+                </p>
+              </div>
+            </FadeUp>
 
-            <div className="rounded-[2rem] border border-white/10 bg-slate-900/80 p-8 shadow-2xl">
-              <p className="text-slate-300 leading-8">
-                Our journey started with a passion for sourcing the finest beans from sustainable farms around the world. Each cup we serve represents dedication to quality, craftsmanship, and community.
-              </p>
-              <p className="mt-5 text-slate-300 leading-8">
-                Today, we honor the art of coffee making while creating a space where connections grow, ideas spark, and moments are savored one perfect cup at a time.
-              </p>
-              <p className="mt-8 text-white text-lg font-medium">
-                Crafting perfect moments in 2026
-              </p>
-            </div>
+            <FadeUp delay={0.2}>
+              <div className="rounded-[2rem] border border-white/10 bg-slate-900/80 p-8 shadow-2xl">
+                <p className="text-slate-300 leading-8">
+                  Our journey started with a passion for sourcing the finest beans from
+                  sustainable farms around the world. Each cup we serve represents dedication
+                  to quality, craftsmanship, and community.
+                </p>
+                <p className="mt-5 text-slate-300 leading-8">
+                  Today, we honor the art of coffee making while creating a space where
+                  connections grow, ideas spark, and moments are savored one perfect cup at a time.
+                </p>
+                <p className="mt-8 text-white text-lg font-medium">
+                  Crafting perfect moments in 2026
+                </p>
+              </div>
+            </FadeUp>
           </div>
 
           {/* Right - Visuals */}
-          <div className="relative">
+          <FadeUp delay={0.3} className="relative">
             <div className="absolute -left-6 top-8 h-32 w-32 rounded-full bg-orange-500/20 blur-3xl" />
             <div className="grid gap-6">
               <div className="overflow-hidden rounded-[2rem] border border-white/10 shadow-2xl">
-                <img
-                  src={barista}
-                  alt="Barista crafting coffee"
-                  className="h-[420px] w-full object-cover"
-                />
+                <img src={barista} alt="Barista crafting coffee"
+                  className="h-[420px] w-full object-cover" />
               </div>
-
               <div className="grid gap-6 sm:grid-cols-[0.9fr_1.1fr]">
                 <div className="overflow-hidden rounded-[2rem] border border-white/10 shadow-2xl">
-                  <img
-                    src={beans}
-                    alt="Coffee beans"
-                    className="h-[320px] w-full object-cover"
-                  />
+                  <img src={beans} alt="Coffee beans"
+                    className="h-[320px] w-full object-cover" />
                 </div>
                 <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-slate-900/80 p-8 shadow-2xl">
                   <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(249,115,22,0.3),_transparent_40%)]" />
@@ -62,7 +67,7 @@ export default function About() {
                     <p className="text-sm uppercase tracking-[0.3em] text-orange-300">Signature Blend</p>
                     <h3 className="text-3xl font-semibold text-white">House Roast</h3>
                     <p className="text-slate-300 leading-7">
-                      Delicate citrus notes, caramel sweetness, and a velvety finish for a truly memorable cup.
+                      Delicate citrus notes, caramel sweetness, and a velvety finish.
                     </p>
                     <div className="rounded-full bg-white/5 px-4 py-2 text-sm text-slate-200">
                       Coastal calm in a cup.
@@ -71,7 +76,7 @@ export default function About() {
                 </div>
               </div>
             </div>
-          </div>
+          </FadeUp>
 
         </div>
       </div>
