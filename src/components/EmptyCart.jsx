@@ -1,13 +1,14 @@
 const EmptyCart = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 pt-24 pb-12">
-      {/* Background Elements */}
-      <div className="absolute -left-24 top-32 h-96 w-96 rounded-full bg-amber-500/10 blur-3xl" />
-      <div className="absolute right-0 top-1/3 h-72 w-72 rounded-full bg-orange-500/8 blur-3xl" />
+      {/* Enhanced Background Elements */}
+      <div className="absolute -left-24 top-32 h-96 w-96 rounded-full bg-amber-500/15 blur-3xl animate-pulse" />
+      <div className="absolute right-0 top-1/3 h-72 w-72 rounded-full bg-orange-500/12 blur-3xl animate-pulse delay-1000" />
+      <div className="absolute left-1/2 bottom-32 h-64 w-64 rounded-full bg-amber-400/8 blur-3xl animate-pulse delay-500" />
       
-      <div className="relative max-w-4xl mx-auto px-6 text-center">
+      <div className="relative max-w-5xl mx-auto px-6 text-center">
         {/* Breadcrumb */}
-        <nav className="flex justify-center mb-8">
+        <nav className="flex justify-center mb-12">
           <ol className="flex items-center space-x-2 text-sm text-slate-400">
             <li><a href="#home" className="hover:text-amber-300 transition-colors">Home</a></li>
             <li className="text-slate-600">/</li>
@@ -17,58 +18,55 @@ const EmptyCart = () => {
           </ol>
         </nav>
 
-        {/* Empty Cart Illustration */}
-        <div className="bg-white/5 backdrop-blur-xl rounded-3xl border border-white/10 p-12 shadow-2xl mb-8">
-          <div className="max-w-md mx-auto">
-            {/* Coffee Cup Illustration */}
-            <div className="w-32 h-32 mx-auto mb-8 relative">
-              <div className="w-full h-full bg-gradient-to-br from-amber-500/20 to-orange-500/20 rounded-2xl border-2 border-dashed border-amber-500/30 flex items-center justify-center">
-                <svg className="w-16 h-16 text-amber-500/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        {/* Main Empty Cart Section */}
+        <div className="bg-gradient-to-br from-white/8 to-white/4 backdrop-blur-xl rounded-3xl border border-white/15 p-12 md:p-16 shadow-2xl mb-8 relative overflow-hidden">
+          {/* Decorative elements */}
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-amber-500 to-orange-500" />
+          
+          <div className="max-w-2xl mx-auto">
+            {/* Enhanced Coffee Cup Illustration */}
+            <div className="w-40 h-40 mx-auto mb-12 relative group">
+              <div className="w-full h-full bg-gradient-to-br from-amber-500/25 to-orange-500/25 rounded-3xl border-2 border-dashed border-amber-400/40 flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
+                <svg className="w-20 h-20 text-amber-400/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M8 6h8M9 3h6a2 2 0 0 1 2 2v0a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4v0a2 2 0 0 1 2-2z" />
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M6 12h12v4a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2v-4z" />
                 </svg>
               </div>
-              {/* Floating elements */}
-              <div className="absolute -top-2 -right-2 w-6 h-6 bg-amber-500/20 rounded-full animate-pulse" />
-              <div className="absolute -bottom-2 -left-2 w-4 h-4 bg-orange-500/20 rounded-full animate-pulse delay-300" />
+              {/* Enhanced floating elements */}
+              <div className="absolute -top-3 -right-3 w-8 h-8 bg-gradient-to-br from-amber-400 to-orange-400 rounded-full animate-bounce opacity-60" />
+              <div className="absolute -bottom-3 -left-3 w-6 h-6 bg-gradient-to-br from-orange-400 to-amber-400 rounded-full animate-bounce delay-300 opacity-60" />
+              <div className="absolute top-1/2 -right-6 w-4 h-4 bg-amber-300 rounded-full animate-pulse delay-700 opacity-40" />
             </div>
 
-            <h1 className="text-4xl md:text-5xl font-extrabold text-white mb-4 tracking-tight">
-              Your Cart is <span className="text-amber-400">Empty</span>
+            <h1 className="text-5xl md:text-7xl font-extrabold text-white mb-6 tracking-tight">
+              Your Cart is <span className="bg-gradient-to-r from-amber-400 to-orange-400 bg-clip-text text-transparent">Empty</span>
             </h1>
             
-            <p className="text-slate-300 text-lg mb-8 leading-relaxed">
-              Looks like you haven't added any handcrafted delights yet. 
-              Let's find something perfect for your taste.
+            <p className="text-slate-200 text-xl md:text-2xl mb-4 leading-relaxed font-light">
+              Looks like you haven't added any <span className="text-amber-300 font-medium">handcrafted delights</span> yet.
+            </p>
+            
+            <p className="text-slate-300 text-lg mb-12 leading-relaxed">
+              Let's find something perfect for your taste and start your coffee journey.
             </p>
 
-            {/* CTA Buttons */}
-            <div className="space-y-4">
+            {/* Enhanced CTA Buttons */}
+            <div className="space-y-6">
               <a
                 href="#menu"
-                className="inline-flex items-center justify-center gap-3 bg-gradient-to-r from-amber-500 to-orange-500 text-slate-900 font-bold py-4 px-8 rounded-2xl hover:from-amber-600 hover:to-orange-600 transition-all duration-200 transform hover:scale-105 shadow-[0_15px_35px_rgba(251,191,36,0.25)]"
+                className="group inline-flex items-center justify-center gap-4 bg-gradient-to-r from-amber-500 to-orange-500 text-slate-900 font-bold py-5 px-10 rounded-2xl hover:from-amber-600 hover:to-orange-600 transition-all duration-300 transform hover:scale-105 shadow-[0_20px_40px_rgba(251,191,36,0.3)] hover:shadow-[0_25px_50px_rgba(251,191,36,0.4)] text-lg"
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-6 h-6 group-hover:rotate-12 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                 </svg>
                 Explore Our Menu
-              </a>
-              
-              <div className="text-slate-400 text-sm">or</div>
-              
-              <a
-                href="#specials"
-                className="inline-flex items-center justify-center gap-2 bg-white/10 text-white font-semibold py-3 px-6 rounded-xl hover:bg-white/20 transition-all duration-200 border border-white/20"
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 3l2.5 6.5L21 10l-5 4.5L17 21l-5-3.5L7 21l1-6.5L3 10l6.5-0.5L12 3z" />
+                <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
                 </svg>
-                View Today's Specials
               </a>
             </div>
           </div>
         </div>
-
       </div>
     </div>
   )
