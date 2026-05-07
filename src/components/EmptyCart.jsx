@@ -69,23 +69,6 @@ const EmptyCart = () => {
           </div>
         </div>
 
-        {/* Popular Items Preview */}
-        <div className="bg-white/5 backdrop-blur-xl rounded-3xl border border-white/10 p-8 shadow-2xl">
-          <h3 className="text-2xl font-bold text-white mb-6">Popular Choices</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[
-              { name: 'Signature Latte', price: '$5.50', emoji: '☕' },
-              { name: 'Iced Americano', price: '$4.25', emoji: '🧊' },
-              { name: 'Chocolate Croissant', price: '$3.75', emoji: '🥐' }
-            ].map((item, index) => (
-              <div key={index} className="text-center p-4 bg-white/5 rounded-2xl border border-white/10 hover:bg-white/10 transition-all duration-200 group cursor-pointer">
-                <div className="text-4xl mb-3 group-hover:scale-110 transition-transform duration-200">{item.emoji}</div>
-                <h4 className="font-semibold text-white mb-1">{item.name}</h4>
-                <p className="text-amber-300 font-medium">{item.price}</p>
-              </div>
-            ))}
-          </div>
-        </div>
       </div>
     </div>
   )
