@@ -1,14 +1,29 @@
-import heroVideo from '../assets/wood.mp4'
-import heroVideo2 from '../assets/2.mp4'
-
 export default function Hero() {
   return (
     <div className="relative w-full h-screen overflow-hidden">
 
       {/* Background Video - two side by side to fill landscape screen */}
       <div className="absolute inset-0 flex flex-col md:flex-row bg-black">
-        <video src={heroVideo} autoPlay loop muted playsInline className="w-full h-1/2 md:h-full md:w-1/2 object-cover" />
-        <video src={heroVideo2} autoPlay loop muted playsInline className="w-full h-1/2 md:h-full md:w-1/2 object-cover" />
+        <video
+          src="/wood.mp4"
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="auto"
+          poster="/Driftwood.png"
+          className="w-full h-1/2 md:h-full md:w-1/2 object-cover"
+        />
+        <video
+          src="/2.mp4"
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="auto"
+          poster="/Driftwood.png"
+          className="w-full h-1/2 md:h-full md:w-1/2 object-cover"
+        />
       </div>
 
       {/* Dark Overlay */}
