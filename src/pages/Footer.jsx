@@ -98,7 +98,8 @@ export default function Footer() {
     setSubStatus('loading')
 
     try {
-      const res = await fetch('http://localhost:5000/api/newsletter', {
+      const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:5000'
+      const res = await fetch(`${apiBase}/api/newsletter`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),

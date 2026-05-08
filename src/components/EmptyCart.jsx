@@ -5,11 +5,11 @@ const EmptyCart = () => {
 
   const handleExploreMenu = (e) => {
     e.preventDefault()
-    navigate('#menu')
-    // Give the main page a tick to mount, then scroll to the menu section
+    // Navigate to home first so the main page mounts, then scroll to menu
+    navigate('#home')
     setTimeout(() => {
       document.getElementById('menu')?.scrollIntoView({ behavior: 'smooth' })
-    }, 50)
+    }, 80)
   }
 
   return (
@@ -21,13 +21,21 @@ const EmptyCart = () => {
       
       <div className="relative max-w-5xl mx-auto px-6 text-center">
         {/* Breadcrumb */}
-        <nav className="flex justify-center mb-12">
+        <nav className="flex justify-center mb-12" aria-label="Breadcrumb">
           <ol className="flex items-center space-x-2 text-sm text-slate-400">
-            <li><a href="#home" className="hover:text-amber-300 transition-colors">Home</a></li>
-            <li className="text-slate-600">/</li>
-            <li><a href="#menu" onClick={handleExploreMenu} className="hover:text-amber-300 transition-colors">Menu</a></li>
-            <li className="text-slate-600">/</li>
-            <li className="text-amber-300 font-medium">Cart</li>
+            <li>
+              <button onClick={() => navigate('#home')} className="hover:text-amber-300 transition-colors">
+                Home
+              </button>
+            </li>
+            <li className="text-slate-600" aria-hidden="true">/</li>
+            <li>
+              <button onClick={handleExploreMenu} className="hover:text-amber-300 transition-colors">
+                Menu
+              </button>
+            </li>
+            <li className="text-slate-600" aria-hidden="true">/</li>
+            <li className="text-amber-300 font-medium" aria-current="page">Cart</li>
           </ol>
         </nav>
 

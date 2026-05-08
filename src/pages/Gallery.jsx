@@ -1,9 +1,27 @@
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { galleryImages } from '../data/menuData'
 import FadeUp from '../animations/FadeUp'
 
 export default function Gallery() {
   const [lightbox, setLightbox] = useState(null)
+
+  const navigate = useCallback((dir) => {
+    if (!lightbox) return
+    const idx = galleryImages.findIndex(i => i.id === lightbox.id)
+    const next = (idx + dir + galleryImages.length) % galleryImages.length
+    setLightbox(galleryImages[next])
+  }, [lightbox])
+
+  useEffect(() => {
+    if (!lightbox) return
+    const handler = (e) => {
+      if (e.key === 'Escape') setLightbox(null)
+      if (e.key === 'ArrowRight') navigate(1)
+      if (e.key === 'ArrowLeft') navigate(-1)
+    }
+    window.addEventListener('keydown', handler)
+    return () => window.removeEventListener('keydown', handler)
+  }, [lightbox, navigate])
 
   return (
     <section id="gallery" className="relative overflow-hidden bg-slate-950 py-24 px-6">
@@ -43,6 +61,8 @@ export default function Gallery() {
                   <img
                     src={image.src}
                     alt={image.alt}
+                    loading="lazy"
+                    decoding="async"
                     className={`w-full object-cover transition-transform duration-500
                       group-hover:scale-105
                       ${image.size === 'tall' ? 'h-80' : ''}
@@ -83,17 +103,11 @@ export default function Gallery() {
               </svg>
             </button>
             <div className="flex justify-between mt-6">
-              <button onClick={() => {
-                const idx = galleryImages.findIndex(i => i.id === lightbox.id)
-                setLightbox(galleryImages[(idx - 1 + galleryImages.length) % galleryImages.length])
-              }} className="bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20
+              <button onClick={() => navigate(-1)} className="bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20
                 rounded-full px-5 py-2 text-white text-sm transition-colors">
                 ← Prev
               </button>
-              <button onClick={() => {
-                const idx = galleryImages.findIndex(i => i.id === lightbox.id)
-                setLightbox(galleryImages[(idx + 1) % galleryImages.length])
-              }} className="bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20
+              <button onClick={() => navigate(1)} className="bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20
                 rounded-full px-5 py-2 text-white text-sm transition-colors">
                 Next →
               </button>

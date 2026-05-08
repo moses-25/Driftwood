@@ -5,6 +5,12 @@ export default function Cursor() {
 
   useEffect(() => {
     const circle = circleRef.current
+    if (!circle) return
+
+    // Only show on pointer-capable devices
+    if (!window.matchMedia('(pointer: fine)').matches) return
+
+    circle.style.display = 'block'
 
     const onMouseMove = (e) => {
       circle.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`
@@ -15,7 +21,7 @@ export default function Cursor() {
       setTimeout(() => { circle.style.scale = '1' }, 150)
     }
 
-    window.addEventListener('mousemove', onMouseMove)
+    window.addEventListener('mousemove', onMouseMove, { passive: true })
     document.addEventListener('pointerdown', onPointerDown)
 
     return () => {
@@ -27,15 +33,16 @@ export default function Cursor() {
   return (
     <div
       ref={circleRef}
-      className="fixed top-0 left-0 pointer-events-none z-[9999]"
+      aria-hidden="true"
+      className="fixed top-0 left-0 pointer-events-none z-[9999] hidden"
       style={{
         width: 32,
         height: 32,
         marginLeft: -16,
         marginTop: -16,
         borderRadius: '50%',
-        border: '3px solid #c2620a',
-        backgroundColor: 'rgba(194,98,10,0.35)',
+        border: '2px solid #c2620a',
+        backgroundColor: 'rgba(194,98,10,0.2)',
         transition: 'scale 0.15s ease',
         willChange: 'transform',
       }}

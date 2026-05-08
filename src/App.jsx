@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react'
 import Navbar from './components/Navbar'
 import Hero from './pages/Hero'
 import About from './pages/About'
@@ -8,40 +9,63 @@ import VisitUs from './pages/VisitUs'
 import Footer from './pages/Footer'
 import Cart from './pages/Cart'
 import Checkout from './pages/Checkout'
+import Cursor from './components/Cursor'
 import useSmoothScroll from './hooks/useSmoothScroll'
 import { useRouter } from './hooks/useRouter'
 import { CartProvider } from './context/CartContext'
 
-function App() {
+function AppContent() {
   useSmoothScroll()
-  const { currentPath } = useRouter()
+  const { currentPath, isFullPage } = useRouter()
 
   const isCart = currentPath === '#cart'
   const isCheckout = currentPath === '#checkout'
-  const isFullPage = isCart || isCheckout
-  
+
+  // When the main page mounts (after navigating away from cart/checkout),
+  // scroll to the section that was requested via the hash.
+  const pendingScroll = useRef(null)
+
+  useEffect(() => {
+    if (!isFullPage && pendingScroll.current) {
+      const target = pendingScroll.current
+      pendingScroll.current = null
+      // Small delay so the sections have time to paint
+      setTimeout(() => {
+        const el = document.getElementById(target)
+        if (el) el.scrollIntoView({ behavior: 'smooth' })
+      }, 80)
+    }
+  }, [isFullPage])
+
+  return (
+    <div className="font-sans min-h-full">
+      <Cursor />
+      <Navbar pendingScroll={pendingScroll} />
+
+      {isCheckout ? (
+        <Checkout />
+      ) : isCart ? (
+        <Cart />
+      ) : (
+        <main>
+          <Hero />
+          <About />
+          <Menu />
+          <Gallery />
+          <Reviews />
+          <VisitUs />
+        </main>
+      )}
+
+      {!isCart && !isCheckout && <Footer />}
+    </div>
+  )
+}
+
+function App() {
   return (
     <CartProvider>
-      <div className="font-sans min-h-full">
-        <Navbar />
-        
-        {isCheckout ? (
-          <Checkout />
-        ) : isCart ? (
-          <Cart />
-        ) : (
-          <main>
-            <section id="home"><Hero /></section>
-            <section id="about"><About /></section>
-            <section id="menu"><Menu /></section>
-            <section id="gallery"><Gallery /></section>
-            <section id="reviews"><Reviews /></section>
-            <section id="visit"><VisitUs /></section> 
-          </main>
-        )}
-        
-        {!isFullPage && <Footer />}
-      </div>
+      <AppContent />
     </CartProvider>
   )
 }

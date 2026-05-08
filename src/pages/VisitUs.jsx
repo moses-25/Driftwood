@@ -61,7 +61,8 @@ export default function VisitUs() {
     setStatus('loading')
 
     try {
-      const res = await fetch('http://localhost:5000/api/contact', {
+      const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:5000'
+      const res = await fetch(`${apiBase}/api/contact`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),
@@ -180,20 +181,22 @@ export default function VisitUs() {
               back to you within 24 hours.
             </p>
 
-            <div className="flex flex-col gap-5">
+            <form onSubmit={handleSubmit} className="flex flex-col gap-5">
 
               {/* Name */}
               <div>
                 <label className="block text-slate-400 text-xs font-medium
-                  uppercase tracking-wider mb-2">
+                  uppercase tracking-wider mb-2" htmlFor="contact-name">
                   Name
                 </label>
                 <input
+                  id="contact-name"
                   type="text"
                   name="name"
                   value={form.name}
                   onChange={handleChange}
                   placeholder="Your name"
+                  required
                   className="w-full bg-slate-800/60 border border-white/10
                     rounded-xl px-4 py-3 text-white text-sm placeholder-slate-500
                     focus:outline-none focus:border-amber-500/50
@@ -204,15 +207,17 @@ export default function VisitUs() {
               {/* Email */}
               <div>
                 <label className="block text-slate-400 text-xs font-medium
-                  uppercase tracking-wider mb-2">
+                  uppercase tracking-wider mb-2" htmlFor="contact-email">
                   Email
                 </label>
                 <input
+                  id="contact-email"
                   type="email"
                   name="email"
                   value={form.email}
                   onChange={handleChange}
                   placeholder="your.email@example.com"
+                  required
                   className="w-full bg-slate-800/60 border border-white/10
                     rounded-xl px-4 py-3 text-white text-sm placeholder-slate-500
                     focus:outline-none focus:border-amber-500/50
@@ -223,15 +228,17 @@ export default function VisitUs() {
               {/* Message */}
               <div>
                 <label className="block text-slate-400 text-xs font-medium
-                  uppercase tracking-wider mb-2">
+                  uppercase tracking-wider mb-2" htmlFor="contact-message">
                   Message
                 </label>
                 <textarea
+                  id="contact-message"
                   name="message"
                   value={form.message}
                   onChange={handleChange}
                   placeholder="Your message..."
                   rows={5}
+                  required
                   className="w-full bg-slate-800/60 border border-white/10
                     rounded-xl px-4 py-3 text-white text-sm placeholder-slate-500
                     focus:outline-none focus:border-amber-500/50
@@ -241,7 +248,7 @@ export default function VisitUs() {
 
               {/* Submit */}
               <button
-                onClick={handleSubmit}
+                type="submit"
                 disabled={status === 'loading'}
                 className="w-full bg-primary hover:bg-orange-700 disabled:opacity-50
                   disabled:cursor-not-allowed text-white font-medium py-3
@@ -253,7 +260,7 @@ export default function VisitUs() {
               {/* Feedback */}
               {status === 'success' && (
                 <p className="text-green-400 text-sm text-center">
-                  ✓ Message sent!.
+                  ✓ Message sent! We'll get back to you within 24 hours.
                 </p>
               )}
               {status === 'error' && (
@@ -262,7 +269,7 @@ export default function VisitUs() {
                 </p>
               )}
 
-            </div>
+            </form>
           </div>
         </div>
       </div>

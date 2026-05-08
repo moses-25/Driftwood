@@ -62,5 +62,53 @@ app.post('/api/contact', async (req, res) => {
   }
 })
 
+app.post('/api/newsletter', async (req, res) => {
+  const { email } = req.body
+
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return res.status(400).json({ error: 'A valid email address is required.' })
+  }
+
+  try {
+    // Notify the café owner of the new subscriber
+    await resend.emails.send({
+      from: 'Driftwood Newsletter <onboarding@resend.dev>',
+      to: process.env.OWNER_EMAIL,
+      subject: `New newsletter subscriber: ${email}`,
+      html: `
+        <div style="font-family:sans-serif;max-width:600px;margin:auto">
+          <h2 style="color:#f97316">New Newsletter Subscriber</h2>
+          <p><strong>Email:</strong> ${email}</p>
+          <hr/>
+          <p style="color:#999;font-size:12px">Sent via Driftwood Café newsletter signup</p>
+        </div>
+      `,
+    })
+
+    // Confirmation email to subscriber
+    await resend.emails.send({
+      from: 'Driftwood Café <onboarding@resend.dev>',
+      to: email,
+      subject: "You're subscribed to Driftwood Café ☕",
+      html: `
+        <div style="font-family:sans-serif;max-width:600px;margin:auto">
+          <h2 style="color:#f97316">Welcome to the Driftwood family!</h2>
+          <p>You're now subscribed to our newsletter. Expect special offers, seasonal specials, and behind-the-scenes stories from our café.</p>
+          <hr/>
+          <p style="color:#999;font-size:12px">
+            Driftwood Café · 123 Coffee Street, Brewville, CA 90210<br/>
+            To unsubscribe, reply to this email with "unsubscribe" in the subject line.
+          </p>
+        </div>
+      `,
+    })
+
+    res.json({ ok: true })
+  } catch (err) {
+    console.error('Newsletter Resend error:', err)
+    res.status(500).json({ error: 'Failed to process subscription.' })
+  }
+})
+
 const PORT = process.env.PORT || 5000
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`))

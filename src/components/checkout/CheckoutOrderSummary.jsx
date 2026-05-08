@@ -1,17 +1,14 @@
 import { useCart } from '../../hooks/useCart'
+import { parsePrice, formatPrice } from '../../utils/price'
 
-const DELIVERY_FEE = 399   // KES
-const TAX_RATE = 0.16      // 16% VAT (Kenya standard)
+const DELIVERY_FEE = 399  // KES
+const TAX_RATE = 0.16     // 16% VAT (Kenya standard)
 
 const CheckoutOrderSummary = ({ deliveryMethod }) => {
   const { items } = useCart()
 
-  const subtotal = items.reduce((sum, item) => {
-    const price = parseFloat(item.price.replace(/[^0-9.]/g, ''))
-    return sum + price * item.quantity
-  }, 0)
-
-  const deliveryFee = deliveryMethod === 'delivery' ? DELIVERY_FEE / 100 : 0
+  const subtotal = items.reduce((sum, item) => sum + parsePrice(item.price) * item.quantity, 0)
+  const deliveryFee = deliveryMethod === 'delivery' ? DELIVERY_FEE : 0
   const tax = subtotal * TAX_RATE
   const total = subtotal + deliveryFee + tax
 
@@ -23,56 +20,48 @@ const CheckoutOrderSummary = ({ deliveryMethod }) => {
 
       {/* Items list */}
       <div className="space-y-3 mb-5">
-        {items.map((item) => {
-          const price = parseFloat(item.price.replace(/[^0-9.]/g, ''))
-          return (
-            <div key={`${item.id}-${item.customizations?.size || 'default'}`} className="flex items-center gap-3">
-              {/* Thumbnail */}
-              <div className="relative shrink-0">
-                <img
-                  src={item.image}
-                  alt={item.name}
-                  className="h-12 w-12 rounded-xl object-cover bg-slate-800"
-                />
-                {/* Quantity badge */}
-                <span className="absolute -top-1.5 -right-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-amber-500 text-slate-900 text-xs font-bold">
-                  {item.quantity}
-                </span>
-              </div>
-
-              {/* Name + price */}
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-white truncate">{item.name}</p>
-                {item.customizations?.size && (
-                  <p className="text-xs text-slate-500">{item.customizations.size}</p>
-                )}
-              </div>
-              <span className="text-sm font-semibold text-amber-300 shrink-0">
-                ${(price * item.quantity).toFixed(2)}
+        {items.map((item) => (
+          <div key={`${item.id}-${item.customizations?.size || 'default'}`} className="flex items-center gap-3">
+            <div className="relative shrink-0">
+              <img
+                src={item.image}
+                alt={item.name}
+                className="h-12 w-12 rounded-xl object-cover bg-slate-800"
+              />
+              <span className="absolute -top-1.5 -right-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-amber-500 text-slate-900 text-xs font-bold">
+                {item.quantity}
               </span>
             </div>
-          )
-        })}
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium text-white truncate">{item.name}</p>
+              {item.customizations?.size && (
+                <p className="text-xs text-slate-500">{item.customizations.size}</p>
+              )}
+            </div>
+            <span className="text-sm font-semibold text-amber-300 shrink-0">
+              {formatPrice(parsePrice(item.price) * item.quantity)}
+            </span>
+          </div>
+        ))}
       </div>
 
-      {/* Divider */}
       <div className="border-t border-white/10 mb-4" />
 
       {/* Totals */}
       <div className="space-y-2.5 text-sm mb-5">
         <div className="flex justify-between text-slate-400">
           <span>Subtotal</span>
-          <span className="text-slate-200">${subtotal.toFixed(2)}</span>
+          <span className="text-slate-200">{formatPrice(subtotal)}</span>
         </div>
         <div className="flex justify-between text-slate-400">
           <span>Delivery fee</span>
           <span className={deliveryFee === 0 ? 'text-green-400 font-medium' : 'text-slate-200'}>
-            {deliveryFee === 0 ? 'Free' : `$${deliveryFee.toFixed(2)}`}
+            {deliveryFee === 0 ? 'Free' : formatPrice(deliveryFee)}
           </span>
         </div>
         <div className="flex justify-between text-slate-400">
           <span>Tax (16% VAT)</span>
-          <span className="text-slate-200">${tax.toFixed(2)}</span>
+          <span className="text-slate-200">{formatPrice(tax)}</span>
         </div>
       </div>
 
@@ -80,11 +69,11 @@ const CheckoutOrderSummary = ({ deliveryMethod }) => {
       <div className="border-t border-white/10 pt-4 mb-5">
         <div className="flex justify-between items-center">
           <span className="text-base font-bold text-white">Total</span>
-          <span className="text-xl font-extrabold text-amber-300">${total.toFixed(2)}</span>
+          <span className="text-xl font-extrabold text-amber-300">{formatPrice(total)}</span>
         </div>
       </div>
 
-      {/* Estimated delivery */}
+      {/* Estimated time */}
       <div className="flex items-center gap-2.5 p-3 rounded-xl bg-white/5 border border-white/10 mb-5">
         <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-amber-500/15 text-amber-400">
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

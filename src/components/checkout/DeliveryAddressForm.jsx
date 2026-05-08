@@ -1,19 +1,15 @@
+import { motion } from 'framer-motion'
 import { InputField } from './ContactSection'
 
 const DeliveryAddressForm = ({ address, setAddress, errors }) => {
   const update = (field) => (e) => setAddress((prev) => ({ ...prev, [field]: e.target.value }))
 
   return (
-    <div
-      className="overflow-hidden transition-all duration-500"
-      style={{ animation: 'slideDown 0.4s ease-out' }}
+    <motion.div
+      initial={{ opacity: 0, y: -12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
     >
-      <style>{`
-        @keyframes slideDown {
-          from { opacity: 0; transform: translateY(-12px); }
-          to   { opacity: 1; transform: translateY(0); }
-        }
-      `}</style>
 
       <div className="bg-white/5 backdrop-blur-xl rounded-3xl border border-white/10 p-6 md:p-8 shadow-2xl">
         <div className="flex items-center gap-3 mb-6">
@@ -96,7 +92,7 @@ const DeliveryAddressForm = ({ address, setAddress, errors }) => {
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   )
 }
 

@@ -1,27 +1,23 @@
-import { useMemo } from 'react'
+import { useMemo, useRef } from 'react'
 import { useCart } from '../hooks/useCart'
 import { menuItems } from '../data/menuData'
+import { formatPrice, parsePrice } from '../utils/price'
 
 const RecommendedAddOns = () => {
   const { addToCart, items } = useCart()
+  // Stable shuffle seed — only randomise once per mount, not on every render
+  const shuffleSeed = useRef(Math.random())
 
-  // Get random items from menu, excluding items already in cart
   const recommendedItems = useMemo(() => {
-    const cartItemIds = items.map(item => item.id)
-    const availableItems = menuItems.filter(item => !cartItemIds.includes(item.id))
-    
-    // Shuffle array and take first 4 items
-    const shuffled = [...availableItems].sort(() => 0.5 - Math.random())
-    return shuffled.slice(0, 4)
+    const cartItemIds = new Set(items.map(item => item.id))
+    const available = menuItems.filter(item => !cartItemIds.has(item.id))
+    // Deterministic-ish shuffle using the stable seed
+    return [...available]
+      .sort((a, b) => (((a.id * shuffleSeed.current) % 1) - ((b.id * shuffleSeed.current) % 1)))
+      .slice(0, 4)
   }, [items])
 
-  const handleAddToCart = (item) => {
-    addToCart(item)
-  }
-
-  if (recommendedItems.length === 0) {
-    return null // Don't show section if no recommendations available
-  }
+  if (recommendedItems.length === 0) return null
 
   return (
     <div className="bg-white/5 backdrop-blur-xl rounded-3xl border border-white/10 p-6 md:p-8 shadow-2xl">
@@ -43,9 +39,9 @@ const RecommendedAddOns = () => {
                 <p className="text-slate-300 text-xs md:text-sm mb-3 md:mb-4 line-clamp-2 leading-relaxed">{item.description}</p>
                 
                 <div className="flex items-center justify-between gap-2">
-                  <span className="text-amber-300 font-bold text-base md:text-lg">{item.price}</span>
+                  <span className="text-amber-300 font-bold text-base md:text-lg">{formatPrice(parsePrice(item.price))}</span>
                   <button
-                    onClick={() => handleAddToCart(item)}
+                    onClick={() => addToCart(item)}
                     className="bg-gradient-to-r from-amber-500/30 to-orange-500/30 hover:from-amber-500/40 hover:to-orange-500/40 text-amber-200 text-xs md:text-sm font-semibold px-3 py-2 md:px-4 md:py-2.5 rounded-xl transition-all duration-200 hover:scale-105 border border-amber-500/40 shadow-lg hover:shadow-amber-500/25 whitespace-nowrap"
                   >
                     Add to Cart

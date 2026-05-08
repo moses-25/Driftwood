@@ -1,13 +1,11 @@
 import { useCart } from '../hooks/useCart'
+import { parsePrice, formatPrice } from '../utils/price'
 
 const OrderSummary = () => {
   const { items } = useCart()
 
-  const subtotal = items.reduce((sum, item) => {
-    return sum + (parseFloat(item.price.replace(/[^0-9.]/g, '')) * item.quantity)
-  }, 0)
-
-  const tax = subtotal * 0.16 // 16% VAT — matches checkout page
+  const subtotal = items.reduce((sum, item) => sum + parsePrice(item.price) * item.quantity, 0)
+  const tax = subtotal * 0.16 // 16% VAT
   const total = subtotal + tax
 
   return (
@@ -17,23 +15,23 @@ const OrderSummary = () => {
       <div className="space-y-4 mb-6">
         <div className="flex justify-between text-slate-300">
           <span>Subtotal</span>
-          <span>${subtotal.toFixed(2)}</span>
+          <span>{formatPrice(subtotal)}</span>
         </div>
 
         <div className="flex justify-between text-slate-300">
           <span>Tax (16% VAT)</span>
-          <span>${tax.toFixed(2)}</span>
+          <span>{formatPrice(tax)}</span>
         </div>
 
         <div className="flex justify-between text-slate-400 text-sm">
           <span>Delivery fee</span>
-          <span className="text-slate-400 italic">calculated at checkout</span>
+          <span className="italic">calculated at checkout</span>
         </div>
 
         <div className="border-t border-white/10 pt-4">
           <div className="flex justify-between text-white font-semibold text-lg">
             <span>Estimated Total</span>
-            <span className="text-amber-300">${total.toFixed(2)}</span>
+            <span className="text-amber-300">{formatPrice(total)}</span>
           </div>
         </div>
       </div>

@@ -1,3 +1,5 @@
+import { formatPrice, parsePrice } from '../utils/price'
+
 const MenuCard = ({ item, onAddToCart }) => {
   return (
     <div className="group relative overflow-hidden rounded-[2rem] border border-white/10 bg-slate-950/90 shadow-[0_25px_80px_rgba(15,23,42,0.32)] transition-transform duration-300 hover:-translate-y-1">
@@ -8,7 +10,7 @@ const MenuCard = ({ item, onAddToCart }) => {
         <img
           src={item.image}
           alt={item.name}
-          className="absolute inset-0 h-full w-full object-contain object-center transition-transform duration-700 group-hover:scale-[1.02]"
+          className="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-[1.02]"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent" />
         <div className="absolute left-5 bottom-5 rounded-full bg-black/50 px-4 py-2 text-xs uppercase tracking-[0.25em] text-amber-200 font-bold shadow-lg">
@@ -22,8 +24,8 @@ const MenuCard = ({ item, onAddToCart }) => {
           <h3 className="text-xl font-semibold text-white tracking-tight">
             {item.name}
           </h3>
-          <span className="rounded-full bg-amber-600/15 px-4 py-2 text-sm font-semibold text-amber-100 ring-1 ring-amber-500/30">
-            {item.price}
+          <span className="rounded-full bg-amber-600/15 px-4 py-2 text-sm font-semibold text-amber-100 ring-1 ring-amber-500/30 whitespace-nowrap">
+            {formatPrice(parsePrice(item.price))}
           </span>
         </div>
 
@@ -39,7 +41,7 @@ const MenuCard = ({ item, onAddToCart }) => {
         </button>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default MenuCard;
+export default MenuCard

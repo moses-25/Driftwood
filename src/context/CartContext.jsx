@@ -80,6 +80,17 @@ function loadFromStorage() {
             return emptyState
         }
 
+        // Discard if any item still has a legacy dollar price (e.g. "$3.50")
+        // This clears the cart once after the currency migration so users
+        // don't see stale $ amounts in the cart UI.
+        const hasLegacyPrices = state.items?.some(item =>
+            String(item.price).trim().startsWith('$')
+        )
+        if (hasLegacyPrices) {
+            localStorage.removeItem(STORAGE_KEY)
+            return emptyState
+        }
+
         return state
     } catch {
         return emptyState

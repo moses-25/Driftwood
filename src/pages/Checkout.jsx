@@ -1,19 +1,22 @@
 import { useState } from 'react'
 import CheckoutProgress from '../components/checkout/CheckoutProgress'
+import ContactSection from '../components/checkout/ContactSection'
 import DeliveryMethodSection from '../components/checkout/DeliveryMethodSection'
 import DeliveryAddressForm from '../components/checkout/DeliveryAddressForm'
 import PaymentMethodSection from '../components/checkout/PaymentMethodSection'
 import CheckoutOrderSummary from '../components/checkout/CheckoutOrderSummary'
 import { useCart } from '../hooks/useCart'
+import { useRouter } from '../hooks/useRouter'
 import EmptyCart from '../components/EmptyCart'
 
 const STEPS = ['Cart', 'Information', 'Payment', 'Confirmation']
 
 const Checkout = () => {
-  const { totalItems } = useCart()
-  const [currentStep, setCurrentStep] = useState(1) // 0=Cart, 1=Information, 2=Payment, 3=Confirmation
+  const { totalItems, clearCart } = useCart()
+  const { navigate } = useRouter()
+  const [currentStep, setCurrentStep] = useState(1) // 1=Information, 2=Payment, 3=Confirmation
 
-  const [contact] = useState({ fullName: '', email: '', phone: '' })
+  const [contact, setContact] = useState({ fullName: '', email: '', phone: '' })
   const [deliveryMethod, setDeliveryMethod] = useState('pickup')
   const [deliveryAddress, setDeliveryAddress] = useState({
     county: '',
@@ -32,6 +35,11 @@ const Checkout = () => {
 
   const validateInformation = () => {
     const newErrors = {}
+    if (!contact.fullName.trim()) newErrors.fullName = 'Full name is required'
+    if (!contact.email.trim()) newErrors.email = 'Email address is required'
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contact.email))
+      newErrors.email = 'Enter a valid email address'
+    if (!contact.phone.trim()) newErrors.phone = 'Phone number is required'
     if (deliveryMethod === 'delivery') {
       if (!deliveryAddress.county.trim()) newErrors.county = 'County/City is required'
       if (!deliveryAddress.street.trim()) newErrors.street = 'Street address is required'
@@ -49,8 +57,16 @@ const Checkout = () => {
     // Simulate async order placement — replace with real API call
     setTimeout(() => {
       setIsPlacingOrder(false)
+      clearCart()
       setCurrentStep(3)
     }, 2000)
+  }
+
+  const handleBackToMenu = () => {
+    navigate('#home')
+    setTimeout(() => {
+      document.getElementById('menu')?.scrollIntoView({ behavior: 'smooth' })
+    }, 80)
   }
 
   return (
@@ -63,13 +79,21 @@ const Checkout = () => {
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6">
         {/* Page header */}
         <div className="text-center mb-10">
-          <nav className="flex justify-center mb-5">
+          <nav className="flex justify-center mb-5" aria-label="Breadcrumb">
             <ol className="flex items-center space-x-2 text-sm text-slate-400">
-              <li><a href="#home" className="hover:text-amber-300 transition-colors">Home</a></li>
-              <li className="text-slate-600">/</li>
-              <li><a href="#cart" className="hover:text-amber-300 transition-colors">Cart</a></li>
-              <li className="text-slate-600">/</li>
-              <li className="text-amber-300 font-medium">Checkout</li>
+              <li>
+                <button onClick={() => navigate('#home')} className="hover:text-amber-300 transition-colors">
+                  Home
+                </button>
+              </li>
+              <li className="text-slate-600" aria-hidden="true">/</li>
+              <li>
+                <button onClick={() => navigate('#cart')} className="hover:text-amber-300 transition-colors">
+                  Cart
+                </button>
+              </li>
+              <li className="text-slate-600" aria-hidden="true">/</li>
+              <li className="text-amber-300 font-medium" aria-current="page">Checkout</li>
             </ol>
           </nav>
           <h1 className="text-4xl md:text-5xl font-extrabold text-white tracking-tight">
@@ -84,14 +108,27 @@ const Checkout = () => {
         <CheckoutProgress steps={STEPS} currentStep={currentStep} />
 
         {currentStep === 3 ? (
-          <ConfirmationScreen contact={contact} deliveryMethod={deliveryMethod} paymentMethod={paymentMethod} />
+          <ConfirmationScreen
+            contact={contact}
+            deliveryMethod={deliveryMethod}
+            paymentMethod={paymentMethod}
+            onBackToMenu={handleBackToMenu}
+          />
         ) : (
           <div className="mt-10 grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
             {/* LEFT — Form */}
             <div className="lg:col-span-3 space-y-6">
               {currentStep === 1 && (
                 <>
-                  <DeliveryMethodSection deliveryMethod={deliveryMethod} setDeliveryMethod={setDeliveryMethod} />
+                  <ContactSection
+                    contact={contact}
+                    setContact={setContact}
+                    errors={errors}
+                  />
+                  <DeliveryMethodSection
+                    deliveryMethod={deliveryMethod}
+                    setDeliveryMethod={setDeliveryMethod}
+                  />
                   {deliveryMethod === 'delivery' && (
                     <DeliveryAddressForm
                       address={deliveryAddress}
@@ -113,14 +150,16 @@ const Checkout = () => {
 
               {currentStep === 2 && (
                 <>
-                  {/* Summary of info */}
                   <InfoReviewCard
                     contact={contact}
                     deliveryMethod={deliveryMethod}
                     deliveryAddress={deliveryAddress}
                     onEdit={() => setCurrentStep(1)}
                   />
-                  <PaymentMethodSection paymentMethod={paymentMethod} setPaymentMethod={setPaymentMethod} />
+                  <PaymentMethodSection
+                    paymentMethod={paymentMethod}
+                    setPaymentMethod={setPaymentMethod}
+                  />
                   <button
                     onClick={handlePlaceOrder}
                     disabled={isPlacingOrder}
@@ -175,27 +214,40 @@ const InfoReviewCard = ({ contact, deliveryMethod, deliveryAddress, onEdit }) =>
       </button>
     </div>
     <div className="space-y-2 text-sm text-slate-300">
-      <div className="flex gap-2"><span className="text-slate-500 w-20 shrink-0">Name</span><span className="text-white font-medium">{contact.fullName}</span></div>
-      <div className="flex gap-2"><span className="text-slate-500 w-20 shrink-0">Email</span><span className="text-white font-medium">{contact.email}</span></div>
-      <div className="flex gap-2"><span className="text-slate-500 w-20 shrink-0">Phone</span><span className="text-white font-medium">{contact.phone}</span></div>
-      <div className="flex gap-2"><span className="text-slate-500 w-20 shrink-0">Method</span>
+      <div className="flex gap-2">
+        <span className="text-slate-500 w-20 shrink-0">Name</span>
+        <span className="text-white font-medium">{contact.fullName || '—'}</span>
+      </div>
+      <div className="flex gap-2">
+        <span className="text-slate-500 w-20 shrink-0">Email</span>
+        <span className="text-white font-medium">{contact.email || '—'}</span>
+      </div>
+      <div className="flex gap-2">
+        <span className="text-slate-500 w-20 shrink-0">Phone</span>
+        <span className="text-white font-medium">{contact.phone || '—'}</span>
+      </div>
+      <div className="flex gap-2">
+        <span className="text-slate-500 w-20 shrink-0">Method</span>
         <span className="text-amber-300 font-medium capitalize">{deliveryMethod}</span>
       </div>
       {deliveryMethod === 'delivery' && deliveryAddress.street && (
-        <div className="flex gap-2"><span className="text-slate-500 w-20 shrink-0">Address</span>
-          <span className="text-white font-medium">{deliveryAddress.street}{deliveryAddress.apartment ? `, ${deliveryAddress.apartment}` : ''}, {deliveryAddress.county}</span>
+        <div className="flex gap-2">
+          <span className="text-slate-500 w-20 shrink-0">Address</span>
+          <span className="text-white font-medium">
+            {deliveryAddress.street}
+            {deliveryAddress.apartment ? `, ${deliveryAddress.apartment}` : ''}, {deliveryAddress.county}
+          </span>
         </div>
       )}
     </div>
   </div>
 )
 
-const ConfirmationScreen = ({ contact, deliveryMethod, paymentMethod }) => {
+const ConfirmationScreen = ({ contact, deliveryMethod, paymentMethod, onBackToMenu }) => {
   const paymentLabels = { pesapal: 'Pesapal', mpesa: 'M-Pesa', cod: 'Cash on Delivery' }
   return (
     <div className="mt-10 max-w-xl mx-auto text-center">
       <div className="bg-white/5 backdrop-blur-xl rounded-3xl border border-white/10 p-10 shadow-2xl">
-        {/* Success icon */}
         <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-amber-500/20 to-orange-500/20 border border-amber-500/30">
           <svg className="w-10 h-10 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
@@ -203,20 +255,36 @@ const ConfirmationScreen = ({ contact, deliveryMethod, paymentMethod }) => {
         </div>
         <h2 className="text-3xl font-extrabold text-white mb-2">Order Confirmed!</h2>
         <p className="text-slate-400 mb-8">
-          Thank you, <span className="text-amber-300 font-semibold">{contact.fullName || 'friend'}</span>! Your order has been received and is being prepared.
+          Thank you,{' '}
+          <span className="text-amber-300 font-semibold">{contact.fullName || 'friend'}</span>!
+          Your order has been received and is being prepared.
         </p>
         <div className="space-y-3 text-sm text-left bg-white/5 rounded-2xl p-5 border border-white/10 mb-8">
-          <div className="flex justify-between"><span className="text-slate-400">Confirmation sent to</span><span className="text-white font-medium">{contact.email}</span></div>
-          <div className="flex justify-between"><span className="text-slate-400">Delivery method</span><span className="text-amber-300 font-medium capitalize">{deliveryMethod}</span></div>
-          <div className="flex justify-between"><span className="text-slate-400">Payment via</span><span className="text-white font-medium">{paymentLabels[paymentMethod]}</span></div>
-          <div className="flex justify-between"><span className="text-slate-400">Estimated time</span><span className="text-white font-medium">{deliveryMethod === 'pickup' ? '15–20 min' : '30–45 min'}</span></div>
+          <div className="flex justify-between">
+            <span className="text-slate-400">Confirmation sent to</span>
+            <span className="text-white font-medium">{contact.email || '—'}</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-slate-400">Delivery method</span>
+            <span className="text-amber-300 font-medium capitalize">{deliveryMethod}</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-slate-400">Payment via</span>
+            <span className="text-white font-medium">{paymentLabels[paymentMethod]}</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-slate-400">Estimated time</span>
+            <span className="text-white font-medium">
+              {deliveryMethod === 'pickup' ? '15–20 min' : '30–45 min'}
+            </span>
+          </div>
         </div>
-        <a
-          href="#menu"
+        <button
+          onClick={onBackToMenu}
           className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-500 to-orange-500 text-slate-900 font-bold py-3 px-8 rounded-2xl hover:from-amber-400 hover:to-orange-400 transition-all duration-200 hover:scale-[1.02] shadow-[0_10px_30px_rgba(251,191,36,0.25)]"
         >
           Back to Menu
-        </a>
+        </button>
       </div>
     </div>
   )

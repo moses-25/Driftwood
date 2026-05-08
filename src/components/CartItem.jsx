@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useCart } from '../hooks/useCart'
+import { parsePrice, formatPrice } from '../utils/price'
 
 const CartItem = ({ item }) => {
   const { addToCart, removeFromCart, removeEntireItem } = useCart()
@@ -7,9 +8,7 @@ const CartItem = ({ item }) => {
 
   const handleRemove = () => {
     setIsRemoving(true)
-    setTimeout(() => {
-      removeEntireItem(item.id)
-    }, 300)
+    setTimeout(() => removeEntireItem(item.id), 300)
   }
 
   const handleQuantityChange = (change) => {
@@ -20,8 +19,7 @@ const CartItem = ({ item }) => {
     }
   }
 
-  // Calculate item total
-  const itemTotal = parseFloat(item.price.replace('$', '')) * item.quantity
+  const itemTotal = parsePrice(item.price) * item.quantity
 
   return (
     <div className={`group bg-white/5 rounded-2xl border border-white/10 p-4 transition-all duration-300 ${
@@ -33,6 +31,8 @@ const CartItem = ({ item }) => {
           <img
             src={item.image}
             alt={item.name}
+            loading="lazy"
+            decoding="async"
             className="w-20 h-20 object-cover rounded-xl bg-slate-800"
           />
         </div>
@@ -66,7 +66,7 @@ const CartItem = ({ item }) => {
               {item.customizations.sugar && (
                 <div className="text-xs text-amber-300">Sugar: {item.customizations.sugar}</div>
               )}
-              {item.customizations.addOns && item.customizations.addOns.length > 0 && (
+              {item.customizations.addOns?.length > 0 && (
                 <div className="text-xs text-amber-300">
                   Add-ons: {item.customizations.addOns.join(', ')}
                 </div>
@@ -86,9 +86,9 @@ const CartItem = ({ item }) => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 12H4" />
                 </svg>
               </button>
-              
+
               <span className="w-8 text-center font-semibold text-white">{item.quantity}</span>
-              
+
               <button
                 onClick={() => handleQuantityChange(1)}
                 className="w-8 h-8 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-all hover:scale-105"
@@ -100,8 +100,8 @@ const CartItem = ({ item }) => {
             </div>
 
             <div className="text-right">
-              <div className="text-sm text-slate-400">{item.price} each</div>
-              <div className="font-semibold text-amber-300 text-lg">${itemTotal.toFixed(2)}</div>
+              <div className="text-sm text-slate-400">{formatPrice(parsePrice(item.price))} each</div>
+              <div className="font-semibold text-amber-300 text-lg">{formatPrice(itemTotal)}</div>
             </div>
           </div>
         </div>

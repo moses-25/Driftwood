@@ -1,12 +1,13 @@
 import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { menuItems } from "../data/menuData";
 import MenuCard from "../components/MenuCard";
 import { useCart } from "../hooks/useCart";
 
 const TABS = [
-  { key: "hot",      label: "Hot" },
   { key: "cold",     label: "Cold" },
   { key: "pastries", label: "Pastries" },
+  { key: "hot",      label: "Hot" },
   { key: "specials", label: "Specials" },
 ];
 
@@ -47,7 +48,7 @@ const getTabIcon = (key) => {
 }
 
 const Menu = () => {
-  const [activeTab, setActiveTab] = useState("hot");
+  const [activeTab, setActiveTab] = useState("cold");
   const { addToCart } = useCart();
 
   const filtered = menuItems.filter((item) => item.category === activeTab);
@@ -95,14 +96,20 @@ const Menu = () => {
         </div>
 
         {/* Card Grid */}
-        <div
-          key={activeTab}
-          className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3" 
-        >
-          {filtered.map((item) => (
-            <MenuCard key={item.id} item={item} onAddToCart={handleAddToCart} />
-          ))}
-        </div>
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeTab}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.25, ease: [0.25, 0.1, 0.25, 1] }}
+            className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3"
+          >
+            {filtered.map((item) => (
+              <MenuCard key={item.id} item={item} onAddToCart={handleAddToCart} />
+            ))}
+          </motion.div>
+        </AnimatePresence>
 
       </div>
     </section>

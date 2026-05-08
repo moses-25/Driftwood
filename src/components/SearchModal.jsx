@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useMemo } from 'react'
 import { menuItems, reviews } from '../data/menuData'
+import { formatPrice, parsePrice } from '../utils/price'
 
 const sections = [
   { name: 'Home', href: '#home', description: 'Welcome to Driftwood Café' },
@@ -71,6 +72,9 @@ export default function SearchModal({ isOpen, onClose }) {
       className="fixed inset-0 z-[100] bg-black/70 backdrop-blur-sm flex items-start justify-center pt-16 sm:pt-20 px-3 sm:px-4"
       onClick={handleBackdropClick}
       onKeyDown={handleKeyDown}
+      role="dialog"
+      aria-modal="true"
+      aria-label="Search"
     >
       <div className="w-full max-w-lg bg-slate-900 rounded-xl shadow-2xl border border-white/10 overflow-hidden">
 
@@ -190,7 +194,7 @@ export default function SearchModal({ isOpen, onClose }) {
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center justify-between gap-2">
                             <p className="text-sm font-medium text-white group-hover:text-primary transition-colors truncate">{item.name}</p>
-                            <span className="text-xs font-bold text-primary flex-shrink-0">{item.price}</span>
+                            <span className="text-xs font-bold text-primary flex-shrink-0">{formatPrice(parsePrice(item.price))}</span>
                           </div>
                           <p className="text-xs text-slate-500 truncate mt-0.5">{item.description}</p>
                           <span className="text-xs text-slate-600 capitalize">{item.category}</span>
