@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useCart } from '../hooks/useCart'
+import SearchModal from './SearchModal'
 
 const navLinks = [
   { label: 'Home', href: '#home' },
@@ -13,6 +14,7 @@ const navLinks = [
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
+  const [searchOpen, setSearchOpen] = useState(false)
   const { totalItems } = useCart()
 
   useEffect(() => {
@@ -79,7 +81,8 @@ export default function Navbar() {
           </a>
           <a
             href="#search"
-            className="hidden md:inline-flex items-center gap-3 bg-white/10 text-white text-sm px-4 py-2.5 rounded-full hover:bg-white/20 transition-all duration-200 shadow-sm border border-white/10 font-bold"
+            onClick={(e) => { e.preventDefault(); setSearchOpen(true) }}
+            className="hidden md:inline-flex items-center gap-3 bg-white/10 text-white text-sm px-4 py-2.5 rounded-full hover:bg-white/20 transition-all duration-200 shadow-sm border border-white/10 font-bold cursor-pointer"
             aria-label="Search"
           >
             <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-slate-100 ring-1 ring-white/15">
@@ -140,6 +143,14 @@ export default function Navbar() {
               </li>
             ))}
             <li>
+              <button
+                onClick={() => { setMenuOpen(false); setSearchOpen(true) }}
+                className="w-full text-left text-base font-bold text-white hover:text-primary transition-colors"
+              >
+                Search
+              </button>
+            </li>
+            <li>
               <a
                 href="#visit"
                 className="block text-center bg-primary text-white px-5 py-2.5 rounded-lg hover:bg-orange-700 transition-colors font-medium"
@@ -150,6 +161,8 @@ export default function Navbar() {
           </ul>
         </div>
       )}
+
+      <SearchModal isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
     </nav>
   )
 }
