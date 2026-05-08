@@ -152,6 +152,28 @@ export default function Navbar() {
             </li>
             <li>
               <a
+                href="#cart"
+                onClick={() => setMenuOpen(false)}
+                className="flex items-center justify-between text-base font-bold text-white hover:text-primary transition-colors"
+              >
+                <span>Cart</span>
+                <span className="flex items-center gap-2">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-amber-300">
+                    <path d="M6 6h15l-1.5 9h-13z" />
+                    <path d="M6 6l-2 0" />
+                    <circle cx="9" cy="20" r="1" />
+                    <circle cx="18" cy="20" r="1" />
+                  </svg>
+                  {totalItems > 0 && (
+                    <span className="bg-amber-500 text-slate-900 text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                      {totalItems}
+                    </span>
+                  )}
+                </span>
+              </a>
+            </li>
+            <li>
+              <a
                 href="#visit"
                 className="block text-center bg-primary text-white px-5 py-2.5 rounded-lg hover:bg-orange-700 transition-colors font-medium"
               >
