@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import CheckoutProgress from '../components/checkout/CheckoutProgress'
-import ContactSection from '../components/checkout/ContactSection'
 import DeliveryMethodSection from '../components/checkout/DeliveryMethodSection'
 import DeliveryAddressForm from '../components/checkout/DeliveryAddressForm'
 import PaymentMethodSection from '../components/checkout/PaymentMethodSection'
@@ -14,7 +13,7 @@ const Checkout = () => {
   const { items, totalItems } = useCart()
   const [currentStep, setCurrentStep] = useState(1) // 0=Cart, 1=Information, 2=Payment, 3=Confirmation
 
-  const [contact, setContact] = useState({ fullName: '', email: '', phone: '' })
+  const [contact] = useState({ fullName: '', email: '', phone: '' })
   const [deliveryMethod, setDeliveryMethod] = useState('pickup')
   const [deliveryAddress, setDeliveryAddress] = useState({
     county: '',
@@ -33,10 +32,6 @@ const Checkout = () => {
 
   const validateInformation = () => {
     const newErrors = {}
-    if (!contact.fullName.trim()) newErrors.fullName = 'Full name is required'
-    if (!contact.email.trim()) newErrors.email = 'Email is required'
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contact.email)) newErrors.email = 'Enter a valid email'
-    if (!contact.phone.trim()) newErrors.phone = 'Phone number is required'
     if (deliveryMethod === 'delivery') {
       if (!deliveryAddress.county.trim()) newErrors.county = 'County/City is required'
       if (!deliveryAddress.street.trim()) newErrors.street = 'Street address is required'
@@ -96,7 +91,6 @@ const Checkout = () => {
             <div className="lg:col-span-3 space-y-6">
               {currentStep === 1 && (
                 <>
-                  <ContactSection contact={contact} setContact={setContact} errors={errors} />
                   <DeliveryMethodSection deliveryMethod={deliveryMethod} setDeliveryMethod={setDeliveryMethod} />
                   {deliveryMethod === 'delivery' && (
                     <DeliveryAddressForm

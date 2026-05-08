@@ -1,4 +1,3 @@
-import Cursor from './components/Cursor'
 import Navbar from './components/Navbar'
 import Hero from './pages/Hero'
 import About from './pages/About'
@@ -23,8 +22,7 @@ function App() {
   
   return (
     <CartProvider>
-      <div className="font-sans min-h-full" style={{ cursor: 'none' }}>
-        <Cursor />
+      <div className="font-sans min-h-full">
         <Navbar />
         
         {isCheckout ? (
