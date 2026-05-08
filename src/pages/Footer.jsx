@@ -20,6 +20,7 @@ const contactInfo = [
       </svg>
     ),
     text: '123 Coffee Street, Brewville, CA 90210',
+    href: 'https://maps.google.com/?q=123+Coffee+Street+Brewville+CA+90210',
   },
   {
     icon: (
@@ -29,6 +30,7 @@ const contactInfo = [
       </svg>
     ),
     text: '(555) 123-4567',
+    href: 'tel:+15551234567',
   },
   {
     icon: (
@@ -38,6 +40,7 @@ const contactInfo = [
       </svg>
     ),
     text: 'hello@driftwoodcafe.com',
+    href: 'mailto:hello@driftwoodcafe.com',
   },
 ]
 
@@ -179,9 +182,14 @@ export default function Footer() {
                   <span className="text-amber-400 mt-0.5 flex-shrink-0">
                     {item.icon}
                   </span>
-                  <span className="text-slate-400 text-sm leading-relaxed">
+                  <a
+                    href={item.href}
+                    target={item.href.startsWith('http') ? '_blank' : undefined}
+                    rel={item.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                    className="text-slate-400 text-sm leading-relaxed hover:text-amber-400 transition-colors"
+                  >
                     {item.text}
-                  </span>
+                  </a>
                 </li>
               ))}
             </ul>
