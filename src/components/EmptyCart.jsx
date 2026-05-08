@@ -1,4 +1,17 @@
+import { useRouter } from '../hooks/useRouter'
+
 const EmptyCart = () => {
+  const { navigate } = useRouter()
+
+  const handleExploreMenu = (e) => {
+    e.preventDefault()
+    navigate('#menu')
+    // Give the main page a tick to mount, then scroll to the menu section
+    setTimeout(() => {
+      document.getElementById('menu')?.scrollIntoView({ behavior: 'smooth' })
+    }, 50)
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 pt-24 pb-12">
       {/* Enhanced Background Elements */}
@@ -12,7 +25,7 @@ const EmptyCart = () => {
           <ol className="flex items-center space-x-2 text-sm text-slate-400">
             <li><a href="#home" className="hover:text-amber-300 transition-colors">Home</a></li>
             <li className="text-slate-600">/</li>
-            <li><a href="#menu" className="hover:text-amber-300 transition-colors">Menu</a></li>
+            <li><a href="#menu" onClick={handleExploreMenu} className="hover:text-amber-300 transition-colors">Menu</a></li>
             <li className="text-slate-600">/</li>
             <li className="text-amber-300 font-medium">Cart</li>
           </ol>
@@ -54,6 +67,7 @@ const EmptyCart = () => {
             <div className="space-y-6">
               <a
                 href="#menu"
+                onClick={handleExploreMenu}
                 className="group inline-flex items-center justify-center gap-4 bg-gradient-to-r from-amber-500 to-orange-500 text-slate-900 font-bold py-5 px-10 rounded-2xl hover:from-amber-600 hover:to-orange-600 transition-all duration-300 transform hover:scale-105 shadow-[0_20px_40px_rgba(251,191,36,0.3)] hover:shadow-[0_25px_50px_rgba(251,191,36,0.4)] text-lg"
               >
                 <svg className="w-6 h-6 group-hover:rotate-12 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
