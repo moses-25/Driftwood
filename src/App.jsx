@@ -8,6 +8,7 @@ import Reviews from './pages/Reviews'
 import VisitUs from './pages/VisitUs'
 import Footer from './pages/Footer'
 import Cart from './pages/Cart'
+import Checkout from './pages/Checkout'
 import useSmoothScroll from './hooks/useSmoothScroll'
 import { useRouter } from './hooks/useRouter'
 import { CartProvider } from './context/CartContext'
@@ -15,6 +16,10 @@ import { CartProvider } from './context/CartContext'
 function App() {
   useSmoothScroll()
   const { currentPath } = useRouter()
+
+  const isCart = currentPath === '#cart'
+  const isCheckout = currentPath === '#checkout'
+  const isFullPage = isCart || isCheckout
   
   return (
     <CartProvider>
@@ -22,7 +27,9 @@ function App() {
         <Cursor />
         <Navbar />
         
-        {currentPath === '#cart' ? (
+        {isCheckout ? (
+          <Checkout />
+        ) : isCart ? (
           <Cart />
         ) : (
           <main>
@@ -35,7 +42,7 @@ function App() {
           </main>
         )}
         
-        {currentPath !== '#cart' && <Footer />}
+        {!isFullPage && <Footer />}
       </div>
     </CartProvider>
   )
