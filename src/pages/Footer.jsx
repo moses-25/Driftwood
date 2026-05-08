@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import PrivacyPolicyModal from '../components/PrivacyPolicyModal'
+import TermsOfServiceModal from '../components/TermsOfServiceModal'
 
 const quickLinks = [
   { label: 'Home', href: '#home' },
@@ -88,6 +90,8 @@ const socials = [
 export default function Footer() {
   const [email, setEmail] = useState('')
   const [subStatus, setSubStatus] = useState('idle') // idle | loading | success | error
+  const [showPrivacy, setShowPrivacy] = useState(false)
+  const [showTerms, setShowTerms] = useState(false)
 
   const handleSubscribe = async () => {
     if (!email) return
@@ -112,6 +116,7 @@ export default function Footer() {
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' })
 
   return (
+    <>
     <footer className="relative bg-slate-900 border-t border-white/10">
 
       {/* Main Footer Content */}
@@ -254,16 +259,22 @@ export default function Footer() {
           </p>
 
           <div className="flex items-center gap-6">
-            <a href="#" className="text-slate-500 text-xs hover:text-slate-300
-              transition-colors">
+            <button
+              onClick={() => setShowPrivacy(true)}
+              className="text-slate-500 text-xs hover:text-slate-300 transition-colors"
+            >
               Privacy Policy
-            </a>
-            <a href="#" className="text-slate-500 text-xs hover:text-slate-300
-              transition-colors">
+            </button>
+            <button
+              onClick={() => setShowTerms(true)}
+              className="text-slate-500 text-xs hover:text-slate-300 transition-colors"
+            >
               Terms of Service
-            </a>
-            <a href="#" className="text-slate-500 text-xs hover:text-slate-300
-              transition-colors">
+            </button>
+            <a
+              href="#visit"
+              className="text-slate-500 text-xs hover:text-slate-300 transition-colors"
+            >
               Sitemap
             </a>
           </div>
@@ -286,5 +297,10 @@ export default function Footer() {
       </div>
 
     </footer>
+
+    {/* Modals */}
+    {showPrivacy && <PrivacyPolicyModal onClose={() => setShowPrivacy(false)} />}
+    {showTerms && <TermsOfServiceModal onClose={() => setShowTerms(false)} />}
+    </>
   )
 }
