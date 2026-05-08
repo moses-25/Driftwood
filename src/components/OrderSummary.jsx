@@ -1,42 +1,38 @@
 import { useCart } from '../hooks/useCart'
 
-const OrderSummary = ({ deliveryOption }) => {
+const OrderSummary = () => {
   const { items } = useCart()
 
-  // Calculate totals
   const subtotal = items.reduce((sum, item) => {
-    return sum + (parseFloat(item.price.replace('$', '')) * item.quantity)
+    return sum + (parseFloat(item.price.replace(/[^0-9.]/g, '')) * item.quantity)
   }, 0)
 
-  const deliveryFee = deliveryOption === 'delivery' ? 3.99 : 0
-  const tax = subtotal * 0.08875 // 8.875% tax
-  const total = subtotal + deliveryFee + tax
+  const tax = subtotal * 0.16 // 16% VAT — matches checkout page
+  const total = subtotal + tax
 
   return (
     <div className="bg-white/5 backdrop-blur-xl rounded-3xl border border-white/10 p-6 shadow-2xl">
       <h3 className="text-xl font-semibold text-white mb-6">Order Summary</h3>
-      
+
       <div className="space-y-4 mb-6">
         <div className="flex justify-between text-slate-300">
           <span>Subtotal</span>
           <span>${subtotal.toFixed(2)}</span>
         </div>
-        
-        {deliveryFee > 0 && (
-          <div className="flex justify-between text-slate-300">
-            <span>Delivery Fee</span>
-            <span>${deliveryFee.toFixed(2)}</span>
-          </div>
-        )}
-        
+
         <div className="flex justify-between text-slate-300">
-          <span>Tax</span>
+          <span>Tax (16% VAT)</span>
           <span>${tax.toFixed(2)}</span>
         </div>
-        
+
+        <div className="flex justify-between text-slate-400 text-sm">
+          <span>Delivery fee</span>
+          <span className="text-slate-400 italic">calculated at checkout</span>
+        </div>
+
         <div className="border-t border-white/10 pt-4">
           <div className="flex justify-between text-white font-semibold text-lg">
-            <span>Total</span>
+            <span>Estimated Total</span>
             <span className="text-amber-300">${total.toFixed(2)}</span>
           </div>
         </div>
@@ -52,7 +48,6 @@ const OrderSummary = ({ deliveryOption }) => {
         </svg>
         Proceed to Checkout
       </a>
-
     </div>
   )
 }

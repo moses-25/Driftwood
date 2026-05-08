@@ -78,7 +78,7 @@ const Checkout = () => {
             </ol>
           </nav>
           <h1 className="text-4xl md:text-5xl font-extrabold text-white tracking-tight">
-            Secure <span className="text-amber-400">Checkout</span>
+            Checkout
           </h1>
           <p className="mt-3 text-slate-400 text-base max-w-xl mx-auto">
             Complete your order in just a few steps. Your coffee is almost on its way.
@@ -145,16 +145,10 @@ const Checkout = () => {
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                         </svg>
-                        Place Order Securely
+                        Place Order
                       </>
                     )}
                   </button>
-                  <p className="text-center text-xs text-slate-500 flex items-center justify-center gap-1.5">
-                    <svg className="w-3.5 h-3.5 text-amber-500" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
-                    </svg>
-                    Your payment information is encrypted and secure
-                  </p>
                 </>
               )}
             </div>
