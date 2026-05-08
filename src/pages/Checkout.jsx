@@ -10,7 +10,7 @@ import EmptyCart from '../components/EmptyCart'
 const STEPS = ['Cart', 'Information', 'Payment', 'Confirmation']
 
 const Checkout = () => {
-  const { items, totalItems } = useCart()
+  const { totalItems } = useCart()
   const [currentStep, setCurrentStep] = useState(1) // 0=Cart, 1=Information, 2=Payment, 3=Confirmation
 
   const [contact] = useState({ fullName: '', email: '', phone: '' })
