@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { menuItems } from "../data/menuData";
 import MenuCard from "../components/MenuCard";
 import { useCart } from "../hooks/useCart";
+import SectionTitle from "../components/SectionTitle";
 
 const TABS = [
   { key: "cold",     label: "Cold" },
@@ -58,36 +59,42 @@ const Menu = () => {
   };
 
   return (
-    <section id="menu" className="relative overflow-hidden py-24 bg-slate-950 text-white">
-      <div className="absolute -left-24 top-10 h-72 w-72 rounded-full bg-amber-500/20 blur-3xl" />
-      <div className="absolute right-0 top-1/4 h-96 w-96 rounded-full bg-sky-500/10 blur-3xl" />
-      <div className="relative max-w-6xl mx-auto px-6">
+    <section id="menu" className="relative overflow-hidden py-28 bg-darkroast">
 
-        {/* Heading */}
-        <div className="text-center mb-12 relative z-10">
-          <p className="text-sm uppercase tracking-[0.4em] text-amber-300 font-semibold mb-3">
-            Our Menu
-          </p>
-          <h2 className="text-5xl md:text-6xl font-extrabold tracking-[-0.04em] text-white max-w-3xl mx-auto">
-            Something for every mood and moment.
-          </h2>
-          <p className="mt-5 text-slate-300 text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
-            Explore our signature coffees, handcrafted cold pours, fresh pastries, and seasonal specials designed to inspire your day.
-          </p>
-        </div>
+      {/* Subtle warm glow */}
+      <div className="absolute -left-32 top-20 h-80 w-80 rounded-full bg-caramel/10 blur-3xl pointer-events-none" />
+      <div className="absolute right-0 bottom-20 h-96 w-96 rounded-full bg-copper/8 blur-3xl pointer-events-none" />
+
+      {/* Grain texture */}
+      <div
+        className="absolute inset-0 opacity-[0.03] pointer-events-none"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
+        }}
+      />
+
+      <div className="relative max-w-7xl mx-auto px-6">
+
+        <SectionTitle
+          eyebrow="Our Menu"
+          heading={<>Something for every <em className="italic text-caramel">mood</em> and moment.</>}
+          subtext="Explore our signature coffees, handcrafted cold pours, fresh pastries, and seasonal specials designed to inspire your day."
+          light
+        />
 
         {/* Tab Bar */}
-        <div className="relative z-10 flex justify-center flex-wrap gap-3 mb-12">
+        <div className="flex justify-center flex-wrap gap-3 mb-12">
           {TABS.map((tab) => (
             <button
               key={tab.key}
               onClick={() => setActiveTab(tab.key)}
               className={`flex items-center gap-2 px-5 py-3 rounded-full text-sm font-semibold transition-all duration-200 border ${activeTab === tab.key ?
-                "border-amber-500 bg-amber-500/15 text-amber-100 shadow-[0_15px_45px_rgba(251,191,36,0.14)]" :
-                "border-white/10 bg-white/5 text-slate-200 hover:bg-white/10 hover:border-white/20"
+                "border-caramel bg-caramel/15 text-softwhite shadow-gold" :
+                "border-white/10 bg-white/5 text-warmbeige/70 hover:bg-white/10 hover:border-white/20"
               }`}
+              aria-pressed={activeTab === tab.key}
             >
-              <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-amber-200">
+              <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-caramel">
                 {getTabIcon(tab.key)}
               </span>
               <span>{tab.label}</span>
@@ -99,14 +106,21 @@ const Menu = () => {
         <AnimatePresence mode="wait">
           <motion.div
             key={activeTab}
-            initial={{ opacity: 0, y: 12 }}
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.25, ease: [0.25, 0.1, 0.25, 1] }}
+            transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
             className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3"
           >
-            {filtered.map((item) => (
-              <MenuCard key={item.id} item={item} onAddToCart={handleAddToCart} />
+            {filtered.map((item, i) => (
+              <motion.div
+                key={item.id}
+                initial={{ opacity: 0, y: 24 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: i * 0.07, ease: [0.25, 0.1, 0.25, 1] }}
+              >
+                <MenuCard item={item} onAddToCart={handleAddToCart} />
+              </motion.div>
             ))}
           </motion.div>
         </AnimatePresence>

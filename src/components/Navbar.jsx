@@ -8,11 +8,10 @@ const navLinks = [
   { label: 'About',    href: '#about' },
   { label: 'Menu',     href: '#menu' },
   { label: 'Gallery',  href: '#gallery' },
-  { label: 'Reviews',  href: '#reviews' },
+  { label: 'Merch',    href: '#reviews' },
   { label: 'Visit Us', href: '#visit' },
 ]
 
-// Section IDs that live on the main page (not full-page routes)
 const SECTION_IDS = new Set(['home', 'about', 'menu', 'gallery', 'reviews', 'visit'])
 
 export default function Navbar({ pendingScroll }) {
@@ -23,7 +22,7 @@ export default function Navbar({ pendingScroll }) {
   const { currentPath, navigate, isFullPage } = useRouter()
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 20)
+    const handleScroll = () => setScrolled(window.scrollY > 40)
     window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
@@ -37,22 +36,12 @@ export default function Navbar({ pendingScroll }) {
     return () => document.removeEventListener('mousedown', handler)
   }, [menuOpen, closeMenu])
 
-  /**
-   * Handle a nav link click.
-   * - If we're already on the main page: let the browser follow the hash
-   *   (Lenis smooth-scroll handles the rest).
-   * - If we're on a full-page view (cart/checkout): store the target section
-   *   in pendingScroll, then navigate to #home so App unmounts the full-page
-   *   view and mounts the main page. App's useEffect will scroll after mount.
-   */
   const handleNavClick = useCallback((e, href) => {
     const sectionId = href.replace('#', '')
-
     if (isFullPage && SECTION_IDS.has(sectionId)) {
       e.preventDefault()
       closeMenu()
       if (pendingScroll) pendingScroll.current = sectionId
-      // Navigate to #home to trigger main-page render; App will scroll after mount
       navigate('#home')
     } else {
       closeMenu()
@@ -60,83 +49,106 @@ export default function Navbar({ pendingScroll }) {
   }, [isFullPage, navigate, closeMenu, pendingScroll])
 
   return (
-    <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 backdrop-blur-xl border-b border-white/10 ${
-      scrolled ? 'bg-slate-900/80 shadow-md' : 'bg-slate-900/20'
-    }`}>
+    <nav
+      className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${
+        scrolled
+          ? 'bg-softwhite/95 backdrop-blur-xl shadow-soft border-b border-warmbeige/60'
+          : 'bg-transparent'
+      }`}
+      role="navigation"
+      aria-label="Main navigation"
+    >
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
 
         {/* Logo */}
         <a
           href="#home"
           onClick={(e) => handleNavClick(e, '#home')}
-          className="flex items-center gap-3"
+          className="flex items-center gap-3 group"
+          aria-label="Driftwood Café — Home"
         >
-          <img src="/Driftwood.png" alt="Driftwood Café" className="h-10 w-auto" />
-          <span className="text-xl font-bold text-white">
-            <span className="text-primary">Driftwood</span>
-            <span className="text-white font-bold text-lg"> Café</span>
+          <img
+            src="/Driftwood.png"
+            alt="Driftwood Café logo"
+            className="h-10 w-auto transition-transform duration-300 group-hover:scale-105"
+          />
+          <span className="font-display text-xl font-bold tracking-tight">
+            <span className={`transition-colors duration-300 ${scrolled ? 'text-caramel' : 'text-caramel'}`}>
+              Driftwood
+            </span>
+            <span className={`transition-colors duration-300 ${scrolled ? 'text-espresso' : 'text-softwhite'}`}>
+              {' '}Café
+            </span>
           </span>
         </a>
 
         {/* Desktop Nav Links */}
-        <ul className="hidden md:flex items-center gap-8">
+        <ul className="hidden md:flex items-center gap-8" role="list">
           {navLinks.map((link) => (
             <li key={link.label}>
               <a
                 href={link.href}
                 onClick={(e) => handleNavClick(e, link.href)}
-                className="text-base font-bold text-white hover:text-primary transition-colors"
+                className={`relative text-base font-bold tracking-wide transition-colors duration-200 group ${
+                  scrolled ? 'text-espresso hover:text-caramel' : 'text-softwhite hover:text-caramel'
+                }`}
+                style={{ fontFamily: "'Fjalla One', sans-serif" }}
               >
                 {link.label}
+                <span className="absolute -bottom-0.5 left-0 w-0 h-px bg-caramel transition-all duration-300 group-hover:w-full" />
               </a>
             </li>
           ))}
         </ul>
 
-        {/* Right Side */}
-        <div className="flex items-center gap-3">
+        {/* Right Side Actions */}
+        <div className="flex items-center gap-2">
+
+          {/* Search */}
+          <button
+            onClick={() => setSearchOpen(true)}
+            className={`hidden md:flex h-10 w-10 items-center justify-center rounded-full transition-all duration-200 ${
+              scrolled
+                ? 'text-espresso/60 hover:text-espresso hover:bg-warmbeige'
+                : 'text-softwhite/70 hover:text-softwhite hover:bg-softwhite/10'
+            }`}
+            aria-label="Open search"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" className="w-4.5 h-4.5">
+              <circle cx="11" cy="11" r="7" />
+              <path d="M21 21l-4.35-4.35" />
+            </svg>
+          </button>
+
           {/* Cart */}
           <a
             href="#cart"
-            className="hidden md:inline-flex items-center gap-3 bg-white/10 text-white text-sm px-4 py-2.5 rounded-full hover:bg-white/20 transition-all duration-200 shadow-sm border border-white/10 font-bold relative"
+            className={`hidden md:flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 relative ${
+              scrolled
+                ? 'text-espresso/70 hover:text-espresso hover:bg-warmbeige border border-warmbeige'
+                : 'text-softwhite/80 hover:text-softwhite hover:bg-softwhite/10 border border-softwhite/20'
+            }`}
             aria-label={`Cart${totalItems > 0 ? `, ${totalItems} items` : ''}`}
           >
-            <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-amber-300 ring-1 ring-white/15">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
-                <path d="M6 6h15l-1.5 9h-13z" />
-                <path d="M6 6l-2 0" />
-                <circle cx="9" cy="20" r="1" />
-                <circle cx="18" cy="20" r="1" />
-              </svg>
-            </span>
-            Cart {totalItems > 0 && `(${totalItems})`}
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+              <path d="M6 6h15l-1.5 9h-13z" />
+              <path d="M6 6l-2 0" />
+              <circle cx="9" cy="20" r="1" />
+              <circle cx="18" cy="20" r="1" />
+            </svg>
+            <span>Cart</span>
             {totalItems > 0 && (
-              <span className="absolute -top-2 -right-2 bg-amber-500 text-slate-900 text-xs font-bold rounded-full h-6 w-6 flex items-center justify-center" aria-hidden="true">
+              <span className="absolute -top-1.5 -right-1.5 bg-caramel text-softwhite text-[10px] font-bold rounded-full h-5 w-5 flex items-center justify-center shadow-gold" aria-hidden="true">
                 {totalItems}
               </span>
             )}
           </a>
 
-          {/* Search */}
-          <button
-            onClick={() => setSearchOpen(true)}
-            className="hidden md:inline-flex items-center gap-3 bg-white/10 text-white text-sm px-4 py-2.5 rounded-full hover:bg-white/20 transition-all duration-200 shadow-sm border border-white/10 font-bold cursor-pointer"
-            aria-label="Open search"
-          >
-            <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-slate-100 ring-1 ring-white/15">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
-                <circle cx="11" cy="11" r="7" />
-                <path d="M21 21l-4.35-4.35" />
-              </svg>
-            </span>
-            Search
-          </button>
-
-          {/* Reserve */}
+          {/* Reserve CTA */}
           <a
             href="#visit"
             onClick={(e) => handleNavClick(e, '#visit')}
-            className="hidden md:inline-flex items-center justify-center bg-primary text-white text-sm px-6 py-2.5 rounded-full hover:bg-orange-700 transition-all duration-200 font-bold shadow-lg"
+            className="hidden md:inline-flex items-center justify-center bg-gradient-to-r from-caramel to-copper text-softwhite text-sm font-semibold px-6 py-2.5 rounded-full shadow-gold hover:shadow-gold-lg hover:-translate-y-0.5 transition-all duration-250"
           >
             Reserve a Table
           </a>
@@ -144,74 +156,68 @@ export default function Navbar({ pendingScroll }) {
           {/* Hamburger */}
           <button
             onClick={() => setMenuOpen(!menuOpen)}
-            className="md:hidden flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-white/10 p-2 transition-all duration-200 hover:bg-white/20"
+            className={`md:hidden flex h-10 w-10 items-center justify-center rounded-full border transition-all duration-200 ${
+              scrolled
+                ? 'border-warmbeige bg-cream hover:bg-warmbeige text-espresso'
+                : 'border-softwhite/20 bg-softwhite/10 hover:bg-softwhite/20 text-softwhite'
+            }`}
             aria-label={menuOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={menuOpen}
           >
-            <span className="flex flex-col gap-1.5 w-6">
-              <span className={`block h-0.5 rounded-full bg-white transition-all duration-300 ${menuOpen ? 'rotate-45 translate-y-2' : ''}`} />
-              <span className={`block h-0.5 rounded-full bg-white transition-all duration-300 ${menuOpen ? 'opacity-0' : ''}`} />
-              <span className={`block h-0.5 rounded-full bg-white transition-all duration-300 ${menuOpen ? '-rotate-45 -translate-y-2' : ''}`} />
+            <span className="flex flex-col gap-1.5 w-5">
+              <span className={`block h-0.5 rounded-full transition-all duration-300 ${menuOpen ? 'rotate-45 translate-y-2 bg-espresso' : scrolled ? 'bg-espresso' : 'bg-softwhite'}`} />
+              <span className={`block h-0.5 rounded-full transition-all duration-300 ${menuOpen ? 'opacity-0' : scrolled ? 'bg-espresso' : 'bg-softwhite'}`} />
+              <span className={`block h-0.5 rounded-full transition-all duration-300 ${menuOpen ? '-rotate-45 -translate-y-2 bg-espresso' : scrolled ? 'bg-espresso' : 'bg-softwhite'}`} />
             </span>
           </button>
         </div>
       </div>
 
-      {/* Mobile menu */}
+      {/* Mobile Menu */}
       {menuOpen && (
-        <div className="md:hidden bg-slate-900 px-6 pb-6 shadow-lg border-t border-white/5">
-          <ul className="flex flex-col gap-4 pt-4">
+        <div className="md:hidden bg-softwhite/98 backdrop-blur-xl border-t border-warmbeige/60 shadow-luxury">
+          <div className="px-6 py-6 flex flex-col gap-1">
             {navLinks.map((link) => (
-              <li key={link.label}>
-                <a
-                  href={link.href}
-                  onClick={(e) => handleNavClick(e, link.href)}
-                  className="block text-base font-bold text-white hover:text-primary transition-colors"
-                >
-                  {link.label}
-                </a>
-              </li>
-            ))}
-            <li>
-              <button
-                onClick={() => { closeMenu(); setSearchOpen(true) }}
-                className="w-full text-left text-base font-bold text-white hover:text-primary transition-colors"
-              >
-                Search
-              </button>
-            </li>
-            <li>
               <a
-                href="#cart"
-                onClick={closeMenu}
-                className="flex items-center justify-between text-base font-bold text-white hover:text-primary transition-colors"
+                key={link.label}
+                href={link.href}
+                onClick={(e) => handleNavClick(e, link.href)}
+                className="block py-3 text-lg font-bold text-espresso hover:text-caramel border-b border-warmbeige/40 last:border-0 transition-colors"
+                style={{ fontFamily: "'Fjalla One', sans-serif" }}
               >
-                <span>Cart</span>
-                <span className="flex items-center gap-2">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-amber-300">
-                    <path d="M6 6h15l-1.5 9h-13z" />
-                    <path d="M6 6l-2 0" />
-                    <circle cx="9" cy="20" r="1" />
-                    <circle cx="18" cy="20" r="1" />
-                  </svg>
-                  {totalItems > 0 && (
-                    <span className="bg-amber-500 text-slate-900 text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
-                      {totalItems}
-                    </span>
-                  )}
-                </span>
+                {link.label}
               </a>
-            </li>
-            <li>
+            ))}
+            <button
+              onClick={() => { closeMenu(); setSearchOpen(true) }}
+              className="text-left py-3 text-lg font-bold text-espresso hover:text-caramel border-b border-warmbeige/40 transition-colors"
+                style={{ fontFamily: "'Fjalla One', sans-serif" }}
+            >
+              Search
+            </button>
+            <a
+              href="#cart"
+              onClick={closeMenu}
+              className="flex items-center justify-between py-3 text-lg font-bold text-espresso hover:text-caramel border-b border-warmbeige/40 transition-colors"
+                style={{ fontFamily: "'Fjalla One', sans-serif" }}
+            >
+              <span>Cart</span>
+              {totalItems > 0 && (
+                <span className="bg-caramel text-softwhite text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                  {totalItems}
+                </span>
+              )}
+            </a>
+            <div className="pt-4">
               <a
                 href="#visit"
                 onClick={(e) => handleNavClick(e, '#visit')}
-                className="block text-center bg-primary text-white px-5 py-2.5 rounded-lg hover:bg-orange-700 transition-colors font-medium"
+                className="block text-center bg-gradient-to-r from-caramel to-copper text-softwhite font-semibold px-6 py-3 rounded-full shadow-gold transition-all duration-200"
               >
                 Reserve a Table
               </a>
-            </li>
-          </ul>
+            </div>
+          </div>
         </div>
       )}
 

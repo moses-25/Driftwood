@@ -1,46 +1,64 @@
+import { motion } from 'framer-motion'
 import { formatPrice, parsePrice } from '../utils/price'
 
 const MenuCard = ({ item, onAddToCart }) => {
   return (
-    <div className="group relative overflow-hidden rounded-[2rem] border border-white/10 bg-slate-950/90 shadow-[0_25px_80px_rgba(15,23,42,0.32)] transition-transform duration-300 hover:-translate-y-1">
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-slate-950/20 to-slate-950/95" />
-
+    <motion.div
+      layout
+      whileHover={{ y: -6 }}
+      transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
+      className="group relative overflow-hidden rounded-4xl bg-gradient-to-b from-espresso to-darkroast shadow-card border border-white/5 flex flex-col"
+    >
       {/* Image */}
-      <div className="relative aspect-[4/3] overflow-hidden rounded-t-[1.75rem] bg-slate-950">
+      <div className="relative aspect-[4/3] overflow-hidden rounded-t-4xl bg-darkroast flex-shrink-0">
         <img
           src={item.image}
           alt={item.name}
-          className="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-[1.02]"
+          className="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-700 scale-75 group-hover:scale-[0.85]"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent" />
-        <div className="absolute left-5 bottom-5 rounded-full bg-black/50 px-4 py-2 text-xs uppercase tracking-[0.25em] text-amber-200 font-bold shadow-lg">
-          {item.category}
+        {/* Gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-espresso/90 via-espresso/20 to-transparent" />
+
+        {/* Category badge */}
+        <div className="absolute top-4 left-4">
+          <span className="inline-block rounded-full bg-darkroast/70 backdrop-blur-sm border border-caramel/20 px-3 py-1 text-[10px] uppercase tracking-[0.25em] text-caramel font-mono font-medium">
+            {item.category}
+          </span>
+        </div>
+
+        {/* Price badge */}
+        <div className="absolute top-4 right-4">
+          <span className="inline-block rounded-full bg-caramel/90 backdrop-blur-sm px-3 py-1 text-xs font-bold text-darkroast shadow-gold">
+            {formatPrice(parsePrice(item.price))}
+          </span>
         </div>
       </div>
 
       {/* Content */}
-      <div className="relative p-6 flex flex-col gap-4">
-        <div className="flex items-start justify-between gap-3">
-          <h3 className="text-xl font-semibold text-white tracking-tight">
-            {item.name}
-          </h3>
-          <span className="rounded-full bg-amber-600/15 px-4 py-2 text-sm font-semibold text-amber-100 ring-1 ring-amber-500/30 whitespace-nowrap">
-            {formatPrice(parsePrice(item.price))}
-          </span>
-        </div>
+      <div className="relative p-6 flex flex-col gap-3 flex-1">
+        {/* Decorative line */}
+        <div className="h-px w-8 bg-caramel/40 mb-1" />
 
-        <p className="text-slate-300 text-sm leading-7 flex-1">
+        <h3 className="font-display text-xl text-softwhite font-semibold leading-tight tracking-tight">
+          {item.name}
+        </h3>
+
+        <p className="text-warmbeige/60 text-sm leading-relaxed flex-1">
           {item.description}
         </p>
 
         <button
           onClick={() => onAddToCart(item)}
-          className="mt-2 inline-flex items-center justify-center rounded-full bg-gradient-to-r from-amber-500 to-orange-500 px-5 py-3 text-sm font-semibold text-slate-950 shadow-[0_15px_30px_rgba(251,191,36,0.18)] transition-all duration-200 hover:scale-[1.02]"
+          className="mt-3 w-full inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-caramel to-copper text-softwhite text-sm font-semibold py-3 px-5 shadow-gold hover:shadow-gold-lg hover:brightness-110 transition-all duration-250 group/btn"
+          aria-label={`Add ${item.name} to cart`}
         >
+          <svg className="w-4 h-4 transition-transform duration-200 group-hover/btn:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+          </svg>
           Add to Cart
         </button>
       </div>
-    </div>
+    </motion.div>
   )
 }
 

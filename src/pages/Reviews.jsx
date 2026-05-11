@@ -1,241 +1,151 @@
-import { useState, useCallback } from 'react'
+import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { reviews } from '../data/menuData'
+import { merchItems } from '../data/menuData'
+import { useCart } from '../hooks/useCart'
 import FadeUp from '../animations/FadeUp'
 
-const StarRating = ({ rating, interactive = false, onRatingChange }) => (
-  <div className="flex gap-1">
-    {[1, 2, 3, 4, 5].map((star) => (
-      <svg
-        key={star}
-        className={`w-4 h-4 ${star <= rating ? 'text-amber-400' : 'text-slate-600'} ${
-          interactive ? 'cursor-pointer hover:text-amber-300 transition-colors' : ''
-        }`}
-        fill="currentColor"
-        viewBox="0 0 24 24"
-        onClick={interactive ? () => onRatingChange(star) : undefined}
-      >
-        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-      </svg>
-    ))}
-  </div>
-)
+const FILTERS = ['All', 'Apparel', 'Drinkware', 'Coffee', 'Accessories']
 
-const ReviewForm = ({ onSubmit }) => {
-  const [formData, setFormData] = useState({ name: '', review: '', rating: 0 })
+export default function Merch() {
+  const [activeFilter, setActiveFilter] = useState('All')
+  const [filterOpen, setFilterOpen] = useState(false)
+  const [recentlyAdded, setRecentlyAdded] = useState({})
+  const { addToCart } = useCart()
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    if (formData.name.trim() && formData.review.trim() && formData.rating > 0) {
-      onSubmit({
-        id: Date.now(),
-        name: formData.name.trim(),
-        date: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
-        rating: formData.rating,
-        review: formData.review.trim(),
-        avatar: formData.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2),
-      })
-      setFormData({ name: '', review: '', rating: 0 })
-    }
+  const filtered = activeFilter === 'All'
+    ? merchItems
+    : merchItems.filter(i => i.category === activeFilter)
+
+  const handleAdd = (item) => {
+    addToCart({ ...item, description: item.category })
+    setRecentlyAdded(prev => ({ ...prev, [item.id]: true }))
+    setTimeout(() => setRecentlyAdded(prev => ({ ...prev, [item.id]: false })), 1800)
   }
 
   return (
-    <div className="rounded-2xl border border-white/10 bg-slate-900/60 backdrop-blur-sm p-6">
-      <h3 className="text-xl font-bold text-white mb-4">Share Your Experience</h3>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label htmlFor="review-name" className="block text-sm font-medium text-slate-300 mb-2">Your Name</label>
-          <input
-            id="review-name"
-            type="text"
-            value={formData.name}
-            onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-            className="w-full px-3 py-2 bg-slate-800/50 border border-white/10 rounded-lg text-white placeholder-slate-500 focus:border-amber-500/50 focus:outline-none transition-colors"
-            placeholder="Enter your name"
-            required
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-slate-300 mb-2">Rating</label>
-          <StarRating
-            rating={formData.rating}
-            interactive
-            onRatingChange={(rating) => setFormData(prev => ({ ...prev, rating }))}
-          />
-        </div>
-        <div>
-          <label htmlFor="review-text" className="block text-sm font-medium text-slate-300 mb-2">Your Review</label>
-          <textarea
-            id="review-text"
-            value={formData.review}
-            onChange={(e) => setFormData(prev => ({ ...prev, review: e.target.value }))}
-            className="w-full px-3 py-2 bg-slate-800/50 border border-white/10 rounded-lg text-white placeholder-slate-500 focus:border-amber-500/50 focus:outline-none transition-colors resize-none"
-            rows={4}
-            placeholder="Tell us about your experience..."
-            required
-          />
-        </div>
-        <button
-          type="submit"
-          className="w-full bg-amber-500 hover:bg-amber-600 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200"
-        >
-          Submit Review
-        </button>
-      </form>
-    </div>
-  )
-}
+    <section id="reviews" className="relative bg-black py-16 px-6 overflow-hidden">
 
-export default function Reviews() {
-  const [userReviews, setUserReviews] = useState([])
-  const [current, setCurrent] = useState(0)
-  const [direction, setDirection] = useState(1)
+      <div className="max-w-6xl mx-auto">
 
-  const allReviews = [...userReviews, ...reviews]
-  const total = allReviews.length
-
-  const go = useCallback((dir) => {
-    setDirection(dir)
-    setCurrent(prev => (prev + dir + total) % total)
-  }, [total])
-
-  const handleNewReview = (newReview) => {
-    setUserReviews(prev => [newReview, ...prev])
-    // Jump to the new review (it lands at index 0)
-    setDirection(-1)
-    setCurrent(0)
-  }
-
-  const review = allReviews[current]
-
-  const variants = {
-    enter: (dir) => ({ opacity: 0, x: dir > 0 ? 60 : -60 }),
-    center: { opacity: 1, x: 0 },
-    exit: (dir) => ({ opacity: 0, x: dir > 0 ? -60 : 60 }),
-  }
-
-  return (
-    <section id="reviews" className="relative overflow-hidden bg-slate-950 py-24 px-6">
-      <div className="absolute left-0 top-1/4 h-72 w-72 rounded-full bg-amber-500/10 blur-3xl pointer-events-none" />
-      <div className="absolute right-0 bottom-10 h-96 w-96 rounded-full bg-sky-500/10 blur-3xl pointer-events-none" />
-
-      <div className="relative max-w-6xl mx-auto">
-
-        {/* Heading */}
-        <div className="text-center mb-14">
-          <FadeUp delay={0}>
-            <p className="text-sm uppercase tracking-[0.4em] text-amber-300 font-semibold mb-3">Reviews</p>
-          </FadeUp>
-          <FadeUp delay={0.1}>
-            <h2 className="text-5xl md:text-6xl font-extrabold tracking-[-0.04em] text-white max-w-3xl mx-auto">
-              What our customers say.
+        {/* ── Header row ── */}
+        <FadeUp delay={0}>
+          <div className="flex items-center justify-between mb-8">
+            <h2 className="font-display text-3xl md:text-4xl text-white font-bold tracking-tight">
+              {activeFilter === 'All' ? 'Merch' : activeFilter}
             </h2>
-          </FadeUp>
-          <FadeUp delay={0.2}>
-            <p className="mt-5 text-slate-300 text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
-              Real experiences from the people who make Driftwood Café what it is every single day.
-            </p>
-          </FadeUp>
-        </div>
 
-        {/* Two-column layout: form left, carousel right */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
+            {/* Filter pill */}
+            <div className="relative">
+              <button
+                onClick={() => setFilterOpen(o => !o)}
+                className="flex items-center gap-2 border border-white/30 rounded-full px-5 py-2 text-xs font-semibold tracking-[0.15em] uppercase text-white hover:border-white/60 transition-colors duration-200"
+              >
+                Filter
+                <svg
+                  className={`w-3 h-3 transition-transform duration-200 ${filterOpen ? 'rotate-180' : ''}`}
+                  fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
 
-          {/* Review form */}
-          <FadeUp delay={0.1}>
-            <ReviewForm onSubmit={handleNewReview} />
-          </FadeUp>
-
-          {/* Carousel */}
-          <FadeUp delay={0.2}>
-            <div className="flex flex-col gap-6">
-
-              {/* Card */}
-              <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-slate-900/60 backdrop-blur-sm min-h-[260px]">
-                <AnimatePresence mode="wait" custom={direction}>
+              {/* Dropdown */}
+              <AnimatePresence>
+                {filterOpen && (
                   <motion.div
-                    key={review.id}
-                    custom={direction}
-                    variants={variants}
-                    initial="enter"
-                    animate="center"
-                    exit="exit"
-                    transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
-                    className="p-6 flex flex-col gap-4"
+                    initial={{ opacity: 0, y: -8, scale: 0.97 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -8, scale: 0.97 }}
+                    transition={{ duration: 0.18, ease: [0.25, 0.1, 0.25, 1] }}
+                    className="absolute right-0 top-full mt-2 bg-[#111] border border-white/10 rounded-2xl overflow-hidden z-20 min-w-[160px] shadow-luxury"
                   >
-                    {/* Decorative quote */}
-                    <div className="absolute top-5 right-5 text-amber-500/20 text-6xl font-serif leading-none select-none" aria-hidden="true">"</div>
-
-                    <StarRating rating={review.rating} />
-
-                    <p className="text-slate-300 leading-7 text-sm flex-1">
-                      "{review.review}"
-                    </p>
-
-                    <div className="h-px bg-white/5" />
-
-                    <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 rounded-full bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-amber-300 text-xs font-bold flex-shrink-0">
-                        {review.avatar}
-                      </div>
-                      <div>
-                        <p className="text-white text-sm font-semibold">{review.name}</p>
-                        <p className="text-slate-500 text-xs">{review.date}</p>
-                      </div>
-                    </div>
+                    {FILTERS.map(f => (
+                      <button
+                        key={f}
+                        onClick={() => { setActiveFilter(f); setFilterOpen(false) }}
+                        className={`w-full text-left px-5 py-3 text-xs font-semibold tracking-wide uppercase transition-colors duration-150 ${
+                          activeFilter === f
+                            ? 'text-caramel bg-white/5'
+                            : 'text-white/50 hover:text-white hover:bg-white/5'
+                        }`}
+                      >
+                        {f}
+                      </button>
+                    ))}
                   </motion.div>
-                </AnimatePresence>
-              </div>
-
-              {/* Navigation row */}
-              <div className="flex items-center justify-between">
-
-                {/* Dot indicators */}
-                <div className="flex items-center gap-2">
-                  {allReviews.map((_, i) => (
-                    <button
-                      key={i}
-                      onClick={() => { setDirection(i > current ? 1 : -1); setCurrent(i) }}
-                      aria-label={`Go to review ${i + 1}`}
-                      className={`rounded-full transition-all duration-200 ${
-                        i === current
-                          ? 'w-6 h-2 bg-amber-400'
-                          : 'w-2 h-2 bg-white/20 hover:bg-white/40'
-                      }`}
-                    />
-                  ))}
-                </div>
-
-                {/* Prev / Next buttons */}
-                <div className="flex items-center gap-3">
-                  <button
-                    onClick={() => go(-1)}
-                    aria-label="Previous review"
-                    className="h-10 w-10 rounded-full border border-white/15 bg-white/5 hover:bg-white/15 hover:border-amber-500/40 flex items-center justify-center text-white transition-all duration-200"
-                  >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
-                    </svg>
-                  </button>
-                  <span className="text-slate-500 text-sm tabular-nums">
-                    {current + 1} / {total}
-                  </span>
-                  <button
-                    onClick={() => go(1)}
-                    aria-label="Next review"
-                    className="h-10 w-10 rounded-full border border-white/15 bg-white/5 hover:bg-white/15 hover:border-amber-500/40 flex items-center justify-center text-white transition-all duration-200"
-                  >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-                    </svg>
-                  </button>
-                </div>
-
-              </div>
+                )}
+              </AnimatePresence>
             </div>
-          </FadeUp>
+          </div>
+        </FadeUp>
 
-        </div>
+        {/* ── Thin divider ── */}
+        <div className="h-px bg-white/10 mb-8" />
+
+        {/* ── Grid ── */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeFilter}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="grid grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-10"
+          >
+            {filtered.map((item, i) => (
+              <motion.div
+                key={item.id}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.3, delay: i * 0.04 }}
+                className="group flex flex-col"
+              >
+                {/* Image — no border, no radius, fills the cell */}
+                <div className="relative overflow-hidden aspect-[4/5] bg-[#111]">
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    loading="lazy"
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                  />
+
+                  {/* Tag */}
+                  {item.tag && (
+                    <span className="absolute top-3 left-3 text-[9px] uppercase tracking-widest font-mono font-bold px-2.5 py-1 bg-black text-caramel">
+                      {item.tag}
+                    </span>
+                  )}
+
+                {/* Quick Add — always visible on mobile, slides up on hover for desktop */}
+                  <div className="absolute bottom-0 left-0 right-0 md:translate-y-full md:group-hover:translate-y-0 transition-transform duration-300 ease-out">
+                    <button
+                      onClick={() => handleAdd(item)}
+                      className={`w-full py-3 text-xs font-bold tracking-[0.15em] uppercase transition-colors duration-200 ${
+                        recentlyAdded[item.id]
+                          ? 'bg-white text-black'
+                          : 'bg-black/90 text-white hover:bg-caramel hover:text-black'
+                      }`}
+                    >
+                      {recentlyAdded[item.id] ? '✓ Added' : '+ Quick Add'}
+                    </button>
+                  </div>
+                </div>
+
+                {/* Name + Price row — exactly like the reference */}
+                <div className="mt-3 flex items-baseline justify-between gap-2">
+                  <p className="text-[11px] uppercase tracking-[0.12em] text-white/80 font-medium leading-snug">
+                    {item.name}
+                  </p>
+                  <p className="text-[11px] uppercase tracking-[0.12em] text-white/80 font-medium shrink-0">
+                    {item.price}
+                  </p>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+        </AnimatePresence>
+
+
       </div>
     </section>
   )

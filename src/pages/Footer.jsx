@@ -3,22 +3,20 @@ import PrivacyPolicyModal from '../components/PrivacyPolicyModal'
 import TermsOfServiceModal from '../components/TermsOfServiceModal'
 
 const quickLinks = [
-  { label: 'Home', href: '#home' },
+  { label: 'Home',     href: '#home' },
   { label: 'About Us', href: '#about' },
-  { label: 'Menu', href: '#menu' },
-  { label: 'Gallery', href: '#gallery' },
-  { label: 'Reviews', href: '#reviews' },
-  { label: 'Contact', href: '#visit' },
+  { label: 'Menu',     href: '#menu' },
+  { label: 'Gallery',  href: '#gallery' },
+  { label: 'Merch',    href: '#reviews' },
+  { label: 'Contact',  href: '#visit' },
 ]
 
 const contactInfo = [
   {
     icon: (
-      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-          d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-          d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.75">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+        <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
       </svg>
     ),
     text: '123 Coffee Street, Brewville, CA 90210',
@@ -26,9 +24,8 @@ const contactInfo = [
   },
   {
     icon: (
-      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-          d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.75">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
       </svg>
     ),
     text: '(555) 123-4567',
@@ -36,9 +33,8 @@ const contactInfo = [
   },
   {
     icon: (
-      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-          d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.75">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
       </svg>
     ),
     text: 'hello@driftwoodcafe.com',
@@ -60,9 +56,9 @@ const socials = [
     label: 'Instagram',
     href: '#',
     icon: (
-      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <rect x="2" y="2" width="20" height="20" rx="5" ry="5" strokeWidth={2} />
-        <circle cx="12" cy="12" r="4" strokeWidth={2} />
+      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.75">
+        <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+        <circle cx="12" cy="12" r="4" />
         <circle cx="17.5" cy="6.5" r="1" fill="currentColor" strokeWidth={0} />
       </svg>
     ),
@@ -89,14 +85,13 @@ const socials = [
 
 export default function Footer() {
   const [email, setEmail] = useState('')
-  const [subStatus, setSubStatus] = useState('idle') // idle | loading | success | error
+  const [subStatus, setSubStatus] = useState('idle')
   const [showPrivacy, setShowPrivacy] = useState(false)
   const [showTerms, setShowTerms] = useState(false)
 
   const handleSubscribe = async () => {
     if (!email) return
     setSubStatus('loading')
-
     try {
       const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:5000'
       const res = await fetch(`${apiBase}/api/newsletter`, {
@@ -104,9 +99,7 @@ export default function Footer() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
       })
-
       if (!res.ok) throw new Error('Failed')
-
       setSubStatus('success')
       setEmail('')
     } catch {
@@ -118,190 +111,151 @@ export default function Footer() {
 
   return (
     <>
-    <footer className="relative bg-slate-900 border-t border-white/10">
+      <footer className="bg-black text-softwhite">
 
-      {/* Main Footer Content */}
-      <div className="max-w-6xl mx-auto px-6 py-16">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12">
+        {/* ── Main content ── */}
+        <div className="max-w-6xl mx-auto px-6 pt-16 pb-12">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12">
 
-          {/* Column 1 - Brand */}
-          <div className="flex flex-col gap-5">
-            <div>
-              <span className="text-xl font-bold">
-                <span className="text-primary">Driftwood</span>
-                <span className="text-white"> Café</span>
-              </span>
-              <p className="text-slate-400 text-sm mt-3 leading-relaxed">
-                Crafting exceptional coffee experiences since 2026. Our
-                mission is to create a sanctuary where quality meets comfort.
+            {/* Brand */}
+            <div className="flex flex-col gap-5">
+              <div className="flex items-center gap-2.5">
+                <img src="/Driftwood.png" alt="Driftwood Café" className="h-9 w-auto" />
+                <span style={{ fontFamily: "'Fjalla One', sans-serif" }} className="text-lg">
+                  <span className="text-caramel">Driftwood</span>
+                  <span className="text-softwhite"> Café</span>
+                </span>
+              </div>
+              <p className="text-white/75 text-sm leading-relaxed" style={{ fontFamily: "'Instrument Serif', serif" }}>
+                Crafting exceptional coffee experiences since 2026. Our mission is to create a sanctuary where quality meets comfort.
               </p>
+              <div className="flex items-center gap-2.5 pt-1">
+                {socials.map((s) => (
+                  <a
+                    key={s.label}
+                    href={s.href}
+                    aria-label={s.label}
+                    className="h-8 w-8 rounded-full border border-white/10 flex items-center justify-center text-white/60 hover:text-caramel hover:border-caramel/30 transition-all duration-200"
+                  >
+                    {s.icon}
+                  </a>
+                ))}
+              </div>
             </div>
 
-            {/* Socials */}
-            <div className="flex items-center gap-3">
-              {socials.map((social) => (
-                <a
-                  key={social.label}
-                  href={social.href}
-                  aria-label={social.label}
-                  className="h-9 w-9 rounded-full border border-white/10
-                    bg-white/5 flex items-center justify-center text-slate-400
-                    hover:text-amber-400 hover:border-amber-500/30
-                    hover:bg-amber-500/10 transition-all duration-200"
+            {/* Quick Links */}
+            <div>
+              <h4 style={{ fontFamily: "'Fjalla One', sans-serif" }} className="text-softwhite text-sm tracking-widest uppercase mb-5">
+                Quick Links
+              </h4>
+              <ul className="flex flex-col gap-3">
+                {quickLinks.map((link) => (
+                  <li key={link.label}>
+                    <a
+                      href={link.href}
+                      className="text-white/75 text-sm hover:text-caramel transition-colors duration-200 flex items-center gap-2 group"
+                      style={{ fontFamily: "'Instrument Serif', serif" }}
+                    >
+                      <span className="h-px w-0 bg-caramel transition-all duration-200 group-hover:w-3 flex-shrink-0" />
+                      {link.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Contact */}
+            <div>
+              <h4 style={{ fontFamily: "'Fjalla One', sans-serif" }} className="text-softwhite text-sm tracking-widest uppercase mb-5">
+                Contact
+              </h4>
+              <ul className="flex flex-col gap-4">
+                {contactInfo.map((item) => (
+                  <li key={item.text} className="flex items-start gap-3">
+                    <span className="text-caramel mt-0.5 flex-shrink-0">{item.icon}</span>
+                    <a
+                      href={item.href}
+                      target={item.href.startsWith('http') ? '_blank' : undefined}
+                      rel={item.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                      className="text-white/75 text-sm leading-relaxed hover:text-caramel transition-colors duration-200"
+                      style={{ fontFamily: "'Instrument Serif', serif" }}
+                    >
+                      {item.text}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Newsletter */}
+            <div>
+              <h4 style={{ fontFamily: "'Fjalla One', sans-serif" }} className="text-softwhite text-sm tracking-widest uppercase mb-5">
+                Newsletter
+              </h4>
+              <p className="text-white/75 text-sm mb-5 leading-relaxed" style={{ fontFamily: "'Instrument Serif', serif" }}>
+                Subscribe to get special offers, free giveaways, and once-in-a-lifetime deals.
+              </p>
+              <div className="flex flex-col gap-3">
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Your email address"
+                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-softwhite text-sm placeholder-white/30 focus:outline-none focus:border-caramel/50 focus:ring-1 focus:ring-caramel/20 transition-all duration-200"
+                />
+                <button
+                  onClick={handleSubscribe}
+                  disabled={subStatus === 'loading'}
+                  className="w-full bg-caramel hover:bg-copper text-softwhite font-semibold py-3 rounded-xl transition-all duration-200 disabled:opacity-50 text-sm"
+                  style={{ fontFamily: "'Fjalla One', sans-serif" }}
                 >
-                  {social.icon}
-                </a>
-              ))}
+                  {subStatus === 'loading' ? 'Subscribing…' : 'Subscribe'}
+                </button>
+                {subStatus === 'success' && <p className="text-caramel text-xs text-center">✓ You're subscribed!</p>}
+                {subStatus === 'error' && <p className="text-red-400 text-xs text-center">Something went wrong. Try again.</p>}
+              </div>
             </div>
-          </div>
 
-          {/* Column 2 - Quick Links */}
-          <div>
-            <h4 className="text-white font-semibold text-sm uppercase
-              tracking-wider mb-5">
-              Quick Links
-            </h4>
-            <ul className="flex flex-col gap-3">
-              {quickLinks.map((link) => (
-                <li key={link.label}>
-                  <a
-                    href={link.href}
-                    className="text-slate-400 text-sm hover:text-amber-400
-                      transition-colors"
-                  >
-                    {link.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
           </div>
+        </div>
 
-          {/* Column 3 - Contact Info */}
-          <div>
-            <h4 className="text-white font-semibold text-sm uppercase
-              tracking-wider mb-5">
-              Contact Info
-            </h4>
-            <ul className="flex flex-col gap-4">
-              {contactInfo.map((item) => (
-                <li key={item.text} className="flex items-start gap-3">
-                  <span className="text-amber-400 mt-0.5 flex-shrink-0">
-                    {item.icon}
-                  </span>
-                  <a
-                    href={item.href}
-                    target={item.href.startsWith('http') ? '_blank' : undefined}
-                    rel={item.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-                    className="text-slate-400 text-sm leading-relaxed hover:text-amber-400 transition-colors"
-                  >
-                    {item.text}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
+        {/* ── Bottom bar ── */}
+        <div className="border-t border-white/8">
+          <div className="max-w-6xl mx-auto px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-4">
 
-          {/* Column 4 - Newsletter */}
-          <div>
-            <h4 className="text-white font-semibold text-sm uppercase
-              tracking-wider mb-5">
-              Newsletter
-            </h4>
-            <p className="text-slate-400 text-sm mb-4 leading-relaxed">
-              Subscribe to get special offers, free giveaways, and
-              once-in-a-lifetime deals.
+            <p className="text-white/40 text-xs font-mono">
+              © {new Date().getFullYear()} Driftwood Café. All rights reserved.
             </p>
 
-            <div className="flex flex-col gap-3">
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Your email address"
-                className="w-full bg-slate-800/60 border border-white/10
-                  rounded-xl px-4 py-3 text-white text-sm placeholder-slate-500
-                  focus:outline-none focus:border-amber-500/50
-                  focus:ring-1 focus:ring-amber-500/30 transition-colors"
-              />
-              <button
-                onClick={handleSubscribe}
-                disabled={subStatus === 'loading'}
-                className="w-full bg-primary hover:bg-orange-700
-                  disabled:opacity-50 disabled:cursor-not-allowed
-                  text-white font-medium py-3 rounded-xl
-                  transition-colors duration-200 text-sm"
-              >
-                {subStatus === 'loading' ? 'Subscribing...' : 'Subscribe'}
+            <div className="flex items-center gap-6">
+              <button onClick={() => setShowPrivacy(true)} className="text-white/40 text-xs hover:text-warmbeige/60 transition-colors font-mono">
+                Privacy Policy
               </button>
-
-              {subStatus === 'success' && (
-                <p className="text-green-400 text-xs text-center">
-                  ✓ You're subscribed!
-                </p>
-              )}
-              {subStatus === 'error' && (
-                <p className="text-red-400 text-xs text-center">
-                  Something went wrong. Try again.
-                </p>
-              )}
+              <button onClick={() => setShowTerms(true)} className="text-white/40 text-xs hover:text-warmbeige/60 transition-colors font-mono">
+                Terms of Service
+              </button>
+              <a href="#visit" className="text-white/40 text-xs hover:text-warmbeige/60 transition-colors font-mono">
+                Sitemap
+              </a>
             </div>
-          </div>
 
-        </div>
-      </div>
-
-      {/* Bottom Bar */}
-      <div className="border-t border-white/5">
-        <div className="max-w-6xl mx-auto px-6 py-5 flex flex-col sm:flex-row
-          items-center justify-between gap-4">
-
-          <p className="text-slate-500 text-xs">
-            © {new Date().getFullYear()} Driftwood Café. All rights reserved.
-          </p>
-
-          <div className="flex items-center gap-6">
             <button
-              onClick={() => setShowPrivacy(true)}
-              className="text-slate-500 text-xs hover:text-slate-300 transition-colors"
+              onClick={scrollToTop}
+              aria-label="Scroll to top"
+              className="h-8 w-8 rounded-full border border-white/10 flex items-center justify-center text-white/50 hover:text-caramel hover:border-caramel/30 transition-all duration-200"
             >
-              Privacy Policy
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+              </svg>
             </button>
-            <button
-              onClick={() => setShowTerms(true)}
-              className="text-slate-500 text-xs hover:text-slate-300 transition-colors"
-            >
-              Terms of Service
-            </button>
-            <a
-              href="#visit"
-              className="text-slate-500 text-xs hover:text-slate-300 transition-colors"
-            >
-              Sitemap
-            </a>
+
           </div>
-
-          {/* Scroll to Top */}
-          <button
-            onClick={scrollToTop}
-            className="h-9 w-9 rounded-full bg-primary hover:bg-orange-700
-              flex items-center justify-center transition-colors duration-200"
-            aria-label="Scroll to top"
-          >
-            <svg className="w-4 h-4 text-white" fill="none"
-              stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round"
-                strokeWidth={2} d="M5 15l7-7 7 7" />
-            </svg>
-          </button>
-
         </div>
-      </div>
 
-    </footer>
+      </footer>
 
-    {/* Modals */}
-    {showPrivacy && <PrivacyPolicyModal onClose={() => setShowPrivacy(false)} />}
-    {showTerms && <TermsOfServiceModal onClose={() => setShowTerms(false)} />}
+      {showPrivacy && <PrivacyPolicyModal onClose={() => setShowPrivacy(false)} />}
+      {showTerms && <TermsOfServiceModal onClose={() => setShowTerms(false)} />}
     </>
   )
 }

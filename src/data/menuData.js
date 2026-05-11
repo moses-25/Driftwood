@@ -117,20 +117,16 @@ export const menuItems = [
   },
 ];
 
-import gallery1 from '../assets/gallary/1.jpg'
 import gallery2 from '../assets/gallary/2.jpg'
 import gallery3 from '../assets/gallary/3.jpg'
-import gallery4 from '../assets/gallary/4.jpg'
 import gallery5 from '../assets/gallary/5.jpg'
 import gallery6 from '../assets/gallary/6.jpg'
 import gallery7 from '../assets/gallary/7.jpg'
 import gallery8 from '../assets/gallary/8.jpg'
 
 export const galleryImages = [
-  { id: 1, src: gallery1, alt: 'Barista at work', size: 'tall' },
   { id: 2, src: gallery2, alt: 'Café interior', size: 'wide' },
   { id: 3, src: gallery3, alt: 'Coffee roaster', size: 'normal' },
-  { id: 4, src: gallery4, alt: 'Coffee tools', size: 'normal' },
   { id: 5, src: gallery5, alt: 'Pastry display', size: 'normal' },
   { id: 6, src: gallery6, alt: 'Espresso pour', size: 'wide' },
   { id: 7, src: gallery7, alt: 'Latte art', size: 'normal' },
@@ -185,5 +181,66 @@ export const reviews = [
     rating: 5,
     review: 'Perfect spot for a date or a quiet afternoon. The cardamom rose cold brew is poetry in a glass. Already recommended it to everyone I know.',
     avatar: 'PS',
+  },
+]
+
+// ── Merch ────────────────────────────────────────────────────────────────────
+// Using gallery images as stand-ins until real product photos are provided.
+// Swap src values with actual product images when ready.
+import merch1 from '../assets/gallary/1.jpg'
+import merch2 from '../assets/gallary/2.jpg'
+import merch3 from '../assets/gallary/3.jpg'
+import merch4 from '../assets/gallary/4.jpg'
+import merch5 from '../assets/gallary/5.jpg'
+import merch6 from '../assets/gallary/6.jpg'
+
+export const merchItems = [
+  {
+    id: 'm1',
+    name: 'Driftwood Crew Sweatshirt',
+    category: 'Apparel',
+    price: 'KES 3,200',
+    tag: 'Bestseller',
+    image: merch1,
+  },
+  {
+    id: 'm2',
+    name: 'Ceramic Pour-Over Mug',
+    category: 'Drinkware',
+    price: 'KES 1,800',
+    tag: null,
+    image: merch2,
+  },
+  {
+    id: 'm3',
+    name: 'Cold Brew Bottle',
+    category: 'Drinkware',
+    price: 'KES 2,400',
+    tag: 'New',
+    image: merch3,
+  },
+  {
+    id: 'm4',
+    name: 'Ember Diamond Hoodie',
+    category: 'Apparel',
+    price: 'KES 4,500',
+    tag: null,
+    image: merch4,
+  },
+  {
+    id: 'm5',
+    name: 'Driftwood Snapback',
+    category: 'Apparel',
+    price: 'KES 1,600',
+    tag: 'New',
+    image: merch5,
+  },
+  {
+    id: 'm6',
+    name: 'House Blend Whole Beans',
+    category: 'Coffee',
+    price: 'KES 1,200',
+    tag: null,
+    image: merch6,
   },
 ]

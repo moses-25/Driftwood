@@ -38,7 +38,7 @@ function AppContent() {
   }, [isFullPage])
 
   return (
-    <div className="font-sans min-h-full">
+    <div className="font-sans min-h-full bg-cream">
       <Cursor />
       <Navbar pendingScroll={pendingScroll} />
 
