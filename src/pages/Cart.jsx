@@ -14,55 +14,79 @@ const Cart = () => {
   }
 
   return (
-    <div className="relative min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 pt-24 pb-12 overflow-hidden">
-      <div className="pointer-events-none absolute -left-24 top-32 h-96 w-96 rounded-full bg-amber-500/10 blur-3xl" />
-      <div className="pointer-events-none absolute right-0 top-1/3 h-72 w-72 rounded-full bg-orange-500/8 blur-3xl" />
+    <div className="min-h-screen bg-black pt-24 pb-16">
 
-      <div className="relative max-w-7xl mx-auto px-6">
-        {/* Breadcrumb */}
-        <div className="text-center mb-12">
-          <nav className="flex justify-center mb-6" aria-label="Breadcrumb">
-            <ol className="flex items-center space-x-2 text-sm text-slate-400">
+      <div className="max-w-6xl mx-auto px-6">
+
+        {/* ── Header ── */}
+        <div className="text-center mb-10">
+          <h1
+            className="text-5xl md:text-6xl font-bold text-white mb-3"
+            style={{ fontFamily: "'Science Gothic', sans-serif" }}
+          >
+            Shopping Cart
+          </h1>
+
+          {/* Breadcrumb */}
+          <nav aria-label="Breadcrumb">
+            <ol className="flex items-center justify-center gap-2 text-base">
               <li>
-                <button onClick={() => navigate('#home')} className="hover:text-amber-300 transition-colors">
+                <button
+                  onClick={() => navigate('#home')}
+                  className="text-white/50 hover:text-caramel transition-colors"
+                  style={{ fontFamily: "'Tinos', serif" }}
+                >
                   Home
                 </button>
               </li>
-              <li className="text-slate-600" aria-hidden="true">/</li>
-              <li>
-                <button onClick={() => navigate('#menu')} className="hover:text-amber-300 transition-colors">
-                  Menu
-                </button>
+              <li className="text-white/30" aria-hidden="true">/</li>
+              <li
+                className="text-white/70 font-medium"
+                aria-current="page"
+                style={{ fontFamily: "'Tinos', serif" }}
+              >
+                Shopping Cart
               </li>
-              <li className="text-slate-600" aria-hidden="true">/</li>
-              <li className="text-amber-300 font-medium" aria-current="page">Cart</li>
             </ol>
           </nav>
-
-          <h1 className="text-5xl md:text-6xl font-extrabold text-white mb-4 tracking-tight">
-            Your <span className="text-amber-400">Cart</span>
-          </h1>
-          <p className="text-slate-300 text-lg max-w-2xl mx-auto leading-relaxed">
-            Review your carefully curated coffee experience before we begin crafting your perfect order.
-          </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2 space-y-6">
-            <div className="bg-white/5 backdrop-blur-xl rounded-3xl border border-white/10 p-6 shadow-2xl">
-              <h3 className="text-xl font-semibold text-white mb-6">Order Items ({totalItems})</h3>
-              <div className="space-y-4">
-                {items.map((item) => (
-                  <CartItem key={`${item.id}-${item.customizations?.size || 'default'}`} item={item} />
-                ))}
-              </div>
+        {/* ── Main grid ── */}
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-8 items-start">
+
+          {/* Left — items table */}
+          <div>
+            {/* Table header */}
+            <div className="grid grid-cols-[2fr_1fr_1fr_1fr] bg-caramel rounded-xl px-5 py-3 mb-1">
+              {['Product', 'Price', 'Quantity', 'Subtotal'].map(h => (
+                <span
+                  key={h}
+                  className="text-softwhite text-sm font-semibold text-center first:text-left"
+                  style={{ fontFamily: "'Tinos', serif" }}
+                >
+                  {h}
+                </span>
+              ))}
             </div>
-            <RecommendedAddOns />
+
+            {/* Items */}
+            <div className="bg-white rounded-xl shadow-soft divide-y divide-warmbeige/60">
+              {items.map((item) => (
+                <CartItem key={`${item.id}-${item.customizations?.size || 'default'}`} item={item} />
+              ))}
+            </div>
+
+            {/* Recommended */}
+            <div className="mt-8">
+              <RecommendedAddOns />
+            </div>
           </div>
 
+          {/* Right — order summary */}
           <div className="lg:sticky lg:top-24 lg:self-start">
             <OrderSummary />
           </div>
+
         </div>
       </div>
     </div>

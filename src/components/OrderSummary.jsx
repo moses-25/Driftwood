@@ -5,45 +5,70 @@ const OrderSummary = () => {
   const { items } = useCart()
 
   const subtotal = items.reduce((sum, item) => sum + parsePrice(item.price) * item.quantity, 0)
-  const tax = subtotal * 0.16 // 16% VAT
+  const tax = subtotal * 0.16
   const total = subtotal + tax
 
+  const rows = [
+    { label: 'Items',           value: items.reduce((s, i) => s + i.quantity, 0), isCount: true },
+    { label: 'Sub Total',       value: formatPrice(subtotal) },
+    { label: 'Shipping',        value: formatPrice(0) },
+    { label: 'Taxes (16% VAT)', value: formatPrice(tax) },
+    { label: 'Delivery fee',    value: 'At checkout', muted: true },
+  ]
+
   return (
-    <div className="bg-white/5 backdrop-blur-xl rounded-3xl border border-white/10 p-6 shadow-2xl">
-      <h3 className="text-xl font-semibold text-white mb-6">Order Summary</h3>
+    <div className="bg-white rounded-2xl shadow-soft p-6">
 
-      <div className="space-y-4 mb-6">
-        <div className="flex justify-between text-slate-300">
-          <span>Subtotal</span>
-          <span>{formatPrice(subtotal)}</span>
-        </div>
+      <h3
+        className="text-lg font-bold text-espresso mb-5 pb-4 border-b border-warmbeige/60"
+        style={{ fontFamily: "'Science Gothic', sans-serif" }}
+      >
+        Order Summary
+      </h3>
 
-        <div className="flex justify-between text-slate-300">
-          <span>Tax (16% VAT)</span>
-          <span>{formatPrice(tax)}</span>
-        </div>
-
-        <div className="flex justify-between text-slate-400 text-sm">
-          <span>Delivery fee</span>
-          <span className="italic">calculated at checkout</span>
-        </div>
-
-        <div className="border-t border-white/10 pt-4">
-          <div className="flex justify-between text-white font-semibold text-lg">
-            <span>Estimated Total</span>
-            <span className="text-amber-300">{formatPrice(total)}</span>
+      <div className="space-y-3 mb-5">
+        {rows.map(row => (
+          <div key={row.label} className="flex justify-between items-center">
+            <span
+              className="text-espresso/60 text-sm"
+              style={{ fontFamily: "'Tinos', serif" }}
+            >
+              {row.label}
+            </span>
+            <span
+              className={`text-sm font-medium ${row.muted ? 'text-espresso/40 italic text-xs' : 'text-espresso'}`}
+              style={{ fontFamily: "'Tinos', serif" }}
+            >
+              {row.isCount ? row.value : row.value}
+            </span>
           </div>
+        ))}
+      </div>
+
+      {/* Total */}
+      <div className="border-t border-warmbeige/60 pt-4 mb-6">
+        <div className="flex justify-between items-center">
+          <span
+            className="text-espresso font-semibold"
+            style={{ fontFamily: "'Tinos', serif" }}
+          >
+            Total
+          </span>
+          <span
+            className="text-espresso font-bold text-lg"
+            style={{ fontFamily: "'Science Gothic', sans-serif" }}
+          >
+            {formatPrice(total)}
+          </span>
         </div>
       </div>
 
-      {/* Checkout Button */}
+      {/* Checkout button */}
       <a
         href="#checkout"
-        className="w-full bg-gradient-to-r from-amber-500 to-orange-500 text-slate-900 font-bold py-4 px-6 rounded-2xl hover:from-amber-400 hover:to-orange-400 transition-all duration-200 transform hover:scale-[1.02] hover:shadow-2xl shadow-[0_15px_35px_rgba(251,191,36,0.25)] mb-4 flex items-center justify-center gap-2"
+        className="w-full flex items-center justify-center bg-espresso hover:bg-caramel text-softwhite font-bold py-4 px-6 rounded-xl transition-all duration-200 text-sm tracking-wide"
+        style={{ fontFamily: "'Tinos', serif" }}
       >
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-        </svg>
         Proceed to Checkout
       </a>
     </div>

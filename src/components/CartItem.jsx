@@ -22,89 +22,106 @@ const CartItem = ({ item }) => {
   const itemTotal = parsePrice(item.price) * item.quantity
 
   return (
-    <div className={`group bg-white/5 rounded-2xl border border-white/10 p-4 transition-all duration-300 ${
-      isRemoving ? 'opacity-0 scale-95 translate-x-4' : 'hover:bg-white/10'
-    }`}>
-      <div className="flex gap-4">
-        {/* Product Image */}
-        <div className="flex-shrink-0">
-          <img
-            src={item.image}
-            alt={item.name}
-            loading="lazy"
-            decoding="async"
-            className="w-20 h-20 object-cover rounded-xl bg-slate-800"
-          />
-        </div>
+    <div
+      className={`grid grid-cols-[2fr_1fr_1fr_1fr] items-center px-5 py-4 transition-all duration-300 ${
+        isRemoving ? 'opacity-0 scale-95' : ''
+      }`}
+    >
+      {/* Product */}
+      <div className="flex items-center gap-4">
+        {/* Remove button */}
+        <button
+          onClick={handleRemove}
+          className="text-espresso/30 hover:text-red-400 transition-colors flex-shrink-0"
+          aria-label="Remove item"
+        >
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
 
-        {/* Product Details */}
-        <div className="flex-1 min-w-0">
-          <div className="flex justify-between items-start mb-2">
-            <h4 className="font-semibold text-white text-lg truncate pr-2">{item.name}</h4>
-            <button
-              onClick={handleRemove}
-              className="text-slate-400 hover:text-red-400 transition-colors p-1 rounded-lg hover:bg-red-500/10"
-              aria-label="Remove item"
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-          </div>
+        <img
+          src={item.image}
+          alt={item.name}
+          loading="lazy"
+          decoding="async"
+          className="w-16 h-16 object-cover rounded-lg bg-warmbeige/30 flex-shrink-0"
+        />
 
-          <p className="text-slate-300 text-sm mb-3 line-clamp-2">{item.description}</p>
-
-          {/* Customizations */}
+        <div className="min-w-0">
+          <h4
+            className="font-semibold text-espresso text-base leading-snug truncate"
+            style={{ fontFamily: "'Tinos', serif" }}
+          >
+            {item.name}
+          </h4>
+          <p
+            className="text-espresso/45 text-sm mt-0.5 line-clamp-1"
+            style={{ fontFamily: "'Tinos', serif" }}
+          >
+            {item.description}
+          </p>
           {item.customizations && (
-            <div className="mb-3 space-y-1">
+            <div className="mt-1 space-y-0.5">
               {item.customizations.size && (
-                <div className="text-xs text-amber-300">Size: {item.customizations.size}</div>
+                <p className="text-[10px] text-caramel font-mono">Size: {item.customizations.size}</p>
               )}
               {item.customizations.milk && (
-                <div className="text-xs text-amber-300">Milk: {item.customizations.milk}</div>
-              )}
-              {item.customizations.sugar && (
-                <div className="text-xs text-amber-300">Sugar: {item.customizations.sugar}</div>
+                <p className="text-[10px] text-caramel font-mono">Milk: {item.customizations.milk}</p>
               )}
               {item.customizations.addOns?.length > 0 && (
-                <div className="text-xs text-amber-300">
-                  Add-ons: {item.customizations.addOns.join(', ')}
-                </div>
+                <p className="text-[10px] text-caramel font-mono">Add-ons: {item.customizations.addOns.join(', ')}</p>
               )}
             </div>
           )}
-
-          {/* Quantity and Price */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <button
-                onClick={() => handleQuantityChange(-1)}
-                disabled={item.quantity <= 1}
-                className="w-8 h-8 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105"
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 12H4" />
-                </svg>
-              </button>
-
-              <span className="w-8 text-center font-semibold text-white">{item.quantity}</span>
-
-              <button
-                onClick={() => handleQuantityChange(1)}
-                className="w-8 h-8 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-all hover:scale-105"
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
-                </svg>
-              </button>
-            </div>
-
-            <div className="text-right">
-              <div className="text-sm text-slate-400">{formatPrice(parsePrice(item.price))} each</div>
-              <div className="font-semibold text-amber-300 text-lg">{formatPrice(itemTotal)}</div>
-            </div>
-          </div>
         </div>
+      </div>
+
+      {/* Price */}
+      <div
+        className="text-center text-espresso/70 text-base"
+        style={{ fontFamily: "'Tinos', serif" }}
+      >
+        {formatPrice(parsePrice(item.price))}
+      </div>
+
+      {/* Quantity */}
+      <div className="flex items-center justify-center gap-3">
+        <button
+          onClick={() => handleQuantityChange(-1)}
+          disabled={item.quantity <= 1}
+          className="w-7 h-7 rounded-full border border-espresso/20 flex items-center justify-center text-espresso/60 hover:border-caramel hover:text-caramel transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+          aria-label="Decrease quantity"
+        >
+          <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M20 12H4" />
+          </svg>
+        </button>
+
+        <span
+          className="w-6 text-center font-semibold text-espresso text-sm"
+          style={{ fontFamily: "'Tinos', serif" }}
+        >
+          {item.quantity}
+        </span>
+
+        <button
+          onClick={() => handleQuantityChange(1)}
+          className="w-7 h-7 rounded-full border border-espresso/20 flex items-center justify-center text-espresso/60 hover:border-caramel hover:text-caramel transition-all"
+          aria-label="Increase quantity"
+        >
+          <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M12 4v16m8-8H4" />
+          </svg>
+        </button>
+      </div>
+
+      {/* Subtotal */}
+      <div
+        className="text-center font-semibold text-espresso text-sm"
+        style={{ fontFamily: "'Tinos', serif" }}
+      >
+        {formatPrice(itemTotal)}
       </div>
     </div>
   )

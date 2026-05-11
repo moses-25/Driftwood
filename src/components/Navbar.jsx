@@ -130,12 +130,7 @@ export default function Navbar({ pendingScroll }) {
             }`}
             aria-label={`Cart${totalItems > 0 ? `, ${totalItems} items` : ''}`}
           >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
-              <path d="M6 6h15l-1.5 9h-13z" />
-              <path d="M6 6l-2 0" />
-              <circle cx="9" cy="20" r="1" />
-              <circle cx="18" cy="20" r="1" />
-            </svg>
+            <span className="text-lg" aria-hidden="true">🛍️</span>
             <span>Cart</span>
             {totalItems > 0 && (
               <span className="absolute -top-1.5 -right-1.5 bg-caramel text-softwhite text-[10px] font-bold rounded-full h-5 w-5 flex items-center justify-center shadow-gold" aria-hidden="true">
