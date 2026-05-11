@@ -20,12 +20,12 @@ const CheckoutProgress = ({ steps, currentStep }) => {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" />
                     </svg>
                   ) : (
-                    <span style={{ fontFamily: "'Tinos', serif" }}>{index + 1}</span>
+                    <span className="font-tinos">{index + 1}</span>
                   )}
                 </div>
-                <span className={`text-xs font-medium whitespace-nowrap transition-colors duration-300 ${
+                <span className={`text-xs font-medium whitespace-nowrap transition-colors duration-300 font-tinos ${
                   isActive ? 'text-white' : isCompleted ? 'text-caramel' : 'text-white/30'
-                }`} style={{ fontFamily: "'Tinos', serif" }}>
+                }`}>
                   {step}
                 </span>
               </div>

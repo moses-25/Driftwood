@@ -8,14 +8,16 @@ const CartItem = ({ item }) => {
 
   const handleRemove = () => {
     setIsRemoving(true)
-    setTimeout(() => removeEntireItem(item.id), 300)
+    setTimeout(() => removeEntireItem(item.cartItemId), 300)
   }
 
   const handleQuantityChange = (change) => {
     if (change > 0) {
+      // Pass the item as-is; addToCart will re-derive the same cartItemId
+      // from the same id + customizations, so it merges into this line.
       addToCart(item)
     } else if (item.quantity > 1) {
-      removeFromCart(item.id)
+      removeFromCart(item.cartItemId)
     }
   }
 
@@ -50,14 +52,12 @@ const CartItem = ({ item }) => {
 
         <div className="min-w-0">
           <h4
-            className="font-semibold text-espresso text-base leading-snug truncate"
-            style={{ fontFamily: "'Tinos', serif" }}
+            className="font-semibold text-espresso text-base leading-snug truncate font-tinos"
           >
             {item.name}
           </h4>
           <p
-            className="text-espresso/45 text-sm mt-0.5 line-clamp-1"
-            style={{ fontFamily: "'Tinos', serif" }}
+            className="text-espresso/45 text-sm mt-0.5 line-clamp-1 font-tinos"
           >
             {item.description}
           </p>
@@ -78,10 +78,7 @@ const CartItem = ({ item }) => {
       </div>
 
       {/* Price */}
-      <div
-        className="text-center text-espresso/70 text-base"
-        style={{ fontFamily: "'Tinos', serif" }}
-      >
+      <div className="text-center text-espresso/70 text-base font-tinos">
         {formatPrice(parsePrice(item.price))}
       </div>
 
@@ -99,8 +96,7 @@ const CartItem = ({ item }) => {
         </button>
 
         <span
-          className="w-6 text-center font-semibold text-espresso text-sm"
-          style={{ fontFamily: "'Tinos', serif" }}
+          className="w-6 text-center font-semibold text-espresso text-sm font-tinos"
         >
           {item.quantity}
         </span>
@@ -117,10 +113,7 @@ const CartItem = ({ item }) => {
       </div>
 
       {/* Subtotal */}
-      <div
-        className="text-center font-semibold text-espresso text-sm"
-        style={{ fontFamily: "'Tinos', serif" }}
-      >
+      <div className="text-center font-semibold text-espresso text-sm font-tinos">
         {formatPrice(itemTotal)}
       </div>
     </div>

@@ -17,10 +17,7 @@ const EmptyCart = () => {
 
         {/* Header */}
         <div className="text-center mb-12">
-          <h1
-            className="text-5xl md:text-6xl font-bold text-espresso mb-3"
-            style={{ fontFamily: "'Science Gothic', sans-serif" }}
-          >
+          <h1 className="text-5xl md:text-6xl font-bold text-espresso mb-3 font-science-gothic">
             Shopping Cart
           </h1>
           <nav aria-label="Breadcrumb">
@@ -28,16 +25,15 @@ const EmptyCart = () => {
               <li>
                 <button
                   onClick={() => navigate('#home')}
-                  className="text-espresso/50 hover:text-caramel transition-colors"
-                  style={{ fontFamily: "'Tinos', serif" }}
+                  className="text-espresso/50 hover:text-caramel transition-colors font-tinos"
                 >
                   Home
                 </button>
               </li>
               <li className="text-espresso/30" aria-hidden="true">/</li>
               <li
-                className="text-espresso/70 font-medium"
-                style={{ fontFamily: "'Tinos', serif" }}
+                className="text-espresso/70 font-medium font-tinos"
+                aria-current="page"
               >
                 Shopping Cart
               </li>
@@ -52,25 +48,18 @@ const EmptyCart = () => {
             <span className="text-5xl" aria-hidden="true">🛍️</span>
           </div>
 
-          <h2
-            className="text-3xl font-bold text-espresso mb-3"
-            style={{ fontFamily: "'Science Gothic', sans-serif" }}
-          >
+          <h2 className="text-3xl font-bold text-espresso mb-3 font-science-gothic">
             Your cart is empty
           </h2>
 
-          <p
-            className="text-espresso/55 text-base mb-8 leading-relaxed"
-            style={{ fontFamily: "'Tinos', serif" }}
-          >
+          <p className="text-espresso/55 text-base mb-8 leading-relaxed font-tinos">
             Looks like you haven't added anything yet. Explore our menu and find something you'll love.
           </p>
 
           <a
             href="#menu"
             onClick={handleExploreMenu}
-            className="inline-flex items-center gap-2 bg-espresso hover:bg-caramel text-softwhite font-semibold py-3.5 px-8 rounded-xl transition-all duration-200 text-sm"
-            style={{ fontFamily: "'Tinos', serif" }}
+            className="inline-flex items-center gap-2 bg-espresso hover:bg-caramel text-softwhite font-semibold py-3.5 px-8 rounded-xl transition-all duration-200 text-sm font-tinos"
           >
             Explore Our Menu
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

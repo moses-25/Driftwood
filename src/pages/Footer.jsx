@@ -121,12 +121,12 @@ export default function Footer() {
             <div className="flex flex-col gap-5">
               <div className="flex items-center gap-2.5">
                 <img src="/Driftwood.png" alt="Driftwood Café" className="h-9 w-auto" />
-                <span style={{ fontFamily: "'Fjalla One', sans-serif" }} className="text-lg">
+                <span className="text-lg font-fjalla">
                   <span className="text-caramel">Driftwood</span>
                   <span className="text-softwhite"> Café</span>
                 </span>
               </div>
-              <p className="text-white/75 text-sm leading-relaxed" style={{ fontFamily: "'Instrument Serif', serif" }}>
+              <p className="text-white/75 text-sm leading-relaxed font-instrument">
                 Crafting exceptional coffee experiences since 2026. Our mission is to create a sanctuary where quality meets comfort.
               </p>
               <div className="flex items-center gap-2.5 pt-1">
@@ -145,7 +145,7 @@ export default function Footer() {
 
             {/* Quick Links */}
             <div>
-              <h4 style={{ fontFamily: "'Fjalla One', sans-serif" }} className="text-softwhite text-sm tracking-widest uppercase mb-5">
+              <h4 className="text-softwhite text-sm tracking-widest uppercase mb-5 font-fjalla">
                 Quick Links
               </h4>
               <ul className="flex flex-col gap-3">
@@ -153,8 +153,7 @@ export default function Footer() {
                   <li key={link.label}>
                     <a
                       href={link.href}
-                      className="text-white/75 text-sm hover:text-caramel transition-colors duration-200 flex items-center gap-2 group"
-                      style={{ fontFamily: "'Instrument Serif', serif" }}
+                      className="text-white/75 text-sm hover:text-caramel transition-colors duration-200 flex items-center gap-2 group font-instrument"
                     >
                       <span className="h-px w-0 bg-caramel transition-all duration-200 group-hover:w-3 flex-shrink-0" />
                       {link.label}
@@ -166,7 +165,7 @@ export default function Footer() {
 
             {/* Contact */}
             <div>
-              <h4 style={{ fontFamily: "'Fjalla One', sans-serif" }} className="text-softwhite text-sm tracking-widest uppercase mb-5">
+              <h4 className="text-softwhite text-sm tracking-widest uppercase mb-5 font-fjalla">
                 Contact
               </h4>
               <ul className="flex flex-col gap-4">
@@ -177,8 +176,7 @@ export default function Footer() {
                       href={item.href}
                       target={item.href.startsWith('http') ? '_blank' : undefined}
                       rel={item.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-                      className="text-white/75 text-sm leading-relaxed hover:text-caramel transition-colors duration-200"
-                      style={{ fontFamily: "'Instrument Serif', serif" }}
+                      className="text-white/75 text-sm leading-relaxed hover:text-caramel transition-colors duration-200 font-instrument"
                     >
                       {item.text}
                     </a>
@@ -189,10 +187,10 @@ export default function Footer() {
 
             {/* Newsletter */}
             <div>
-              <h4 style={{ fontFamily: "'Fjalla One', sans-serif" }} className="text-softwhite text-sm tracking-widest uppercase mb-5">
+              <h4 className="text-softwhite text-sm tracking-widest uppercase mb-5 font-fjalla">
                 Newsletter
               </h4>
-              <p className="text-white/75 text-sm mb-5 leading-relaxed" style={{ fontFamily: "'Instrument Serif', serif" }}>
+              <p className="text-white/75 text-sm mb-5 leading-relaxed font-instrument">
                 Subscribe to get special offers, free giveaways, and once-in-a-lifetime deals.
               </p>
               <div className="flex flex-col gap-3">
@@ -206,8 +204,7 @@ export default function Footer() {
                 <button
                   onClick={handleSubscribe}
                   disabled={subStatus === 'loading'}
-                  className="w-full bg-caramel hover:bg-copper text-softwhite font-semibold py-3 rounded-xl transition-all duration-200 disabled:opacity-50 text-sm"
-                  style={{ fontFamily: "'Fjalla One', sans-serif" }}
+                  className="w-full bg-caramel hover:bg-copper text-softwhite font-semibold py-3 rounded-xl transition-all duration-200 disabled:opacity-50 text-sm font-fjalla"
                 >
                   {subStatus === 'loading' ? 'Subscribing…' : 'Subscribe'}
                 </button>

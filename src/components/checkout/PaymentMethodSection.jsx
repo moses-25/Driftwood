@@ -50,8 +50,8 @@ const PaymentMethodSection = ({ paymentMethod, setPaymentMethod }) => {
           </svg>
         </div>
         <div>
-          <h3 className="text-lg font-bold text-white" style={{ fontFamily: "'Science Gothic', sans-serif" }}>Payment Method</h3>
-          <p className="text-sm text-white/40" style={{ fontFamily: "'Tinos', serif" }}>Choose how you'd like to pay</p>
+          <h3 className="text-lg font-bold text-white font-science-gothic">Payment Method</h3>
+          <p className="text-sm text-white/40 font-tinos">Choose how you'd like to pay</p>
         </div>
       </div>
 
@@ -71,16 +71,16 @@ const PaymentMethodSection = ({ paymentMethod, setPaymentMethod }) => {
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <span className={`font-semibold text-base ${isSelected ? 'text-white' : 'text-white/70'}`} style={{ fontFamily: "'Science Gothic', sans-serif" }}>
+                  <span className={`font-semibold text-base font-science-gothic ${isSelected ? 'text-white' : 'text-white/70'}`}>
                     {method.label}
                   </span>
                   {method.badge && (
-                    <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${isSelected ? 'bg-caramel/20 text-caramel' : 'bg-white/8 text-white/35'}`} style={{ fontFamily: "'Tinos', serif" }}>
+                    <span className={`text-xs font-medium px-2 py-0.5 rounded-full font-tinos ${isSelected ? 'bg-caramel/20 text-caramel' : 'bg-white/8 text-white/35'}`}>
                       {method.badge}
                     </span>
                   )}
                 </div>
-                <p className={`text-sm mt-0.5 ${isSelected ? 'text-white/55' : 'text-white/30'}`} style={{ fontFamily: "'Tinos', serif" }}>
+                <p className={`text-sm mt-0.5 font-tinos ${isSelected ? 'text-white/55' : 'text-white/30'}`}>
                   {method.description}
                 </p>
               </div>
@@ -93,7 +93,7 @@ const PaymentMethodSection = ({ paymentMethod, setPaymentMethod }) => {
       </div>
 
       {active?.note && (
-        <div className="mt-4 p-3 rounded-xl bg-white/5 border border-white/10 text-sm text-white/50 flex items-start gap-2" style={{ fontFamily: "'Tinos', serif" }}>
+        <div className="mt-4 p-3 rounded-xl bg-white/5 border border-white/10 text-sm text-white/50 flex items-start gap-2 font-tinos">
           <svg className="w-4 h-4 shrink-0 mt-0.5 text-caramel" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>

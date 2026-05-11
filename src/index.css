@@ -76,6 +76,30 @@ body {
   font-family: 'Cormorant Garamond', Georgia, serif;
 }
 
+.font-tinos {
+  font-family: 'Tinos', Georgia, serif;
+}
+
+.font-science-gothic {
+  font-family: 'Science Gothic', 'Inter', sans-serif;
+}
+
+.font-fjalla {
+  font-family: 'Fjalla One', 'Inter', sans-serif;
+}
+
+.font-instrument {
+  font-family: 'Instrument Serif', Georgia, serif;
+}
+
+.font-oswald {
+  font-family: 'Oswald', 'Inter', sans-serif;
+}
+
+.font-luckiest {
+  font-family: 'Luckiest Guy', cursive;
+}
+
 /* ─── Luxury Scrollbar ──────────────────────────────────────── */
 ::-webkit-scrollbar {
   width: 6px;

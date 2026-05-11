@@ -18,7 +18,7 @@ const DELIVERY_OPTIONS = [
 const DeliveryMethodSection = ({ deliveryMethod, setDeliveryMethod }) => {
   return (
     <div className="space-y-4">
-      <h3 className="text-base font-semibold text-white/70 uppercase tracking-widest" style={{ fontFamily: "'Tinos', serif" }}>
+      <h3 className="text-base font-semibold text-white/70 uppercase tracking-widest font-tinos">
         Delivery Method
       </h3>
 
@@ -37,8 +37,7 @@ const DeliveryMethodSection = ({ deliveryMethod, setDeliveryMethod }) => {
             >
               <div className="flex items-start justify-between mb-2">
                 <h4
-                  className={`text-base font-bold ${isSelected ? 'text-white' : 'text-white/80'}`}
-                  style={{ fontFamily: "'Science Gothic', sans-serif" }}
+                  className={`text-base font-bold font-science-gothic ${isSelected ? 'text-white' : 'text-white/80'}`}
                 >
                   {option.label}
                 </h4>
@@ -50,24 +49,17 @@ const DeliveryMethodSection = ({ deliveryMethod, setDeliveryMethod }) => {
                   </div>
                 )}
               </div>
-              <p
-                className={`text-sm mb-3 ${isSelected ? 'text-white/60' : 'text-white/35'}`}
-                style={{ fontFamily: "'Tinos', serif" }}
-              >
+              <p className={`text-sm mb-3 font-tinos ${isSelected ? 'text-white/60' : 'text-white/35'}`}>
                 {option.description}
               </p>
               <div className="flex items-center justify-between">
-                <span
-                  className={`text-sm ${isSelected ? 'text-white/60' : 'text-white/35'}`}
-                  style={{ fontFamily: "'Tinos', serif" }}
-                >
+                <span className={`text-sm font-tinos ${isSelected ? 'text-white/60' : 'text-white/35'}`}>
                   {option.time}
                 </span>
                 <span
-                  className={`text-xs font-medium px-2 py-0.5 rounded-full ${
+                  className={`text-xs font-medium px-2 py-0.5 rounded-full font-tinos ${
                     isSelected ? 'bg-caramel/20 text-caramel' : 'bg-white/8 text-white/35'
                   }`}
-                  style={{ fontFamily: "'Tinos', serif" }}
                 >
                   {option.badge}
                 </span>

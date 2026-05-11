@@ -11,7 +11,7 @@ const DeliveryAddressForm = ({ address, setAddress, errors }) => {
       transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
       className="space-y-4"
     >
-      <h3 className="text-base font-semibold text-white/70 uppercase tracking-widest" style={{ fontFamily: "'Tinos', serif" }}>
+      <h3 className="text-base font-semibold text-white/70 uppercase tracking-widest font-tinos">
         Delivery Address
       </h3>
 
@@ -24,7 +24,7 @@ const DeliveryAddressForm = ({ address, setAddress, errors }) => {
       </div>
 
       <div className="space-y-1.5">
-        <label htmlFor="notes" className="block text-sm font-medium text-white/60" style={{ fontFamily: "'Tinos', serif" }}>
+        <label htmlFor="notes" className="block text-sm font-medium text-white/60 font-tinos">
           Delivery Notes <span className="text-white/30 font-normal">(optional)</span>
         </label>
         <textarea
@@ -33,8 +33,7 @@ const DeliveryAddressForm = ({ address, setAddress, errors }) => {
           placeholder="Any special instructions for the delivery rider…"
           value={address.notes}
           onChange={update('notes')}
-          style={{ fontFamily: "'Tinos', serif" }}
-          className="w-full rounded-xl border border-white/12 bg-white/6 px-4 py-3 text-white placeholder-white/25 text-base outline-none focus:ring-2 focus:ring-caramel/50 focus:border-caramel/60 hover:border-white/25 transition-all duration-200 resize-none"
+          className="w-full rounded-xl border border-white/12 bg-white/6 px-4 py-3 text-white placeholder-white/25 text-base outline-none focus:ring-2 focus:ring-caramel/50 focus:border-caramel/60 hover:border-white/25 transition-all duration-200 resize-none font-tinos"
         />
       </div>
     </motion.div>

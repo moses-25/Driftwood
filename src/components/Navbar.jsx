@@ -89,10 +89,9 @@ export default function Navbar({ pendingScroll }) {
               <a
                 href={link.href}
                 onClick={(e) => handleNavClick(e, link.href)}
-                className={`relative text-base font-bold tracking-wide transition-colors duration-200 group ${
+                className={`relative text-base font-bold tracking-wide transition-colors duration-200 group font-fjalla ${
                   scrolled ? 'text-espresso hover:text-caramel' : 'text-softwhite hover:text-caramel'
                 }`}
-                style={{ fontFamily: "'Fjalla One', sans-serif" }}
               >
                 {link.label}
                 <span className="absolute -bottom-0.5 left-0 w-0 h-px bg-caramel transition-all duration-300 group-hover:w-full" />
@@ -143,7 +142,7 @@ export default function Navbar({ pendingScroll }) {
           <a
             href="#visit"
             onClick={(e) => handleNavClick(e, '#visit')}
-            className="hidden md:inline-flex items-center justify-center bg-gradient-to-r from-caramel to-copper text-softwhite text-sm font-semibold px-6 py-2.5 rounded-full shadow-gold hover:shadow-gold-lg hover:-translate-y-0.5 transition-all duration-250"
+            className="hidden md:inline-flex items-center justify-center bg-black text-softwhite text-sm font-semibold px-6 py-2.5 rounded-full shadow-gold hover:shadow-gold-lg hover:-translate-y-0.5 transition-all duration-250"
           >
             Reserve a Table
           </a>
@@ -177,24 +176,21 @@ export default function Navbar({ pendingScroll }) {
                 key={link.label}
                 href={link.href}
                 onClick={(e) => handleNavClick(e, link.href)}
-                className="block py-3 text-lg font-bold text-espresso hover:text-caramel border-b border-warmbeige/40 last:border-0 transition-colors"
-                style={{ fontFamily: "'Fjalla One', sans-serif" }}
+                className="block py-3 text-lg font-bold text-espresso hover:text-caramel border-b border-warmbeige/40 last:border-0 transition-colors font-fjalla"
               >
                 {link.label}
               </a>
             ))}
             <button
               onClick={() => { closeMenu(); setSearchOpen(true) }}
-              className="text-left py-3 text-lg font-bold text-espresso hover:text-caramel border-b border-warmbeige/40 transition-colors"
-                style={{ fontFamily: "'Fjalla One', sans-serif" }}
+              className="text-left py-3 text-lg font-bold text-espresso hover:text-caramel border-b border-warmbeige/40 transition-colors font-fjalla"
             >
               Search
             </button>
             <a
               href="#cart"
               onClick={closeMenu}
-              className="flex items-center justify-between py-3 text-lg font-bold text-espresso hover:text-caramel border-b border-warmbeige/40 transition-colors"
-                style={{ fontFamily: "'Fjalla One', sans-serif" }}
+              className="flex items-center justify-between py-3 text-lg font-bold text-espresso hover:text-caramel border-b border-warmbeige/40 transition-colors font-fjalla"
             >
               <span>Cart</span>
               {totalItems > 0 && (
@@ -207,7 +203,7 @@ export default function Navbar({ pendingScroll }) {
               <a
                 href="#visit"
                 onClick={(e) => handleNavClick(e, '#visit')}
-                className="block text-center bg-gradient-to-r from-caramel to-copper text-softwhite font-semibold px-6 py-3 rounded-full shadow-gold transition-all duration-200"
+                className="block text-center bg-black text-softwhite font-semibold px-6 py-3 rounded-full shadow-gold transition-all duration-200"
               >
                 Reserve a Table
               </a>

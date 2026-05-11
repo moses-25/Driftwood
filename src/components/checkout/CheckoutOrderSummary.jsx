@@ -15,7 +15,7 @@ const CheckoutOrderSummary = ({ deliveryMethod }) => {
 
   return (
     <div className="bg-white/6 rounded-2xl border border-white/10 p-6">
-      <h3 className="text-lg font-bold text-white mb-5" style={{ fontFamily: "'Science Gothic', sans-serif" }}>
+      <h3 className="text-lg font-bold text-white mb-5 font-science-gothic">
         Order Summary
       </h3>
 
@@ -30,12 +30,12 @@ const CheckoutOrderSummary = ({ deliveryMethod }) => {
               </span>
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-base font-medium text-white truncate" style={{ fontFamily: "'Tinos', serif" }}>{item.name}</p>
+              <p className="text-base font-medium text-white truncate font-tinos">{item.name}</p>
               {item.customizations?.size && (
-                <p className="text-sm text-white/35" style={{ fontFamily: "'Tinos', serif" }}>{item.customizations.size}</p>
+                <p className="text-sm text-white/35 font-tinos">{item.customizations.size}</p>
               )}
             </div>
-            <span className="text-base font-semibold text-white shrink-0" style={{ fontFamily: "'Tinos', serif" }}>
+            <span className="text-base font-semibold text-white shrink-0 font-tinos">
               {formatPrice(parsePrice(item.price) * item.quantity)}
             </span>
           </div>
@@ -45,7 +45,7 @@ const CheckoutOrderSummary = ({ deliveryMethod }) => {
       <div className="border-t border-white/10 mb-4" />
 
       {/* Totals */}
-      <div className="space-y-2.5 mb-5" style={{ fontFamily: "'Tinos', serif" }}>
+      <div className="space-y-2.5 mb-5 font-tinos">
         {[
           { label: 'Subtotal', value: formatPrice(subtotal) },
           { label: 'Delivery fee', value: deliveryFee === 0 ? 'Free' : formatPrice(deliveryFee), green: deliveryFee === 0 },
@@ -60,8 +60,8 @@ const CheckoutOrderSummary = ({ deliveryMethod }) => {
 
       <div className="border-t border-white/10 pt-4 mb-5">
         <div className="flex justify-between items-center">
-          <span className="text-base font-bold text-white" style={{ fontFamily: "'Tinos', serif" }}>Total</span>
-          <span className="text-xl font-bold text-caramel" style={{ fontFamily: "'Science Gothic', sans-serif" }}>{formatPrice(total)}</span>
+          <span className="text-base font-bold text-white font-tinos">Total</span>
+          <span className="text-xl font-bold text-caramel font-science-gothic">{formatPrice(total)}</span>
         </div>
       </div>
 
@@ -74,15 +74,15 @@ const CheckoutOrderSummary = ({ deliveryMethod }) => {
           </svg>
         </div>
         <div>
-          <p className="text-sm text-white/35" style={{ fontFamily: "'Tinos', serif" }}>
+          <p className="text-sm text-white/35 font-tinos">
             Estimated {deliveryMethod === 'pickup' ? 'pickup' : 'delivery'} time
           </p>
-          <p className="text-base font-semibold text-white" style={{ fontFamily: "'Tinos', serif" }}>{estimatedTime}</p>
+          <p className="text-base font-semibold text-white font-tinos">{estimatedTime}</p>
         </div>
       </div>
 
       {/* Trust badges */}
-      <div className="flex items-center justify-center gap-5 text-sm text-white/30" style={{ fontFamily: "'Tinos', serif" }}>
+      <div className="flex items-center justify-center gap-5 text-sm text-white/30 font-tinos">
         {[['Secure', 'M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z'], ['Protected', 'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z'], ['Trusted', 'M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z']].map(([label, path]) => (
           <div key={label} className="flex items-center gap-1">
             <svg className="w-3.5 h-3.5 text-caramel" fill={label === 'Secure' ? 'currentColor' : 'none'} stroke={label === 'Secure' ? 'none' : 'currentColor'} viewBox="0 0 24 24">

@@ -35,7 +35,7 @@ export default function Hero() {
       <div className="relative z-10 flex flex-col items-center justify-center h-full text-center px-6">
         
         {/* Overline */}
-        <p className="text-sm md:text-base uppercase tracking-[0.3em] text-orange-400 mb-6 font-semibold" style={{ fontFamily: 'Oswald, sans-serif' }}>
+        <p className="text-sm md:text-base uppercase tracking-[0.3em] text-orange-400 mb-6 font-semibold font-oswald">
           Premium Coffee Experience
         </p>
 
@@ -60,7 +60,7 @@ export default function Hero() {
         </h1>
 
         {/* Subheading */}
-        <p className="text-lg md:text-xl text-slate-200 max-w-2xl leading-relaxed" style={{ fontFamily: 'Oswald, sans-serif', fontWeight: '400' }}>
+        <p className="text-lg md:text-xl text-slate-200 max-w-2xl leading-relaxed font-oswald font-normal">
           A warm sanctuary where every cup tells a story.<br />
           <span className="text-white font-bold">Crafted with care, served with love.</span>
         </p>

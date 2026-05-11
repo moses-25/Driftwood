@@ -2,7 +2,7 @@ const inputClass = `w-full rounded-xl border border-white/12 bg-white/6 px-4 py-
 
 const InputField = ({ label, id, type = 'text', placeholder, value, onChange, error }) => (
   <div className="space-y-1.5">
-    <label htmlFor={id} className="block text-sm font-medium text-white/60" style={{ fontFamily: "'Tinos', serif" }}>
+    <label htmlFor={id} className="block text-sm font-medium text-white/60 font-tinos">
       {label}
     </label>
     <input
@@ -12,11 +12,10 @@ const InputField = ({ label, id, type = 'text', placeholder, value, onChange, er
       value={value}
       onChange={onChange}
       autoComplete="off"
-      style={{ fontFamily: "'Tinos', serif" }}
-      className={`${inputClass} ${error ? 'border-red-500/60 focus:ring-red-500/30' : ''}`}
+      className={`${inputClass} font-tinos ${error ? 'border-red-500/60 focus:ring-red-500/30' : ''}`}
     />
     {error && (
-      <p className="text-sm text-red-400 mt-1" style={{ fontFamily: "'Tinos', serif" }}>
+      <p className="text-sm text-red-400 mt-1 font-tinos">
         {error}
       </p>
     )}
@@ -28,7 +27,7 @@ const ContactSection = ({ contact, setContact, errors }) => {
 
   return (
     <div className="space-y-4">
-      <h3 className="text-base font-semibold text-white/70 uppercase tracking-widest" style={{ fontFamily: "'Tinos', serif" }}>
+      <h3 className="text-base font-semibold text-white/70 uppercase tracking-widest font-tinos">
         Contact Information
       </h3>
       <InputField label="Full Name" id="fullName" placeholder="Jane Doe" value={contact.fullName} onChange={update('fullName')} error={errors.fullName} />

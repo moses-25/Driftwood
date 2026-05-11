@@ -12,7 +12,7 @@ export default function About() {
           {/* Left - Story Content */}
           <div className="space-y-8">
             <FadeUp delay={0}>
-              <p className="text-2xl text-copper" style={{ fontFamily: "'Luckiest Guy', cursive" }}>
+              <p className="text-2xl text-copper font-luckiest">
                 Our Story
               </p>
             </FadeUp>

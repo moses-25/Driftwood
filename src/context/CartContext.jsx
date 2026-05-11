@@ -4,15 +4,31 @@ import { CartContext } from './CartContextDefinition'
 const STORAGE_KEY = 'driftwood_cart'
 const TTL_MS = 24 * 60 * 60 * 1000 // 24 hours
 
+/**
+ * Derive a stable line-item key from a product id + its customizations.
+ * Two orders of the same product with different options become separate lines.
+ * Orders with no customizations (or identical ones) are merged as before.
+ */
+export function makeCartItemId(productId, customizations) {
+    if (!customizations || Object.keys(customizations).length === 0) {
+        return String(productId)
+    }
+    // Sort keys so {milk:'oat',size:'large'} === {size:'large',milk:'oat'}
+    const stable = JSON.stringify(customizations, Object.keys(customizations).sort())
+    return `${productId}::${stable}`
+}
+
 const cartReducer = (state, action) => {
     switch (action.type) {
         case 'ADD_ITEM': {
-            const existingItem = state.items.find(item => item.id === action.payload.id)
+            // cartItemId is the line-item identity; id is the product catalogue id
+            const { cartItemId } = action.payload
+            const existingItem = state.items.find(item => item.cartItemId === cartItemId)
             if (existingItem) {
                 return {
                     ...state,
                     items: state.items.map(item =>
-                        item.id === action.payload.id
+                        item.cartItemId === cartItemId
                             ? { ...item, quantity: item.quantity + 1 }
                             : item
                     ),
@@ -27,19 +43,20 @@ const cartReducer = (state, action) => {
         }
 
         case 'REMOVE_ITEM': {
-            const itemToRemove = state.items.find(item => item.id === action.payload)
+            // payload is cartItemId
+            const itemToRemove = state.items.find(item => item.cartItemId === action.payload)
             if (!itemToRemove) return state
             if (itemToRemove.quantity === 1) {
                 return {
                     ...state,
-                    items: state.items.filter(item => item.id !== action.payload),
+                    items: state.items.filter(item => item.cartItemId !== action.payload),
                     totalItems: state.totalItems - 1
                 }
             }
             return {
                 ...state,
                 items: state.items.map(item =>
-                    item.id === action.payload
+                    item.cartItemId === action.payload
                         ? { ...item, quantity: item.quantity - 1 }
                         : item
                 ),
@@ -48,11 +65,12 @@ const cartReducer = (state, action) => {
         }
 
         case 'REMOVE_ENTIRE_ITEM': {
-            const itemToRemove = state.items.find(item => item.id === action.payload)
+            // payload is cartItemId
+            const itemToRemove = state.items.find(item => item.cartItemId === action.payload)
             if (!itemToRemove) return state
             return {
                 ...state,
-                items: state.items.filter(item => item.id !== action.payload),
+                items: state.items.filter(item => item.cartItemId !== action.payload),
                 totalItems: state.totalItems - itemToRemove.quantity
             }
         }
@@ -113,9 +131,15 @@ export const CartProvider = ({ children }) => {
         saveToStorage(state)
     }, [state])
 
-    const addToCart = (item) => dispatch({ type: 'ADD_ITEM', payload: item })
-    const removeFromCart = (itemId) => dispatch({ type: 'REMOVE_ITEM', payload: itemId })
-    const removeEntireItem = (itemId) => dispatch({ type: 'REMOVE_ENTIRE_ITEM', payload: itemId })
+    const addToCart = (item) => dispatch({
+        type: 'ADD_ITEM',
+        payload: {
+            ...item,
+            cartItemId: makeCartItemId(item.id, item.customizations),
+        }
+    })
+    const removeFromCart = (cartItemId) => dispatch({ type: 'REMOVE_ITEM', payload: cartItemId })
+    const removeEntireItem = (cartItemId) => dispatch({ type: 'REMOVE_ENTIRE_ITEM', payload: cartItemId })
     const clearCart = () => dispatch({ type: 'CLEAR_CART' })
 
     return (

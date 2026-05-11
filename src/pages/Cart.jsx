@@ -21,8 +21,7 @@ const Cart = () => {
         {/* ── Header ── */}
         <div className="text-center mb-10">
           <h1
-            className="text-5xl md:text-6xl font-bold text-white mb-3"
-            style={{ fontFamily: "'Science Gothic', sans-serif" }}
+            className="text-5xl md:text-6xl font-bold text-white mb-3 font-science-gothic"
           >
             Shopping Cart
           </h1>
@@ -33,17 +32,15 @@ const Cart = () => {
               <li>
                 <button
                   onClick={() => navigate('#home')}
-                  className="text-white/50 hover:text-caramel transition-colors"
-                  style={{ fontFamily: "'Tinos', serif" }}
+                  className="text-white/50 hover:text-caramel transition-colors font-tinos"
                 >
                   Home
                 </button>
               </li>
               <li className="text-white/30" aria-hidden="true">/</li>
               <li
-                className="text-white/70 font-medium"
+                className="text-white/70 font-medium font-tinos"
                 aria-current="page"
-                style={{ fontFamily: "'Tinos', serif" }}
               >
                 Shopping Cart
               </li>
@@ -61,8 +58,7 @@ const Cart = () => {
               {['Product', 'Price', 'Quantity', 'Subtotal'].map(h => (
                 <span
                   key={h}
-                  className="text-softwhite text-sm font-semibold text-center first:text-left"
-                  style={{ fontFamily: "'Tinos', serif" }}
+                  className="text-softwhite text-sm font-semibold text-center first:text-left font-tinos"
                 >
                   {h}
                 </span>
@@ -72,7 +68,7 @@ const Cart = () => {
             {/* Items */}
             <div className="bg-white rounded-xl shadow-soft divide-y divide-warmbeige/60">
               {items.map((item) => (
-                <CartItem key={`${item.id}-${item.customizations?.size || 'default'}`} item={item} />
+                <CartItem key={item.cartItemId} item={item} />
               ))}
             </div>
 

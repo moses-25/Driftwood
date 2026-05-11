@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import CheckoutProgress from '../components/checkout/CheckoutProgress'
 import ContactSection from '../components/checkout/ContactSection'
 import DeliveryMethodSection from '../components/checkout/DeliveryMethodSection'
@@ -22,6 +22,18 @@ const Checkout = () => {
   const [paymentMethod, setPaymentMethod] = useState('pesapal')
   const [errors, setErrors] = useState({})
   const [isPlacingOrder, setIsPlacingOrder] = useState(false)
+  const placeOrderTimerRef = useRef(null)
+
+  // Clear the place-order timeout if the component unmounts while the
+  // simulated request is still in-flight, preventing state updates on an
+  // unmounted component.
+  useEffect(() => {
+    return () => {
+      if (placeOrderTimerRef.current !== null) {
+        clearTimeout(placeOrderTimerRef.current)
+      }
+    }
+  }, [])
 
   if (totalItems === 0 && currentStep !== 3) return <EmptyCart />
 
@@ -43,7 +55,12 @@ const Checkout = () => {
 
   const handlePlaceOrder = () => {
     setIsPlacingOrder(true)
-    setTimeout(() => { setIsPlacingOrder(false); clearCart(); setCurrentStep(3) }, 2000)
+    placeOrderTimerRef.current = setTimeout(() => {
+      placeOrderTimerRef.current = null
+      setIsPlacingOrder(false)
+      clearCart()
+      setCurrentStep(3)
+    }, 2000)
   }
 
   const handleBackToMenu = () => {
@@ -60,7 +77,7 @@ const Checkout = () => {
         {/* Header */}
         <div className="text-center mb-10">
           <nav className="flex justify-center mb-4" aria-label="Breadcrumb">
-            <ol className="flex items-center gap-2 text-base" style={{ fontFamily: "'Tinos', serif" }}>
+            <ol className="flex items-center gap-2 text-base font-tinos">
               <li><button onClick={() => navigate('#home')} className="text-white/40 hover:text-caramel transition-colors">Home</button></li>
               <li className="text-white/20">/</li>
               <li><button onClick={() => navigate('#cart')} className="text-white/40 hover:text-caramel transition-colors">Cart</button></li>
@@ -68,10 +85,10 @@ const Checkout = () => {
               <li className="text-white/70" aria-current="page">Checkout</li>
             </ol>
           </nav>
-          <h1 className="text-5xl md:text-6xl font-bold text-white mb-2" style={{ fontFamily: "'Science Gothic', sans-serif" }}>
+          <h1 className="text-5xl md:text-6xl font-bold text-white mb-2 font-science-gothic">
             Checkout
           </h1>
-          <p className="text-white/50 text-base max-w-md mx-auto" style={{ fontFamily: "'Tinos', serif" }}>
+          <p className="text-white/50 text-base max-w-md mx-auto font-tinos">
             Complete your order in just a few steps.
           </p>
         </div>
@@ -91,7 +108,7 @@ const Checkout = () => {
                   {deliveryMethod === 'delivery' && (
                     <DeliveryAddressForm address={deliveryAddress} setAddress={setDeliveryAddress} errors={errors} />
                   )}
-                  <button onClick={handleContinueToPayment} className={btnClass} style={{ fontFamily: "'Tinos', serif" }}>
+                  <button onClick={handleContinueToPayment} className={`${btnClass} font-tinos`}>
                     Continue to Payment
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
@@ -103,7 +120,7 @@ const Checkout = () => {
                 <>
                   <InfoReviewCard contact={contact} deliveryMethod={deliveryMethod} deliveryAddress={deliveryAddress} onEdit={() => setCurrentStep(1)} />
                   <PaymentMethodSection paymentMethod={paymentMethod} setPaymentMethod={setPaymentMethod} />
-                  <button onClick={handlePlaceOrder} disabled={isPlacingOrder} className={`${btnClass} disabled:opacity-60 disabled:cursor-not-allowed`} style={{ fontFamily: "'Tinos', serif" }}>
+                  <button onClick={handlePlaceOrder} disabled={isPlacingOrder} className={`${btnClass} font-tinos disabled:opacity-60 disabled:cursor-not-allowed`}>
                     {isPlacingOrder ? (
                       <><svg className="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" /></svg>Placing Order…</>
                     ) : (
@@ -126,13 +143,13 @@ const Checkout = () => {
 const InfoReviewCard = ({ contact, deliveryMethod, deliveryAddress, onEdit }) => (
   <div className="bg-white/6 rounded-2xl border border-white/10 p-6">
     <div className="flex items-center justify-between mb-4">
-      <h3 className="text-base font-bold text-white" style={{ fontFamily: "'Science Gothic', sans-serif" }}>Your Information</h3>
-      <button onClick={onEdit} className="text-caramel hover:text-white text-sm font-medium transition-colors flex items-center gap-1" style={{ fontFamily: "'Tinos', serif" }}>
+      <h3 className="text-base font-bold text-white font-science-gothic">Your Information</h3>
+      <button onClick={onEdit} className="text-caramel hover:text-white text-sm font-medium transition-colors flex items-center gap-1 font-tinos">
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
         Edit
       </button>
     </div>
-    <div className="space-y-2 text-base" style={{ fontFamily: "'Tinos', serif" }}>
+    <div className="space-y-2 text-base font-tinos">
       {[['Name', contact.fullName], ['Email', contact.email], ['Phone', contact.phone], ['Method', deliveryMethod]].map(([label, val]) => (
         <div key={label} className="flex gap-3">
           <span className="text-white/35 w-16 shrink-0">{label}</span>
@@ -159,11 +176,11 @@ const ConfirmationScreen = ({ contact, deliveryMethod, paymentMethod, onBackToMe
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
           </svg>
         </div>
-        <h2 className="text-4xl font-bold text-white mb-2" style={{ fontFamily: "'Science Gothic', sans-serif" }}>Order Confirmed!</h2>
-        <p className="text-white/60 mb-8 text-base" style={{ fontFamily: "'Tinos', serif" }}>
+        <h2 className="text-4xl font-bold text-white mb-2 font-science-gothic">Order Confirmed!</h2>
+        <p className="text-white/60 mb-8 text-base font-tinos">
           Thank you, <span className="text-caramel font-semibold">{contact.fullName || 'friend'}</span>! Your order is being prepared.
         </p>
-        <div className="space-y-3 text-base text-left bg-white/5 rounded-xl p-5 border border-white/10 mb-8" style={{ fontFamily: "'Tinos', serif" }}>
+        <div className="space-y-3 text-base text-left bg-white/5 rounded-xl p-5 border border-white/10 mb-8 font-tinos">
           {[
             ['Confirmation sent to', contact.email || '—'],
             ['Delivery method', deliveryMethod],
@@ -176,7 +193,7 @@ const ConfirmationScreen = ({ contact, deliveryMethod, paymentMethod, onBackToMe
             </div>
           ))}
         </div>
-        <button onClick={onBackToMenu} className="inline-flex items-center gap-2 bg-white hover:bg-caramel text-espresso hover:text-white font-bold py-3 px-8 rounded-xl transition-all duration-200 text-base" style={{ fontFamily: "'Tinos', serif" }}>
+        <button onClick={onBackToMenu} className="inline-flex items-center gap-2 bg-white hover:bg-caramel text-espresso hover:text-white font-bold py-3 px-8 rounded-xl transition-all duration-200 text-base font-tinos">
           Back to Menu
         </button>
       </div>

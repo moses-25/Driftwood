@@ -62,12 +62,11 @@ export default function VisitUs() {
           {/* ── Left — Info ── */}
           <div>
             <h3
-              className="text-3xl md:text-5xl font-black text-espresso mb-2"
-              style={{ fontFamily: "'Fjalla One', sans-serif" }}
+              className="text-3xl md:text-5xl font-black text-espresso mb-2 font-fjalla"
             >
               Get In Touch
             </h3>
-            <p className="text-slate-400 text-sm leading-relaxed mb-10 max-w-sm" style={{ fontFamily: "'Instrument Serif', serif" }}>
+            <p className="text-slate-400 text-sm leading-relaxed mb-10 max-w-sm font-instrument">
               Have a question, want to make a reservation, or just want to say hello? We'll get back to you within 24 hours.
             </p>
 
@@ -77,12 +76,12 @@ export default function VisitUs() {
             {/* Hours */}
             <div>
               <div className="flex items-center gap-2 mb-4">
-                <span className="text-espresso font-bold text-sm" style={{ fontFamily: "'Instrument Serif', serif" }}>Opening Hours</span>
+                <span className="text-espresso font-bold text-sm font-instrument">Opening Hours</span>
                 <span className={`ml-auto text-[10px] font-bold font-mono px-2.5 py-1 rounded-full ${open ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-600'}`}>
                   {open ? 'Open Now' : 'Closed'}
                 </span>
               </div>
-              <div className="flex flex-col gap-2.5" style={{ fontFamily: "'Instrument Serif', serif" }}>
+              <div className="flex flex-col gap-2.5 font-instrument">
                 {[
                   { day: 'Mon – Fri', hours: '7:00 AM – 8:00 PM' },
                   { day: 'Saturday', hours: '8:00 AM – 9:00 PM' },
