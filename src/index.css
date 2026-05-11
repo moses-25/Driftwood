@@ -1,4 +1,39 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700&family=Fjalla+One&family=Instrument+Serif:ital@0;1&family=Luckiest+Guy&family=Science+Gothic&family=Tinos:ital,wght@0,400;0,700;1,400;1,700&family=Rubik+Marker+Hatch&family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+/* ─── Self-hosted fonts via @fontsource (no external requests, CSP-safe) ─── */
+/* Variable fonts — single file covers all weights */
+@import '@fontsource-variable/inter';
+@import '@fontsource-variable/playfair-display';
+@import '@fontsource-variable/playfair-display/wght-italic.css';
+@import '@fontsource-variable/oswald';
+
+/* Static fonts */
+@import '@fontsource/cormorant-garamond/300.css';
+@import '@fontsource/cormorant-garamond/400.css';
+@import '@fontsource/cormorant-garamond/500.css';
+@import '@fontsource/cormorant-garamond/600.css';
+@import '@fontsource/cormorant-garamond/700.css';
+@import '@fontsource/cormorant-garamond/300-italic.css';
+@import '@fontsource/cormorant-garamond/400-italic.css';
+@import '@fontsource/cormorant-garamond/500-italic.css';
+@import '@fontsource/cormorant-garamond/600-italic.css';
+@import '@fontsource/cormorant-garamond/700-italic.css';
+@import '@fontsource/bebas-neue';
+@import '@fontsource/poppins/300.css';
+@import '@fontsource/poppins/400.css';
+@import '@fontsource/poppins/500.css';
+@import '@fontsource/poppins/600.css';
+@import '@fontsource/poppins/700.css';
+@import '@fontsource/jetbrains-mono/400.css';
+@import '@fontsource/jetbrains-mono/500.css';
+@import '@fontsource/fjalla-one';
+@import '@fontsource/instrument-serif';
+@import '@fontsource/instrument-serif/400-italic.css';
+@import '@fontsource/tinos/400.css';
+@import '@fontsource/tinos/700.css';
+@import '@fontsource/tinos/400-italic.css';
+@import '@fontsource/tinos/700-italic.css';
+@import '@fontsource/science-gothic';
+@import '@fontsource/luckiest-guy';
+@import '@fontsource/rubik-marker-hatch';
 @import "tailwindcss";
 
 @variant dark (&:where(.dark, .dark *));
