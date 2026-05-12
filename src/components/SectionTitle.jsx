@@ -49,7 +49,7 @@ export default function SectionTitle({
 
       {subtext && (
         <FadeUp delay={0.2}>
-          <pCF2E-A6A5
+          <p
             className={`mt-5 text-base md:text-lg leading-relaxed max-w-2xl ${
               isCenter ? 'mx-auto' : ''
             } ${light ? 'text-warmbeige/80' : 'text-espresso/60'}`}
