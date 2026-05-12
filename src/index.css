@@ -209,6 +209,13 @@ body {
   box-shadow: 0 32px 80px rgba(59, 36, 22, 0.18);
 }
 
+/* ─── Scrollbar Hidden ──────────────────────────────────────── */
+@utility scrollbar-hidden {
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 /* ─── Image Zoom ────────────────────────────────────────────── */
 .img-zoom {
   overflow: hidden;
