@@ -185,62 +185,66 @@ export const reviews = [
 ]
 
 // ── Merch ────────────────────────────────────────────────────────────────────
-// Using gallery images as stand-ins until real product photos are provided.
-// Swap src values with actual product images when ready.
-import merch1 from '../assets/gallary/1.jpg'
-import merch2 from '../assets/gallary/2.jpg'
-import merch3 from '../assets/gallary/3.jpg'
-import merch4 from '../assets/gallary/4.jpg'
-import merch5 from '../assets/gallary/5.jpg'
-import merch6 from '../assets/gallary/6.jpg'
+import merch1 from '../assets/Merch/M1.jpeg'
+import merch2 from '../assets/Merch/M2.jpeg'
+import merch3 from '../assets/Merch/M3.jpeg'
+import merch4 from '../assets/Merch/M4.jpeg'
+import merch5 from '../assets/Merch/M5.jpeg'
+import merch6 from '../assets/Merch/M6.jpeg'
 
 export const merchItems = [
   {
     id: 'm1',
-    name: 'Driftwood Crew Sweatshirt',
-    category: 'Apparel',
-    price: 'KES 3,200',
+    name: 'Driftwood Bucket Hat',
+    category: 'Accessories',
+    description: 'A wide-brim black bucket hat with "Driftwood cafe\'" embroidered in warm cream lettering. Features an adjustable chin strap cord for a secure, stylish fit — perfect for sunny mornings and café runs.',
+    price: 'KES 2,200',
     tag: 'Bestseller',
     image: merch1,
   },
   {
     id: 'm2',
-    name: 'Ceramic Pour-Over Mug',
-    category: 'Drinkware',
+    name: 'Signature Canvas Tote',
+    category: 'Accessories',
+    description: 'A sturdy all-black canvas tote bearing the full Driftwood Café identity — EST. 2024, bold wordmark, and the tagline "Coffee · Community · Craft. Brewed with purpose." Spacious, reusable, and unmistakably Driftwood.',
     price: 'KES 1,800',
-    tag: null,
+    tag: 'New',
     image: merch2,
   },
   {
     id: 'm3',
-    name: 'Cold Brew Bottle',
+    name: 'Matte Black Ceramic Mug',
     category: 'Drinkware',
-    price: 'KES 2,400',
-    tag: 'New',
+    description: 'A smooth matte-black ceramic mug with "Driftwood cafe\'" printed in elegant cream-gold serif lettering. The perfect vessel for your morning ritual — understated, weighty, and built to be savoured.',
+    price: 'KES 1,600',
+    tag: null,
     image: merch3,
   },
   {
     id: 'm4',
-    name: 'Ember Diamond Hoodie',
-    category: 'Apparel',
-    price: 'KES 4,500',
-    tag: null,
+    name: 'Driftwood Travel Tumbler',
+    category: 'Drinkware',
+    description: 'An insulated matte-black travel tumbler with a ribbed silicone grip band, stainless steel rim, and secure flip-top lid. Keeps your brew hot on the go, branded with "Driftwood cafe\'" for the commuter who doesn\'t compromise.',
+    price: 'KES 3,500',
+    tag: 'Bestseller',
     image: merch4,
   },
   {
     id: 'm5',
-    name: 'Driftwood Snapback',
+    name: 'Coffee Into Code Tee — Navy',
     category: 'Apparel',
-    price: 'KES 1,600',
-    tag: 'New',
+    description: 'A navy blue crew-neck tee featuring a playful illustrated graphic: "I Turn Coffee into Code" surrounded by steaming cups and coffee beans. Soft, comfortable, and made for the developer who runs on espresso.',
+    price: 'KES 2,800',
+    tag: null,
     image: merch5,
   },
   {
     id: 'm6',
-    name: 'House Blend Whole Beans',
-    category: 'Coffee',
-    price: 'KES 1,200',
-    tag: null,
+    name: 'Coffee Into Code Tee — Grey',
+    category: 'Apparel',
+    description: 'A heather grey crew-neck tee with a bold, high-contrast "I Turn Coffee into Code" graphic print. Minimal, punchy, and unmistakably built for the caffeine-fuelled creative. A Driftwood cult classic.',
+    price: 'KES 2,800',
+    tag: 'New',
     image: merch6,
   },
 ]
