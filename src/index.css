@@ -32,6 +32,7 @@
 @import '@fontsource/tinos/700-italic.css';
 @import '@fontsource/science-gothic';
 @import '@fontsource/luckiest-guy';
+@import '@fontsource/bebas-neue';
 @import "tailwindcss";
 
 @variant dark (&:where(.dark, .dark *));
