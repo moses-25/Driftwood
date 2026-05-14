@@ -1,3 +1,7 @@
+import pesapalLogo from '../../assets/logo/pesapal.png'
+import mpesaLogo from '../../assets/logo/M-PESA.png'
+import cashLogo from '../../assets/logo/cash.png'
+
 const PAYMENT_METHODS = [
   {
     id: 'pesapal',
@@ -6,10 +10,11 @@ const PAYMENT_METHODS = [
     badge: 'Recommended',
     note: "You'll be redirected to Pesapal's secure payment gateway.",
     icon: (
-      <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-        <rect x="2" y="5" width="20" height="14" rx="3" strokeWidth="2" />
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2 10h20M6 15h4" />
-      </svg>
+      <img 
+        src={pesapalLogo} 
+        alt="Pesapal" 
+        className="w-6 h-6 object-contain"
+      />
     ),
   },
   {
@@ -19,9 +24,11 @@ const PAYMENT_METHODS = [
     badge: 'Popular',
     note: 'An M-Pesa STK push will be sent to your phone number.',
     icon: (
-      <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
-      </svg>
+      <img 
+        src={mpesaLogo} 
+        alt="M-Pesa" 
+        className="w-6 h-6 object-contain"
+      />
     ),
   },
   {
@@ -31,9 +38,11 @@ const PAYMENT_METHODS = [
     badge: null,
     note: 'Please have the exact amount ready for the rider.',
     icon: (
-      <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
-      </svg>
+      <img 
+        src={cashLogo} 
+        alt="Cash on Delivery" 
+        className="w-6 h-6 object-contain"
+      />
     ),
   },
 ]
