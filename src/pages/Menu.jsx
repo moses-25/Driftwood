@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { menuItems } from "../data/menuData";
 import MenuCard from "../components/MenuCard";
@@ -80,21 +80,22 @@ const WATERMARKS = [
 ];
 
 const Menu = () => {
-  const [activeTab, setActiveTab]       = useState("cold");
-  const [selectedItem, setSelectedItem] = useState(
-    () => menuItems.find((i) => i.category === "cold")
-  );
+  const [activeTab, setActiveTab] = useState("cold");
   const [quantity, setQuantity] = useState(1);
-  const { addToCart }           = useCart();
-  const carouselRef             = useRef(null);
+  const { addToCart } = useCart();
+  const carouselRef = useRef(null);
 
   const filtered = menuItems.filter((item) => item.category === activeTab);
-
-  useEffect(() => {
-    const first = menuItems.find((i) => i.category === activeTab);
-    setSelectedItem(first || null);
-    setQuantity(1);
+  
+  // Derive selected item from activeTab to avoid setState in effect
+  const selectedItem = useMemo(() => {
+    return menuItems.find((i) => i.category === activeTab) || null;
   }, [activeTab]);
+
+  const handleTabChange = (newTab) => {
+    setActiveTab(newTab);
+    setQuantity(1);
+  };
 
   const handleAddToCart = () => {
     if (!selectedItem) return;
@@ -107,8 +108,12 @@ const Menu = () => {
   };
 
   const handleSelectItem = (item) => {
-    setSelectedItem(item);
-    setQuantity(1);
+    // For manual selection, we need to update the activeTab to match the item's category
+    if (item.category !== activeTab) {
+      handleTabChange(item.category);
+    } else {
+      setQuantity(1);
+    }
   };
 
   return (
@@ -224,7 +229,7 @@ const Menu = () => {
             {TABS.map((tab) => (
               <button
                 key={tab.key}
-                onClick={() => setActiveTab(tab.key)}
+                onClick={() => handleTabChange(tab.key)}
                 aria-pressed={activeTab === tab.key}
                 className={`px-5 py-2.5 rounded-full text-sm font-semibold border transition-all duration-200 ${
                   activeTab === tab.key

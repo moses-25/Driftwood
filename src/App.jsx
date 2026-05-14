@@ -23,12 +23,12 @@ function AppContent() {
 
   // When the main page mounts (after navigating away from cart/checkout),
   // scroll to the section that was requested via the hash.
-  const pendingScroll = useRef(null)
+  const pendingScrollRef = useRef(null)
 
   useEffect(() => {
-    if (!isFullPage && pendingScroll.current) {
-      const target = pendingScroll.current
-      pendingScroll.current = null
+    if (!isFullPage && pendingScrollRef.current) {
+      const target = pendingScrollRef.current
+      pendingScrollRef.current = null
       // Small delay so the sections have time to paint
       setTimeout(() => {
         const el = document.getElementById(target)
@@ -40,7 +40,7 @@ function AppContent() {
   return (
     <div className="font-sans min-h-full bg-cream">
       <Cursor />
-      <Navbar pendingScroll={pendingScroll} />
+      <Navbar pendingScrollRef={pendingScrollRef} />
 
       {isCheckout ? (
         <Checkout />

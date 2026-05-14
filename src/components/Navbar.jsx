@@ -14,12 +14,12 @@ const navLinks = [
 
 const SECTION_IDS = new Set(['home', 'about', 'menu', 'gallery', 'reviews', 'visit'])
 
-export default function Navbar({ pendingScroll }) {
+export default function Navbar({ pendingScrollRef }) {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
   const { totalItems } = useCart()
-  const { currentPath, navigate, isFullPage } = useRouter()
+  const { navigate, isFullPage } = useRouter()
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 40)
@@ -41,12 +41,12 @@ export default function Navbar({ pendingScroll }) {
     if (isFullPage && SECTION_IDS.has(sectionId)) {
       e.preventDefault()
       closeMenu()
-      if (pendingScroll) pendingScroll.current = sectionId
+      if (pendingScrollRef) pendingScrollRef.current = sectionId
       navigate('#home')
     } else {
       closeMenu()
     }
-  }, [isFullPage, navigate, closeMenu, pendingScroll])
+  }, [isFullPage, navigate, closeMenu, pendingScrollRef])
 
   return (
     <nav
