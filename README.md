@@ -1,100 +1,99 @@
 # Driftwood Café
 
-A premium coffee shop website built with React, Vite, and Tailwind CSS. Features an elegant design, interactive menu, shopping cart, and contact forms.
+A premium coffee shop application with React frontend and Express backend.
+
+## 🏗️ Project Structure
+
+```
+driftwood/
+├── client/          # React frontend (Vite + Tailwind)
+│   ├── src/
+│   ├── public/
+│   ├── package.json
+│   └── vite.config.js
+├── server/          # Express backend API
+│   ├── index.js
+│   └── package.json
+├── package.json     # Root package.json for scripts
+└── README.md
+```
 
 ## 🚀 Quick Start
 
 ### Prerequisites
 - Node.js 18+ 
-- npm or yarn
+- npm
 
-### Installation
+### Installation & Development
 ```bash
-# Clone the repository
-git clone <repository-url>
-cd driftwood
+# Install all dependencies (root, client, and server)
+npm run install:all
 
-# Install dependencies
-npm install
-
-# Start development server
+# Start both frontend and backend
 npm run dev
 ```
 
-### Environment Variables
-Create a `.env` file in the root directory:
-```bash
-# Backend API URL (optional, defaults to localhost:5000)
-VITE_API_URL=https://your-api-url.com
-```
+This will start:
+- **Frontend**: http://localhost:5173 (Vite dev server)
+- **Backend**: http://localhost:3000 (Express API)
 
-## 🏗️ Build & Deploy
-
-### Build for Production
+### Individual Commands
 ```bash
+# Frontend only
+npm run dev:client
+
+# Backend only  
+npm run dev:server
+
+# Build frontend for production
 npm run build
+
+# Start production server
+npm start
 ```
-
-### Deploy to Vercel
-1. Install Vercel CLI: `npm i -g vercel`
-2. Run: `vercel`
-3. Follow the prompts
-
-The project includes a `vercel.json` configuration for:
-- SPA routing support
-- Security headers
-- Asset caching
-
-### Environment Variables for Production
-Set these in your Vercel dashboard:
-- `VITE_API_URL`: Your backend API URL
 
 ## 🛠️ Development
 
-### Available Scripts
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm run preview` - Preview production build
-- `npm run lint` - Run ESLint
+### Environment Variables
 
-### Project Structure
-```
-src/
-├── components/     # Reusable UI components
-├── pages/         # Main page components
-├── hooks/         # Custom React hooks
-├── context/       # React context providers
-├── data/          # Static data and content
-├── utils/         # Utility functions
-├── assets/        # Images and media files
-└── animations/    # Framer Motion components
+**Client (.env in client/ directory):**
+```bash
+VITE_API_URL=http://localhost:3000
 ```
 
-## 🔧 Backend Setup (Optional)
+**Server (.env in server/ directory):**
+```bash
+RESEND_API_KEY=your_resend_api_key
+FROM_EMAIL=your_email@domain.com
+```
 
-The frontend works standalone, but for contact forms and newsletter signup:
+### Project Features
+- **Frontend**: React + Vite + Tailwind CSS + Framer Motion
+- **Backend**: Express.js + CORS + Resend (email)
+- **Interactive Menu** with shopping cart
+- **Contact Forms** with email integration
+- **Responsive Design** and smooth animations
 
-1. Navigate to `server/` directory
-2. Copy `.env.example` to `.env`
-3. Add your Resend API key and email
-4. Run: `npm install && npm start`
+## 🚀 Deployment
 
-## 🎨 Features
+### Vercel (Recommended)
+The project is configured for Vercel with:
+- Static frontend served from `/client/dist`
+- API routes served from `/server` at `/api/*`
 
-- **Responsive Design** - Mobile-first approach
-- **Interactive Menu** - Dynamic filtering and cart
-- **Smooth Animations** - Framer Motion powered
-- **Contact Forms** - Email integration via Resend
-- **Gallery** - Lightbox image viewer
-- **Shopping Cart** - Persistent local storage
-- **SEO Optimized** - Meta tags and semantic HTML
+```bash
+# Deploy to Vercel
+vercel
+```
 
-## 🔒 Security
+Set environment variables in Vercel dashboard:
+- `RESEND_API_KEY`
+- `FROM_EMAIL`
 
-- Environment variables for sensitive data
-- Input validation and sanitization
-- Security headers via Vercel configuration
-- No hardcoded secrets in codebase
+## 🔧 API Endpoints
+
+- `POST /api/contact` - Contact form submission
+- `POST /api/newsletter` - Newsletter signup
 
 ## 📱 Browser Support
 
@@ -108,7 +107,7 @@ The frontend works standalone, but for contact forms and newsletter signup:
 1. Fork the repository
 2. Create a feature branch
 3. Make your changes
-4. Run `npm run lint` to check code quality
+4. Test both client and server
 5. Submit a pull request
 
 ## 📄 License
