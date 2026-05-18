@@ -34,7 +34,7 @@ server/
 
 ---
 
-## 📋 Development Phases
+##  Development Phases
 
 ### **Phase 1: Foundation Setup** ✅ (Already Done)
 **Goal:** Set up the basic Flask application structure
