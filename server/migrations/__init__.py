@@ -1,1 +1,0 @@
-# Flask-Migrate migrations directory

@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_cors import CORS
 from config import Config
-from extensions import db, migrate
+from extensions import db, migrate, jwt, mail
 from routes import register_routes
 
 def create_app():
@@ -11,6 +11,8 @@ def create_app():
     # Initialize extensions
     db.init_app(app)
     migrate.init_app(app, db)
+    jwt.init_app(app)
+    mail.init_app(app)
     CORS(app)
     
     # Register routes
