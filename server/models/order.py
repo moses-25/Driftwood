@@ -7,7 +7,7 @@ class Order(db.Model):
     
     id = db.Column(db.Integer, primary_key=True)
     order_number = db.Column(db.String(50), unique=True, nullable=False, default=lambda: str(uuid.uuid4())[:8].upper())
-    customer_id = db.Column(db.Integer, db.ForeignKey('customers.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     
     # Order details
     total_amount = db.Column(db.Numeric(10, 2), nullable=False)
@@ -31,12 +31,13 @@ class Order(db.Model):
     
     # Relationships
     order_items = db.relationship('OrderItem', backref='order', lazy=True, cascade='all, delete-orphan')
+    payment = db.relationship('Payment', backref='order', uselist=False, lazy=True)
     
     def to_dict(self):
         return {
             'id': self.id,
             'order_number': self.order_number,
-            'customer': self.customer.to_dict() if self.customer else None,
+            'user': self.user.to_dict() if self.user else None,
             'total_amount': float(self.total_amount),
             'order_type': self.order_type,
             'status': self.status,
@@ -47,7 +48,8 @@ class Order(db.Model):
             'delivery_fee': float(self.delivery_fee) if self.delivery_fee else 0,
             'created_at': self.created_at.isoformat(),
             'estimated_ready_time': self.estimated_ready_time.isoformat() if self.estimated_ready_time else None,
-            'items': [item.to_dict() for item in self.order_items]
+            'items': [item.to_dict() for item in self.order_items],
+            'payment': self.payment.to_dict() if self.payment else None
         }
     
     def __repr__(self):
