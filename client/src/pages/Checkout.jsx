@@ -19,7 +19,7 @@ const Checkout = () => {
   const [contact, setContact] = useState({ fullName: '', email: '', phone: '' })
   const [deliveryMethod, setDeliveryMethod] = useState('pickup')
   const [deliveryAddress, setDeliveryAddress] = useState({ county: '', street: '', apartment: '', landmark: '', notes: '' })
-  const [paymentMethod, setPaymentMethod] = useState('pesapal')
+  const [paymentMethod, setPaymentMethod] = useState('mpesa')
   const [errors, setErrors] = useState({})
   const [isPlacingOrder, setIsPlacingOrder] = useState(false)
   const placeOrderTimerRef = useRef(null)
@@ -167,7 +167,7 @@ const InfoReviewCard = ({ contact, deliveryMethod, deliveryAddress, onEdit }) =>
 )
 
 const ConfirmationScreen = ({ contact, deliveryMethod, paymentMethod, onBackToMenu }) => {
-  const paymentLabels = { pesapal: 'Pesapal', mpesa: 'M-Pesa', cod: 'Cash on Delivery' }
+  const paymentLabels = { mpesa: 'M-Pesa', cod: 'Cash on Delivery' }
   return (
     <div className="mt-10 max-w-xl mx-auto text-center">
       <div className="bg-white/6 rounded-2xl border border-white/10 p-10">

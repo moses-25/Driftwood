@@ -1,22 +1,7 @@
-import pesapalLogo from '../../assets/logo/pesapal.png'
 import mpesaLogo from '../../assets/logo/M-PESA.png'
 import cashLogo from '../../assets/logo/cash.png'
 
 const PAYMENT_METHODS = [
-  {
-    id: 'pesapal',
-    label: 'Pesapal',
-    description: 'Cards, mobile money & more',
-    badge: 'Recommended',
-    note: "You'll be redirected to Pesapal's secure payment gateway.",
-    icon: (
-      <img 
-        src={pesapalLogo} 
-        alt="Pesapal" 
-        className="w-6 h-6 object-contain"
-      />
-    ),
-  },
   {
     id: 'mpesa',
     label: 'M-Pesa',

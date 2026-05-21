@@ -74,7 +74,7 @@ def create_order():
         db.session.commit()
         
         # Process payment if needed
-        if data['paymentMethod'] in ['card', 'mpesa']:
+        if data['paymentMethod'] in ['cash', 'mpesa']:
             payment_service = PaymentService()
             payment_result = payment_service.process_payment(order, data['paymentMethod'])
             
