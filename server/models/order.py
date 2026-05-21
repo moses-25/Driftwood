@@ -15,7 +15,7 @@ class Order(db.Model):
     status = db.Column(db.String(20), default='pending')  # pending, confirmed, preparing, ready, completed, cancelled
     
     # Payment details
-    payment_method = db.Column(db.String(20))  # card, mpesa, cash
+    payment_method = db.Column(db.String(20))  # mpesa, cash
     payment_status = db.Column(db.String(20), default='pending')  # pending, paid, failed
     payment_reference = db.Column(db.String(100))
     

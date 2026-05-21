@@ -88,30 +88,12 @@ class PaymentService:
         except Exception as e:
             return {'success': False, 'error': str(e)}
     
-    def process_card_payment(self, order, card_details):
-        """Process card payment (integrate with your preferred payment gateway)"""
-        # This is a placeholder - integrate with Stripe, PayPal, or other payment processor
-        try:
-            # Simulate payment processing
-            # In real implementation, you would call your payment gateway API
-            
-            # For demo purposes, assume payment is successful
-            return {
-                'success': True,
-                'reference': f"card_{order.order_number}_{datetime.now().strftime('%Y%m%d%H%M%S')}",
-                'message': 'Card payment processed successfully'
-            }
-        except Exception as e:
-            return {'success': False, 'error': str(e)}
-    
+ 
     def process_payment(self, order, payment_method, **kwargs):
         """Main payment processing method"""
         if payment_method == 'mpesa':
             phone_number = kwargs.get('phone_number', order.customer.phone)
             return self.process_mpesa_payment(order, phone_number)
-        elif payment_method == 'card':
-            card_details = kwargs.get('card_details', {})
-            return self.process_card_payment(order, card_details)
         elif payment_method == 'cash':
             return {
                 'success': True,
