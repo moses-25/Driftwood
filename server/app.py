@@ -16,7 +16,16 @@ def test():
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
-    
+
+    # Import all models so Alembic can see the full schema for migrations
+    from models.user import User
+    from models.product import Product
+    from models.category import Category
+    from models.order import Order
+    from models.order_item import OrderItem
+    from models.review import Review
+    from models.payment import Payment
+
     # Initialize extensions
     db.init_app(app)
     migrate.init_app(app, db)
@@ -29,10 +38,3 @@ def create_app():
     
     test()
     return app
-
-
-
-if __name__ == '__main__':
-    app = create_app()
-    app.run(debug=True, host='0.0.0.0', port=5000)
-    
