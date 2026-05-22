@@ -6,11 +6,11 @@ from .order_item import OrderItem
 from .payment import Payment
 from .review import Review
 
-# Legacy models - commented out to avoid conflicts during migration
+# Legacy models (restored for compatibility)
+from .menu_item import MenuItem
 # from .customer import Customer
-# from .menu_item import MenuItem
 
 __all__ = [
-    'User', 'Category', 'Product', 'Order', 'OrderItem', 'Payment', 'Review'
-    # 'Customer', 'MenuItem'  # Legacy models
+    'User', 'Category', 'Product', 'Order', 'OrderItem', 'Payment', 'Review', 'MenuItem'
+    # 'Customer'  # Legacy models
 ]
