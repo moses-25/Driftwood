@@ -1,20 +1,9 @@
 export default function Hero() {
   return (
-    <div id="home" className="relative w-full h-screen overflow-hidden">
+    <div id="home" className="relative w-full h-[60vh] md:h-screen md:max-h-[90vh] overflow-hidden pt-16 md:pt-20">
 
-      {/* Background Video - two side by side to fill landscape screen */}
-      <div className="absolute inset-0 flex flex-col md:flex-row bg-black">
-        <video
-          src="/wood.mp4"
-          autoPlay
-          loop
-          muted
-          playsInline
-          preload="metadata"
-          poster="/Driftwood.png"
-          aria-hidden="true"
-          className="w-full h-[60vh] md:h-full md:w-1/2 object-contain"
-        />
+      {/* Background Video - full screen */}
+      <div className="absolute inset-0 bg-black">
         <video
           src="/2.mp4"
           autoPlay
@@ -24,7 +13,11 @@ export default function Hero() {
           preload="metadata"
           poster="/Driftwood.png"
           aria-hidden="true"
-          className="w-full h-[60vh] md:h-full md:w-1/2 object-contain"
+          className="w-full h-full object-cover md:scale-90"
+          style={{
+            maskImage: 'radial-gradient(ellipse at center, black 0%, black 60%, transparent 100%)',
+            WebkitMaskImage: 'radial-gradient(ellipse at center, black 0%, black 60%, transparent 100%)'
+          }}
         />
       </div>
 
@@ -64,14 +57,6 @@ export default function Hero() {
           A warm sanctuary where every cup tells a story.<br />
           <span className="text-white font-bold">Crafted with care, served with love.</span>
         </p>
-      </div>
-
-      {/* Scroll indicator */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 animate-bounce">
-        <span className="text-xs text-white/50 uppercase tracking-widest">Scroll</span>
-        <svg className="w-5 h-5 text-white/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-        </svg>
       </div>
 
     </div>

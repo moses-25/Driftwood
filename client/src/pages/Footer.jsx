@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import PrivacyPolicyModal from '../components/PrivacyPolicyModal'
 import TermsOfServiceModal from '../components/TermsOfServiceModal'
 
@@ -88,6 +88,22 @@ export default function Footer() {
   const [subStatus, setSubStatus] = useState('idle')
   const [showPrivacy, setShowPrivacy] = useState(false)
   const [showTerms, setShowTerms] = useState(false)
+
+  // Prevent body scroll when any modal is open
+  useEffect(() => {
+    if (showPrivacy || showTerms) {
+      document.body.style.overflow = 'hidden'
+      document.documentElement.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+      document.documentElement.style.overflow = ''
+    }
+    
+    return () => {
+      document.body.style.overflow = ''
+      document.documentElement.style.overflow = ''
+    }
+  }, [showPrivacy, showTerms])
 
   const handleSubscribe = async () => {
     if (!email) return
