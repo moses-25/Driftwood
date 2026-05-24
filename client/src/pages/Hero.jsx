@@ -15,8 +15,8 @@ export default function Hero() {
           aria-hidden="true"
           className="w-full h-full object-cover md:scale-90"
           style={{
-            maskImage: 'radial-gradient(ellipse at center, black 0%, black 30%, transparent 100%)',
-            WebkitMaskImage: 'radial-gradient(ellipse at center, black 0%, black 30%, transparent 100%)'
+            maskImage: 'radial-gradient(ellipse at center, black 0%, black 60%, transparent 100%)',
+            WebkitMaskImage: 'radial-gradient(ellipse at center, black 0%, black 60%, transparent 100%)'
           }}
         />
       </div>
