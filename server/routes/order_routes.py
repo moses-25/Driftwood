@@ -33,7 +33,7 @@ def create_order():
         500: Server error
     """
     try:
-        data = request.get_json()
+        data = request.get_json(force=True)
         
         if not data:
             return jsonify({'success': False, 'error': 'No data provided'}), 400

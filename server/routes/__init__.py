@@ -7,6 +7,7 @@ from .product_routes import product_bp
 from .category_routes import category_bp
 from .order_routes import order_bp
 from .payment_routes import payment_bp
+from .user_routes import user_bp
 
 # Legacy routes (to be deprecated)
 # from .menu_routes import menu_bp  # Replaced by product_routes
@@ -23,6 +24,7 @@ def register_routes(app):
     app.register_blueprint(category_bp, url_prefix='/api')
     app.register_blueprint(order_bp, url_prefix='/api')
     app.register_blueprint(payment_bp, url_prefix='/api')
+    app.register_blueprint(user_bp, url_prefix='/api')
     
     # Simple health check route
     @app.route('/api/health')
