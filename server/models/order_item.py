@@ -28,13 +28,24 @@ class OrderItem(db.Model):
                 return {}
         return {}
     
+    def safe_float(self, value):
+        if value is None:
+            return 0.0
+        try:
+            result = float(value)
+            if result != result or result == float('inf') or result == float('-inf'):
+                return 0.0
+            return result
+        except (TypeError, ValueError, OverflowError):
+            return 0.0
+
     def to_dict(self):
         return {
             'id': self.id,
             'product': self.product.to_dict() if self.product else None,
             'quantity': self.quantity,
-            'unit_price': float(self.unit_price),
-            'subtotal': float(self.subtotal),
+            'unit_price': self.safe_float(self.unit_price),
+            'subtotal': self.safe_float(self.subtotal),
             'customizations': self.get_customizations()
         }
     

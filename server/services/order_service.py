@@ -139,7 +139,7 @@ class OrderService:
             total_amount = OrderService.calculate_order_total(validated_items, delivery_fee)
             
             # Verify total matches (if provided)
-            if 'total_amount' in order_data:
+            if order_data.get('total_amount') is not None:
                 provided_total = Decimal(str(order_data['total_amount']))
                 if abs(provided_total - total_amount) > Decimal('0.01'):
                     return None, f"Total amount mismatch. Expected: {total_amount}, Provided: {provided_total}", 400
