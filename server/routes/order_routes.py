@@ -1,203 +1,305 @@
+"""
+Order routes
+Handles all order-related API endpoints
+Supports both authenticated users and guest checkout
+"""
 from flask import Blueprint, jsonify, request
-from models.order import Order
-from models.order_item import OrderItem
-from models.customer import Customer
-from models.menu_item import MenuItem
-from extensions import db
-from datetime import datetime, timedelta
-from services.payment_service import PaymentService
+from flask_jwt_extended import jwt_required, get_jwt_identity
+from services.order_service import OrderService
+from utils.decorators import staff_required, get_current_user
 
 order_bp = Blueprint('order', __name__)
 
+
 @order_bp.route('/orders', methods=['POST'])
 def create_order():
-    """Create a new order"""
+    """
+    Create a new order
+    Supports both authenticated users and guest checkout
+    
+    Request Body:
+        items (list): List of order items with product_id, quantity, customizations
+        order_type (str): 'pickup' or 'delivery' (required)
+        payment_method (str): 'mpesa' or 'cash' (required)
+        delivery_address (str): Delivery address (required for delivery orders)
+        delivery_instructions (str): Special delivery instructions
+        delivery_fee (float): Delivery fee (for delivery orders)
+        total_amount (float): Expected total amount (for verification)
+        
+    Returns:
+        201: Order created successfully
+        400: Validation error
+        404: Product not found
+        500: Server error
+    """
     try:
         data = request.get_json()
         
-        # Get or create customer
-        customer_data = data['customerInfo']
-        customer = Customer.query.filter_by(email=customer_data['email']).first()
+        if not data:
+            return jsonify({'success': False, 'error': 'No data provided'}), 400
         
-        if not customer:
-            customer = Customer(
-                name=customer_data['name'],
-                email=customer_data['email'],
-                phone=customer_data.get('phone'),
-                address=data.get('deliveryInfo', {}).get('address')
-            )
-            db.session.add(customer)
-            db.session.flush()  # Get customer ID
+        # Get user ID if authenticated (optional for guest checkout)
+        user_id = None
+        try:
+            user_id = get_jwt_identity()
+        except:
+            pass  # Guest checkout
         
-        # Create order
-        order = Order(
-            customer_id=customer.id,
-            total_amount=data['totalAmount'],
-            order_type=data['orderType'],
-            payment_method=data['paymentMethod'],
-            delivery_address=data.get('deliveryInfo', {}).get('address'),
-            delivery_instructions=data.get('deliveryInfo', {}).get('instructions'),
-            estimated_ready_time=datetime.utcnow() + timedelta(minutes=20)  # Default 20 min
-        )
+        # Extract items and order data
+        items = data.get('items', [])
+        order_data = {
+            'order_type': data.get('order_type'),
+            'payment_method': data.get('payment_method'),
+            'delivery_address': data.get('delivery_address'),
+            'delivery_instructions': data.get('delivery_instructions'),
+            'delivery_fee': data.get('delivery_fee', 0),
+            'total_amount': data.get('total_amount')
+        }
         
-        db.session.add(order)
-        db.session.flush()  # Get order ID
+        # Create order using service
+        order, error, status_code = OrderService.create_order(user_id, items, order_data)
         
-        # Add order items
-        total_calculated = 0
-        for item_data in data['items']:
-            menu_item = MenuItem.query.get(item_data['id'])
-            if not menu_item:
-                raise ValueError(f"Menu item {item_data['id']} not found")
-            
-            unit_price = float(menu_item.price)
-            total_price = unit_price * item_data['quantity']
-            total_calculated += total_price
-            
-            order_item = OrderItem(
-                order_id=order.id,
-                menu_item_id=menu_item.id,
-                quantity=item_data['quantity'],
-                unit_price=unit_price,
-                total_price=total_price
-            )
-            
-            if 'customizations' in item_data:
-                order_item.set_customizations(item_data['customizations'])
-            
-            db.session.add(order_item)
-        
-        # Verify total amount
-        if abs(total_calculated - float(data['totalAmount'])) > 0.01:
-            raise ValueError("Total amount mismatch")
-        
-        db.session.commit()
-        
-        # Process payment if needed
-        if data['paymentMethod'] in ['cash', 'mpesa']:
-            payment_service = PaymentService()
-            payment_result = payment_service.process_payment(order, data['paymentMethod'])
-            
-            if payment_result['success']:
-                order.payment_status = 'paid'
-                order.payment_reference = payment_result['reference']
-            else:
-                order.payment_status = 'failed'
-            
-            db.session.commit()
+        if error:
+            return jsonify({'success': False, 'error': error}), status_code
         
         return jsonify({
             'success': True,
-            'data': order.to_dict()
-        }), 201
+            'message': 'Order created successfully',
+            'data': order
+        }), status_code
         
     except Exception as e:
-        db.session.rollback()
-        return jsonify({
-            'success': False,
-            'error': str(e)
-        }), 500
+        return jsonify({'success': False, 'error': str(e)}), 500
 
 @order_bp.route('/orders/<int:order_id>', methods=['GET'])
 def get_order(order_id):
-    """Get order by ID"""
+    """
+    Get order by ID
+    Users can only view their own orders, staff/admin can view any order
+    
+    Path Parameters:
+        order_id (int): The order's ID
+        
+    Returns:
+        200: Order details
+        403: Access denied
+        404: Order not found
+        500: Server error
+    """
     try:
-        order = Order.query.get_or_404(order_id)
+        # Get user ID if authenticated
+        user_id = None
+        user = get_current_user()
+        if user:
+            user_id = user.id
+            # Staff and admin can view any order
+            if user.role in ['staff', 'admin']:
+                user_id = None  # Skip ownership check
+        
+        order, error, status_code = OrderService.get_order_by_id(order_id, user_id)
+        
+        if error:
+            return jsonify({'success': False, 'error': error}), status_code
+        
         return jsonify({
             'success': True,
-            'data': order.to_dict()
-        })
+            'data': order
+        }), status_code
+        
     except Exception as e:
-        return jsonify({
-            'success': False,
-            'error': str(e)
-        }), 500
+        return jsonify({'success': False, 'error': str(e)}), 500
 
 @order_bp.route('/orders/<order_number>', methods=['GET'])
 def get_order_by_number(order_number):
-    """Get order by order number"""
+    """
+    Get order by order number (for guest checkout tracking)
+    
+    Path Parameters:
+        order_number (str): The order's unique number
+        
+    Returns:
+        200: Order details
+        404: Order not found
+        500: Server error
+    """
     try:
-        order = Order.query.filter_by(order_number=order_number).first_or_404()
+        order, error, status_code = OrderService.get_order_by_number(order_number)
+        
+        if error:
+            return jsonify({'success': False, 'error': error}), status_code
+        
         return jsonify({
             'success': True,
-            'data': order.to_dict()
-        })
+            'data': order
+        }), status_code
+        
     except Exception as e:
-        return jsonify({
-            'success': False,
-            'error': str(e)
-        }), 500
+        return jsonify({'success': False, 'error': str(e)}), 500
 
 @order_bp.route('/orders/<int:order_id>/status', methods=['PUT'])
+@jwt_required()
+@staff_required
 def update_order_status(order_id):
-    """Update order status"""
+    """
+    Update order status (Staff/Admin only)
+    
+    Path Parameters:
+        order_id (int): The order's ID
+        
+    Request Body:
+        status (str): New status (required)
+            Valid values: pending, confirmed, preparing, ready, completed, cancelled
+        
+    Returns:
+        200: Order status updated successfully
+        400: Invalid status
+        403: Forbidden (not staff/admin)
+        404: Order not found
+        500: Server error
+    """
     try:
-        order = Order.query.get_or_404(order_id)
         data = request.get_json()
         
-        valid_statuses = ['pending', 'confirmed', 'preparing', 'ready', 'completed', 'cancelled']
-        new_status = data.get('status')
+        if not data or 'status' not in data:
+            return jsonify({'success': False, 'error': 'Status is required'}), 400
         
-        if new_status not in valid_statuses:
-            return jsonify({
-                'success': False,
-                'error': 'Invalid status'
-            }), 400
+        order, error, status_code = OrderService.update_order_status(order_id, data['status'])
         
-        order.status = new_status
-        
-        # Update estimated ready time if provided
-        if 'estimated_ready_time' in data:
-            order.estimated_ready_time = datetime.fromisoformat(data['estimated_ready_time'])
-        
-        db.session.commit()
+        if error:
+            return jsonify({'success': False, 'error': error}), status_code
         
         return jsonify({
             'success': True,
-            'data': order.to_dict()
-        })
+            'message': 'Order status updated successfully',
+            'data': order
+        }), status_code
+        
     except Exception as e:
-        db.session.rollback()
-        return jsonify({
-            'success': False,
-            'error': str(e)
-        }), 500
+        return jsonify({'success': False, 'error': str(e)}), 500
 
 @order_bp.route('/orders', methods=['GET'])
+@jwt_required()
+@staff_required
 def get_orders():
-    """Get orders with optional filtering"""
+    """
+    Get all orders with optional filtering (Staff/Admin only)
+    
+    Query Parameters:
+        page (int): Page number (default: 1)
+        per_page (int): Items per page (default: 20)
+        status (str): Filter by status
+        order_type (str): Filter by order type (pickup/delivery)
+        
+    Returns:
+        200: List of orders with pagination
+        403: Forbidden (not staff/admin)
+        500: Server error
+    """
     try:
         page = request.args.get('page', 1, type=int)
         per_page = request.args.get('per_page', 20, type=int)
-        status = request.args.get('status')
-        customer_email = request.args.get('customer_email')
+        status = request.args.get('status', type=str)
+        order_type = request.args.get('order_type', type=str)
         
-        query = Order.query
+        # Limit per_page to prevent abuse
+        per_page = min(per_page, 100)
         
-        if status:
-            query = query.filter_by(status=status)
-        
-        if customer_email:
-            customer = Customer.query.filter_by(email=customer_email).first()
-            if customer:
-                query = query.filter_by(customer_id=customer.id)
-        
-        orders = query.order_by(Order.created_at.desc()).paginate(
-            page=page, per_page=per_page, error_out=False
+        orders, pagination, error, status_code = OrderService.get_all_orders(
+            page=page,
+            per_page=per_page,
+            status=status,
+            order_type=order_type
         )
+        
+        if error:
+            return jsonify({'success': False, 'error': error}), status_code
         
         return jsonify({
             'success': True,
-            'data': [order.to_dict() for order in orders.items],
-            'pagination': {
-                'page': page,
-                'pages': orders.pages,
-                'per_page': per_page,
-                'total': orders.total
-            }
-        })
+            'data': orders,
+            'pagination': pagination
+        }), status_code
+        
     except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
+@order_bp.route('/orders/my-orders', methods=['GET'])
+@jwt_required()
+def get_my_orders():
+    """
+    Get current user's orders
+    
+    Query Parameters:
+        page (int): Page number (default: 1)
+        per_page (int): Items per page (default: 20)
+        status (str): Filter by status
+        
+    Returns:
+        200: List of user's orders with pagination
+        401: Unauthorized
+        500: Server error
+    """
+    try:
+        user_id = get_jwt_identity()
+        page = request.args.get('page', 1, type=int)
+        per_page = request.args.get('per_page', 20, type=int)
+        status = request.args.get('status', type=str)
+        
+        # Limit per_page to prevent abuse
+        per_page = min(per_page, 100)
+        
+        orders, pagination, error, status_code = OrderService.get_user_orders(
+            user_id=user_id,
+            page=page,
+            per_page=per_page,
+            status=status
+        )
+        
+        if error:
+            return jsonify({'success': False, 'error': error}), status_code
+        
         return jsonify({
-            'success': False,
-            'error': str(e)
-        }), 500
+            'success': True,
+            'data': orders,
+            'pagination': pagination
+        }), status_code
+        
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
+@order_bp.route('/orders/<int:order_id>', methods=['DELETE'])
+@jwt_required()
+def cancel_order(order_id):
+    """
+    Cancel an order
+    Users can cancel their own orders, admins can cancel any order
+    
+    Path Parameters:
+        order_id (int): The order's ID
+        
+    Returns:
+        200: Order cancelled successfully
+        400: Cannot cancel order
+        403: Access denied
+        404: Order not found
+        500: Server error
+    """
+    try:
+        user = get_current_user()
+        user_id = user.id if user.role == 'customer' else None  # Admin can cancel any order
+        
+        order, error, status_code = OrderService.cancel_order(order_id, user_id)
+        
+        if error:
+            return jsonify({'success': False, 'error': error}), status_code
+        
+        return jsonify({
+            'success': True,
+            'message': 'Order cancelled successfully',
+            'data': order
+        }), status_code
+        
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
