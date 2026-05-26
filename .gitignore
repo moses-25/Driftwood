@@ -105,3 +105,4 @@ env/
 .qodo/
 managed_context/
 test_suite_analysis/
+.kiro
