@@ -9,6 +9,9 @@ from .order_routes import order_bp
 from .payment_routes import payment_bp
 from .user_routes import user_bp
 
+# Phase 6: File upload routes
+from .upload_routes import upload_bp
+
 # Legacy routes (to be deprecated)
 # from .menu_routes import menu_bp  # Replaced by product_routes
 # from .customer_routes import customer_bp  # Replaced by user_routes
@@ -25,6 +28,9 @@ def register_routes(app):
     app.register_blueprint(order_bp, url_prefix='/api')
     app.register_blueprint(payment_bp, url_prefix='/api')
     app.register_blueprint(user_bp, url_prefix='/api')
+    
+    # Phase 6: File upload routes
+    app.register_blueprint(upload_bp, url_prefix='/api')
     
     # Simple health check route
     @app.route('/api/health')

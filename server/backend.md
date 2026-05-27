@@ -364,29 +364,81 @@ All authentication features have been tested and verified:
 
 ---
 
-### **Phase 6: File Upload & Media Management**
+### **Phase 6: File Upload & Media Management** ✅ (100% Completed)
 **Goal:** Handle product images and file uploads
 
-**Features to Implement:**
-1. **Image Upload**
-   - Product image upload
-   - Image validation and processing
-   - File size and type restrictions
+**Features Implemented:**
+1. ✅ **Image Upload**
+   - Product image upload with validation
+   - Category image upload
+   - Image validation (type, size, dimensions)
+   - File size restrictions (max 5MB)
+   - Supported formats: PNG, JPG, JPEG, GIF, WebP
 
-2. **File Management**
-   - Secure file storage
+2. ✅ **File Management**
+   - Secure file storage with unique filenames
    - File URL generation
-   - Image optimization
+   - File deletion with thumbnail cleanup
+   - Orphaned file cleanup
+   - Bulk upload support
 
-**Tasks for Phase 6:**
-- [ ] Create file upload service (`services/file_service.py`)
-- [ ] Implement upload routes (`routes/upload_routes.py`)
-- [ ] Add image processing utilities (`utils/image_utils.py`)
+3. ✅ **Image Processing**
+   - Image optimization (quality reduction, resizing)
+   - Thumbnail generation (small, medium, large)
+   - Image info extraction (dimensions, size, format)
+   - WebP conversion support
+   - Dominant color extraction
 
-**Files to Create:**
-- `services/file_service.py`
-- `routes/upload_routes.py`
-- `utils/image_utils.py`
+**Completed Tasks:**
+- ✅ Created image utilities (`utils/image_utils.py`) - 15 functions
+- ✅ Created file service (`services/file_service.py`) - 10 methods
+- ✅ Implemented upload routes (`routes/upload_routes.py`) - 8 endpoints
+- ✅ Created upload directory structure
+- ✅ Added Pillow dependency
+- ✅ Registered upload routes in app
+
+**Files Created:**
+- ✅ `utils/image_utils.py` - Image processing utilities
+- ✅ `services/file_service.py` - File upload service
+- ✅ `routes/upload_routes.py` - Upload API endpoints
+- ✅ `test_phase6.py` - Automated test suite
+- ✅ `uploads/` directory structure
+
+**API Endpoints (8 total):**
+- ✅ `GET /api/uploads/<path:filename>` - Serve uploaded file
+- ✅ `POST /api/upload/product-image` - Upload product image (Admin)
+- ✅ `POST /api/upload/category-image` - Upload category image (Admin)
+- ✅ `DELETE /api/upload/delete/<file_type>/<filename>` - Delete file (Admin)
+- ✅ `GET /api/upload/files/<file_type>` - List files (Staff/Admin)
+- ✅ `GET /api/upload/file-info/<file_type>/<filename>` - Get file info
+- ✅ `POST /api/upload/cleanup/<file_type>` - Cleanup orphaned files (Admin)
+- ✅ `POST /api/upload/bulk-upload` - Bulk upload images (Admin)
+
+**What's Working:**
+- ✅ Image validation (type, size, dimensions)
+- ✅ Image optimization and compression
+- ✅ Automatic thumbnail generation (3 sizes)
+- ✅ Secure file storage with unique names
+- ✅ File URL generation
+- ✅ File deletion with cleanup
+- ✅ Bulk upload support
+- ✅ Orphaned file cleanup
+- ✅ Product/Category image association
+
+**Testing:**
+- ✅ Test script created (`test_phase6.py`)
+- ✅ All utility functions tested
+- ✅ Service methods verified
+- ✅ Routes verified
+- ✅ Upload/delete operations tested
+
+**Image Processing Features:**
+- ✅ Optimization (quality 85%, max width 1200px)
+- ✅ Thumbnails: small (150x150), medium (300x300), large (600x600)
+- ✅ Format conversion (WebP support)
+- ✅ Corruption detection
+- ✅ Dominant color extraction
+- ✅ RGBA to RGB conversion
 
 ---
 
@@ -533,12 +585,12 @@ python run.py
 - ✅ **Phase 3:** Authentication & Authorization (100% - complete auth system with JWT, role-based access, password management)
 - ✅ **Phase 4:** Core API Endpoints (95% - full MVP ready with all CRUD operations, guest checkout, user management, payment integration)
 - ✅ **Phase 5:** Payment Integration (100% - M-Pesa STK Push, refunds, payment history, reports, retry mechanism, comprehensive utilities)
+- ✅ **Phase 6:** File Upload & Media Management (100% - image upload, optimization, thumbnails, file management, bulk upload)
 
 ### Next Priority Tasks:
-1. **Phase 6: File Upload & Media Management** - Product image uploads, image optimization, file storage
-2. **Phase 7: Advanced Features** - Reviews, notifications, analytics, inventory management
-3. **Phase 8: Testing & Quality Assurance** - Comprehensive unit and integration tests
-4. **Phase 9: Deployment & Production Setup** - Docker, monitoring, logging
+1. **Phase 7: Advanced Features** - Reviews & ratings, notifications, analytics, inventory management
+2. **Phase 8: Testing & Quality Assurance** - Comprehensive unit and integration tests
+3. **Phase 9: Deployment & Production Setup** - Docker, monitoring, logging
 
 ---
 
