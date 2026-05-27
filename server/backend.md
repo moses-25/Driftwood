@@ -277,35 +277,90 @@ All authentication features have been tested and verified:
 
 ---
 
-### **Phase 5: Payment Integration** ⚠️ (Partially Completed)
+### **Phase 5: Payment Integration** ✅ (100% Completed)
 **Goal:** Integrate M-Pesa payment system
 
-**Features to Implement:**
-1. **M-Pesa STK Push**
-   - Initiate payment requests
-   - Handle payment callbacks
-   - Payment status tracking
+**Features Implemented:**
+1. ✅ **M-Pesa STK Push**
+   - Initiate payment requests with validation
+   - Handle payment callbacks with parsing
+   - Payment status tracking and queries
+   - Enhanced error handling and logging
 
-2. **Payment Processing**
+2. ✅ **Payment Processing**
    - Order payment workflow
-   - Payment confirmation
+   - Payment confirmation with auto-order confirmation
    - Failed payment handling
+   - Payment retry mechanism
 
-3. **Payment History**
-   - Transaction logging
-   - Payment reports
-   - Refund processing
+3. ✅ **Payment History & Reports**
+   - Transaction logging with sanitization
+   - Payment history with pagination
+   - Payment reports with statistics
+   - Refund processing (full and partial)
 
-**Tasks for Phase 5:**
-- ✅ Create M-Pesa service (`services/mpesa_service.py`) - exists as payment_service.py
-- [ ] Implement payment routes (`routes/payment_routes.py`)
-- [ ] Add webhook handlers for callbacks
-- [ ] Create payment utilities (`utils/payment_utils.py`)
+4. ✅ **Payment Utilities**
+   - Phone number validation and formatting
+   - Amount validation and formatting
+   - Payment reference generation
+   - Webhook signature verification
+   - Callback data parsing and sanitization
+   - Refund amount validation
+
+**Completed Tasks:**
+- ✅ Enhanced M-Pesa service (`services/payment_service.py`)
+- ✅ Implemented all payment routes (`routes/payment_routes.py`)
+- ✅ Added webhook handlers for callbacks, timeouts, and refunds
+- ✅ Created comprehensive payment utilities (`utils/payment_utils.py`)
+- ✅ Added refund fields to Payment model
+- ✅ Implemented payment query, retry, history, and reports endpoints
 
 **Files Status:**
-- ✅ `services/payment_service.py` - exists (check if M-Pesa is implemented)
-- [ ] `routes/payment_routes.py` - needs creation
-- [ ] `utils/payment_utils.py` - needs creation
+- ✅ `services/payment_service.py` - Enhanced with refunds, retry, and query
+- ✅ `routes/payment_routes.py` - 11 endpoints implemented
+- ✅ `utils/payment_utils.py` - Complete utility library created
+- ✅ `models/payment.py` - Enhanced with refund fields
+- ✅ `config.py` - Added M-Pesa B2C and APP_URL configs
+- ✅ `test_phase5.py` - Comprehensive test suite created
+- ✅ `PHASE5_COMPLETE.md` - Full documentation created
+
+**API Endpoints (11 total):**
+- ✅ `POST /api/payments/mpesa/initiate` - Initiate M-Pesa payment
+- ✅ `POST /api/payments/mpesa/callback` - M-Pesa payment callback
+- ✅ `POST /api/payments/mpesa/timeout` - M-Pesa timeout callback
+- ✅ `POST /api/payments/mpesa/refund-callback` - M-Pesa refund callback
+- ✅ `GET /api/payments/<id>` - Get payment details
+- ✅ `GET /api/payments/order/<order_id>` - Get order payment
+- ✅ `GET /api/payments/query/<checkout_request_id>` - Query payment status
+- ✅ `POST /api/payments/<id>/refund` - Process refund (Admin)
+- ✅ `POST /api/payments/<id>/retry` - Retry failed payment
+- ✅ `GET /api/payments/history` - Get payment history
+- ✅ `GET /api/payments/reports` - Get payment reports (Staff/Admin)
+
+**What's Working:**
+- ✅ M-Pesa STK Push with validation
+- ✅ Payment callbacks with parsing
+- ✅ Payment status queries
+- ✅ Full and partial refunds
+- ✅ Payment retry mechanism
+- ✅ Payment history with pagination
+- ✅ Payment reports with statistics
+- ✅ Comprehensive logging and error handling
+- ✅ Webhook handlers for all M-Pesa events
+
+**Testing:**
+- ✅ Test script created (`test_phase5.py`)
+- ✅ All utility functions tested
+- ✅ Service methods verified
+- ✅ Routes verified
+- ✅ Model fields verified
+
+**Documentation:**
+- ✅ Complete Phase 5 report (`PHASE5_COMPLETE.md`)
+- ✅ API endpoint documentation
+- ✅ Testing guide
+- ✅ Environment variables guide
+- ✅ Payment flow diagrams
 
 ---
 
@@ -477,13 +532,13 @@ python run.py
 - ✅ **Phase 2:** Database Models & Schema Design (100% - all models created, migrations applied, seed data working)
 - ✅ **Phase 3:** Authentication & Authorization (100% - complete auth system with JWT, role-based access, password management)
 - ✅ **Phase 4:** Core API Endpoints (95% - full MVP ready with all CRUD operations, guest checkout, user management, payment integration)
-- ⚠️ **Phase 5:** Payment Integration (60% - M-Pesa STK Push implemented, callback handler, payment tracking)
+- ✅ **Phase 5:** Payment Integration (100% - M-Pesa STK Push, refunds, payment history, reports, retry mechanism, comprehensive utilities)
 
 ### Next Priority Tasks:
-1. **Phase 5: Payment Enhancement** - Complete webhook handlers, add refund processing
-2. **Review System** - Create reviews and ratings functionality
-3. **Advanced Features** - Analytics, inventory alerts, email notifications
-4. **Testing** - Comprehensive unit and integration tests
+1. **Phase 6: File Upload & Media Management** - Product image uploads, image optimization, file storage
+2. **Phase 7: Advanced Features** - Reviews, notifications, analytics, inventory management
+3. **Phase 8: Testing & Quality Assurance** - Comprehensive unit and integration tests
+4. **Phase 9: Deployment & Production Setup** - Docker, monitoring, logging
 
 ---
 

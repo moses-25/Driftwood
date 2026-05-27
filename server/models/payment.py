@@ -25,6 +25,12 @@ class Payment(db.Model):
     payment_reference = db.Column(db.String(100))  # Internal reference
     failure_reason = db.Column(db.Text)
     
+    # Refund fields
+    refunded_amount = db.Column(db.Numeric(10, 2), default=0.0)
+    refund_reference = db.Column(db.String(100))
+    refund_reason = db.Column(db.Text)
+    refunded_at = db.Column(db.DateTime)
+    
     # Timestamps
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
@@ -59,6 +65,10 @@ class Payment(db.Model):
             'currency': self.currency,
             'payment_reference': self.payment_reference,
             'failure_reason': self.failure_reason,
+            'refunded_amount': float(self.refunded_amount) if self.refunded_amount else 0.0,
+            'refund_reference': self.refund_reference,
+            'refund_reason': self.refund_reason,
+            'refunded_at': self.refunded_at.isoformat() if self.refunded_at else None,
             'created_at': self.created_at.isoformat() if self.created_at else None,
             'completed_at': self.completed_at.isoformat() if self.completed_at else None
         }
