@@ -19,6 +19,11 @@ class Config:
     MPESA_CONSUMER_SECRET = os.environ.get('MPESA_CONSUMER_SECRET')
     MPESA_SHORTCODE = os.environ.get('MPESA_SHORTCODE')
     MPESA_PASSKEY = os.environ.get('MPESA_PASSKEY')
+    MPESA_INITIATOR_NAME = os.environ.get('MPESA_INITIATOR_NAME', 'testapi')
+    MPESA_SECURITY_CREDENTIAL = os.environ.get('MPESA_SECURITY_CREDENTIAL', '')
+    
+    # Application URL (for callbacks)
+    APP_URL = os.environ.get('APP_URL', 'http://localhost:5000')
     
     # Email configuration
     MAIL_SERVER = os.environ.get('MAIL_SERVER')
