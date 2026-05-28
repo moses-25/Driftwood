@@ -303,3 +303,114 @@ def cancel_order(order_id):
         
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)}), 500
+
+
+
+@order_bp.route('/orders/<int:order_id>/timeline', methods=['GET'])
+def get_order_timeline(order_id):
+    """
+    Get order status history timeline
+    Public endpoint for order tracking
+    
+    Path Parameters:
+        order_id (int): The order's ID
+        
+    Returns:
+        200: Order timeline
+        404: Order not found
+        500: Server error
+    """
+    try:
+        from services.order_tracking_service import OrderTrackingService
+        
+        timeline = OrderTrackingService.get_order_timeline(order_id)
+        
+        return jsonify({
+            'success': True,
+            'data': timeline
+        }), 200
+        
+    except ValueError as e:
+        return jsonify({'success': False, 'error': str(e)}), 404
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
+@order_bp.route('/orders/<order_number>/track', methods=['GET'])
+def track_order(order_number):
+    """
+    Public order tracking by order number
+    For guest checkout orders
+    
+    Path Parameters:
+        order_number (str): The order's unique number
+        
+    Returns:
+        200: Order tracking information
+        404: Order not found
+        500: Server error
+    """
+    try:
+        from services.order_tracking_service import OrderTrackingService
+        
+        tracking_info = OrderTrackingService.track_order(order_number)
+        
+        return jsonify({
+            'success': True,
+            'data': tracking_info
+        }), 200
+        
+    except ValueError as e:
+        return jsonify({'success': False, 'error': str(e)}), 404
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
+@order_bp.route('/orders/<int:order_id>/status-with-tracking', methods=['PUT'])
+@jwt_required()
+@staff_required
+def update_order_status_with_tracking(order_id):
+    """
+    Update order status with history tracking and notifications (Staff/Admin only)
+    
+    Path Parameters:
+        order_id (int): The order's ID
+        
+    Request Body:
+        status (str): New status (required)
+        notes (str): Optional notes about the status change
+        
+    Returns:
+        200: Order status updated successfully
+        400: Invalid status
+        403: Forbidden (not staff/admin)
+        404: Order not found
+        500: Server error
+    """
+    try:
+        from services.order_tracking_service import OrderTrackingService
+        
+        data = request.get_json()
+        
+        if not data or 'status' not in data:
+            return jsonify({'success': False, 'error': 'Status is required'}), 400
+        
+        user_id = get_jwt_identity()
+        
+        order = OrderTrackingService.update_order_status(
+            order_id=order_id,
+            status=data['status'],
+            notes=data.get('notes'),
+            user_id=user_id
+        )
+        
+        return jsonify({
+            'success': True,
+            'message': 'Order status updated successfully',
+            'data': order
+        }), 200
+        
+    except ValueError as e:
+        return jsonify({'success': False, 'error': str(e)}), 400
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500

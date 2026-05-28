@@ -28,6 +28,8 @@ class Order(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     estimated_ready_time = db.Column(db.DateTime)
+    estimated_completion = db.Column(db.DateTime)
+    completed_at = db.Column(db.DateTime)
     
     # Relationships
     order_items = db.relationship('OrderItem', backref='order', lazy=True, cascade='all, delete-orphan')

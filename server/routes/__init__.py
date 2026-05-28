@@ -12,6 +12,12 @@ from .user_routes import user_bp
 # Phase 6: File upload routes
 from .upload_routes import upload_bp
 
+# Phase 7: Advanced features routes
+from .review_routes import review_bp
+from .analytics_routes import analytics_bp
+from .inventory_routes import inventory_bp
+from .notification_routes import notification_bp
+
 # Legacy routes (to be deprecated)
 # from .menu_routes import menu_bp  # Replaced by product_routes
 # from .customer_routes import customer_bp  # Replaced by user_routes
@@ -31,6 +37,12 @@ def register_routes(app):
     
     # Phase 6: File upload routes
     app.register_blueprint(upload_bp, url_prefix='/api')
+    
+    # Phase 7: Advanced features routes
+    app.register_blueprint(review_bp, url_prefix='/api')
+    app.register_blueprint(analytics_bp, url_prefix='/api')
+    app.register_blueprint(inventory_bp, url_prefix='/api')
+    app.register_blueprint(notification_bp, url_prefix='/api')
     
     # Simple health check route
     @app.route('/api/health')
