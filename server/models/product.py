@@ -20,6 +20,7 @@ class Product(db.Model):
     # Inventory management
     stock_quantity = db.Column(db.Integer, default=0)
     low_stock_threshold = db.Column(db.Integer, default=5)
+    track_inventory = db.Column(db.Boolean, default=True)
     
     # Product metadata
     preparation_time = db.Column(db.Integer)  # in minutes

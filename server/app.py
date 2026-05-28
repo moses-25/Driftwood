@@ -25,6 +25,9 @@ def create_app():
     from models.order_item import OrderItem
     from models.review import Review
     from models.payment import Payment
+    from models.stock_adjustment import StockAdjustment
+    from models.order_status_history import OrderStatusHistory
+    from models.notification_preference import NotificationPreference
 
     # Initialize extensions
     db.init_app(app)
