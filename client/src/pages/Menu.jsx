@@ -1,8 +1,9 @@
-import { useState, useRef, useMemo } from "react";
+import { useState, useRef, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { menuItems } from "../data/menuData";
+import { menuItems as staticMenuItems } from "../data/menuData";
 import MenuCard from "../components/MenuCard";
 import { useCart } from "../hooks/useCart";
+import { useProducts } from "../hooks/useProducts";
 
 const TABS = [
   { key: "cold",     label: "Cold Brews" },
@@ -84,13 +85,23 @@ const Menu = () => {
   const [quantity, setQuantity] = useState(1);
   const { addToCart } = useCart();
   const carouselRef = useRef(null);
+  
+  // Fetch products from backend
+  const { products: backendProducts, loading, error } = useProducts();
+  
+  // Use backend products if available, otherwise fall back to static data
+  const menuItems = useMemo(() => {
+    if (loading || error || backendProducts.length === 0) {
+      return staticMenuItems;
+    }
+    return backendProducts;
+  }, [backendProducts, loading, error]);
 
   const filtered = menuItems.filter((item) => item.category === activeTab);
   
-  // Derive selected item from activeTab to avoid setState in effect
   const selectedItem = useMemo(() => {
     return menuItems.find((i) => i.category === activeTab) || null;
-  }, [activeTab]);
+  }, [activeTab, menuItems]);
 
   const handleTabChange = (newTab) => {
     setActiveTab(newTab);

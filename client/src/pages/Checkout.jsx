@@ -6,13 +6,16 @@ import DeliveryAddressForm from '../components/checkout/DeliveryAddressForm'
 import PaymentMethodSection from '../components/checkout/PaymentMethodSection'
 import CheckoutOrderSummary from '../components/checkout/CheckoutOrderSummary'
 import { useCart } from '../hooks/useCart'
+import { useAuth } from '../hooks/useAuth'
 import { useRouter } from '../hooks/useRouter'
+import { createOrder } from '../services/api'
+import { parsePrice } from '../utils/price'
 import EmptyCart from '../components/EmptyCart'
 
 const STEPS = ['Cart', 'Information', 'Payment', 'Confirmation']
 
 const Checkout = () => {
-  const { totalItems, clearCart } = useCart()
+  const { items, totalItems, clearCart } = useCart()
   const { navigate } = useRouter()
   const [currentStep, setCurrentStep] = useState(1)
 
@@ -22,20 +25,16 @@ const Checkout = () => {
   const [paymentMethod, setPaymentMethod] = useState('mpesa')
   const [errors, setErrors] = useState({})
   const [isPlacingOrder, setIsPlacingOrder] = useState(false)
-  const placeOrderTimerRef = useRef(null)
+  const [orderResult, setOrderResult] = useState(null)
+  const [orderError, setOrderError] = useState('')
+  const { user } = useAuth()
+  const cancelledRef = useRef(false)
 
-  // Clear the place-order timeout if the component unmounts while the
-  // simulated request is still in-flight, preventing state updates on an
-  // unmounted component.
   useEffect(() => {
-    return () => {
-      if (placeOrderTimerRef.current !== null) {
-        clearTimeout(placeOrderTimerRef.current)
-      }
-    }
+    return () => { cancelledRef.current = true }
   }, [])
 
-  if (totalItems === 0 && currentStep !== 3) return <EmptyCart />
+  if (totalItems === 0 && currentStep !== 3 && !orderResult) return <EmptyCart />
 
   const validateInformation = () => {
     const newErrors = {}
@@ -53,14 +52,43 @@ const Checkout = () => {
 
   const handleContinueToPayment = () => { if (validateInformation()) setCurrentStep(2) }
 
-  const handlePlaceOrder = () => {
+  const handlePlaceOrder = async () => {
     setIsPlacingOrder(true)
-    placeOrderTimerRef.current = setTimeout(() => {
-      placeOrderTimerRef.current = null
-      setIsPlacingOrder(false)
+    setOrderError('')
+    try {
+      const orderItems = items.map(item => ({
+        product_id: item.id,
+        quantity: item.quantity,
+        customizations: item.customizations || {},
+      }))
+      const total = items.reduce((s, i) => s + parsePrice(i.price) * i.quantity, 0)
+      const deliveryFee = deliveryMethod === 'delivery' ? 399 : 0
+      
+      const orderData = {
+        items: orderItems,
+        order_type: deliveryMethod,
+        payment_method: paymentMethod === 'mpesa' ? 'mpesa' : 'cash',
+        customer_name: contact.fullName,
+        customer_email: contact.email,
+        customer_phone: contact.phone,
+        delivery_address: deliveryMethod === 'delivery'
+          ? `${deliveryAddress.street}${deliveryAddress.apartment ? `, ${deliveryAddress.apartment}` : ''}, ${deliveryAddress.county}`
+          : undefined,
+        delivery_instructions: deliveryAddress.notes || undefined,
+        delivery_fee: deliveryFee || undefined,
+      }
+      
+      const result = await createOrder(orderData)
+      if (cancelledRef.current) return
+      setOrderResult(result.data)
       clearCart()
       setCurrentStep(3)
-    }, 2000)
+    } catch (err) {
+      if (cancelledRef.current) return
+      setOrderError(err.message || 'Failed to place order')
+    } finally {
+      if (!cancelledRef.current) setIsPlacingOrder(false)
+    }
   }
 
   const handleBackToMenu = () => {
@@ -96,8 +124,8 @@ const Checkout = () => {
         {/* Progress */}
         <CheckoutProgress steps={STEPS} currentStep={currentStep} />
 
-        {currentStep === 3 ? (
-          <ConfirmationScreen contact={contact} deliveryMethod={deliveryMethod} paymentMethod={paymentMethod} onBackToMenu={handleBackToMenu} />
+        {currentStep === 3 || orderResult ? (
+          <ConfirmationScreen contact={contact} deliveryMethod={deliveryMethod} paymentMethod={paymentMethod} orderResult={orderResult} onBackToMenu={handleBackToMenu} />
         ) : (
           <div className="mt-10 grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
             <div className="lg:col-span-3 space-y-5">
@@ -120,6 +148,7 @@ const Checkout = () => {
                 <>
                   <InfoReviewCard contact={contact} deliveryMethod={deliveryMethod} deliveryAddress={deliveryAddress} onEdit={() => setCurrentStep(1)} />
                   <PaymentMethodSection paymentMethod={paymentMethod} setPaymentMethod={setPaymentMethod} />
+                  {orderError && <p className="text-red-400 text-sm text-center">{orderError}</p>}
                   <button onClick={handlePlaceOrder} disabled={isPlacingOrder} className={`${btnClass} font-tinos disabled:opacity-60 disabled:cursor-not-allowed`}>
                     {isPlacingOrder ? (
                       <><svg className="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" /></svg>Placing Order…</>
@@ -166,8 +195,12 @@ const InfoReviewCard = ({ contact, deliveryMethod, deliveryAddress, onEdit }) =>
   </div>
 )
 
-const ConfirmationScreen = ({ contact, deliveryMethod, paymentMethod, onBackToMenu }) => {
-  const paymentLabels = { mpesa: 'M-Pesa', cod: 'Cash on Delivery' }
+const ConfirmationScreen = ({ contact, deliveryMethod, paymentMethod, orderResult, onBackToMenu }) => {
+  const paymentLabels = { mpesa: 'M-Pesa', cash: 'Cash on Delivery' }
+  const orderNumber = orderResult?.order_number || ''
+  const estimatedTime = orderResult?.estimated_ready_time
+    ? new Date(orderResult.estimated_ready_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    : deliveryMethod === 'pickup' ? '15–20 min' : '30–45 min'
   return (
     <div className="mt-10 max-w-xl mx-auto text-center">
       <div className="bg-white/6 rounded-2xl border border-white/10 p-10">
@@ -180,12 +213,17 @@ const ConfirmationScreen = ({ contact, deliveryMethod, paymentMethod, onBackToMe
         <p className="text-white/60 mb-8 text-base font-tinos">
           Thank you, <span className="text-caramel font-semibold">{contact.fullName || 'friend'}</span>! Your order is being prepared.
         </p>
+        {orderNumber && (
+          <p className="text-white/40 text-sm font-mono mb-6">
+            Order #{orderNumber}
+          </p>
+        )}
         <div className="space-y-3 text-base text-left bg-white/5 rounded-xl p-5 border border-white/10 mb-8 font-tinos">
           {[
             ['Confirmation sent to', contact.email || '—'],
             ['Delivery method', deliveryMethod],
-            ['Payment via', paymentLabels[paymentMethod]],
-            ['Estimated time', deliveryMethod === 'pickup' ? '15–20 min' : '30–45 min'],
+            ['Payment via', paymentLabels[paymentMethod] || paymentMethod],
+            ['Estimated time', estimatedTime],
           ].map(([label, val]) => (
             <div key={label} className="flex justify-between">
               <span className="text-white/40">{label}</span>
