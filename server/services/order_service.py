@@ -9,6 +9,9 @@ from models.user import User
 from extensions import db
 from datetime import datetime, timedelta
 from decimal import Decimal
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class OrderService:
@@ -55,8 +58,11 @@ class OrderService:
                 return False, "Invalid quantity format", None
             
             # Check stock (if stock tracking is enabled)
-            if product.stock_quantity > 0 and quantity > product.stock_quantity:
-                return False, f"Insufficient stock for '{product.name}'. Available: {product.stock_quantity}", None
+            if product.track_inventory:
+                if product.stock_quantity <= 0:
+                    return False, f"Product '{product.name}' is out of stock", None
+                if quantity > product.stock_quantity:
+                    return False, f"Insufficient stock for '{product.name}'. Available: {product.stock_quantity}", None
             
             validated_items.append({
                 'product': product,
@@ -323,6 +329,7 @@ class OrderService:
     def update_order_status(order_id, new_status):
         """
         Update order status (Staff/Admin only)
+        Automatically deducts stock when order is completed
         
         Args:
             order_id: The order's ID
@@ -342,13 +349,36 @@ class OrderService:
             if new_status not in valid_statuses:
                 return None, f"Invalid status. Must be one of: {', '.join(valid_statuses)}", 400
             
+            old_status = order.status
             order.status = new_status
+            
+            # Deduct stock when order is completed
+            if new_status == 'completed' and old_status != 'completed':
+                from services.inventory_service import InventoryService
+                
+                for item in order.order_items:
+                    product = item.product
+                    
+                    # Only deduct if inventory tracking is enabled
+                    if product.track_inventory:
+                        try:
+                            InventoryService.deduct_stock(
+                                product_id=product.id,
+                                quantity=item.quantity,
+                                order_id=order.id
+                            )
+                            logger.info(f"Stock deducted for product {product.id}: -{item.quantity}")
+                        except Exception as e:
+                            # Log warning but don't fail the order
+                            logger.warning(f"Failed to deduct stock for product {product.id}: {str(e)}")
+            
             db.session.commit()
             
             return order.to_dict(), None, 200
             
         except Exception as e:
             db.session.rollback()
+            logger.error(f"Error updating order status: {str(e)}")
             return None, str(e), 500
     
     @staticmethod
