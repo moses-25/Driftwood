@@ -1,24 +1,44 @@
 /**
- * Parse a price string — handles both "KES 450" and legacy "$3.50" formats → number
+ * Parse price string to number
+ * Handles formats like "KES 350", "350", "$3.50", etc.
  */
-export function parsePrice(priceStr) {
-  const str = String(priceStr)
-  // Legacy dollar format: "$3.50" → multiply by ~130 (approx KES rate) — but
-  // we actually just want the numeric value so the cart math still works.
-  // The display is always formatted as KES via formatPrice.
-  return parseFloat(str.replace(/[^0-9.]/g, '')) || 0
-}
+export const parsePrice = (priceString) => {
+  if (typeof priceString === 'number') return priceString;
+  
+  // Remove currency symbols and commas, extract numbers
+  const match = String(priceString).match(/[\d,]+\.?\d*/);
+  return match ? parseFloat(match[0].replace(/,/g, '')) : 0;
+};
 
 /**
- * Format a number as a KES price string → "KES 450"
+ * Format number as price
  */
-export function formatPrice(amount) {
-  return `KES ${Math.round(amount).toLocaleString('en-KE')}`
-}
+export const formatPrice = (price) => {
+  return `KES ${Math.round(price).toLocaleString('en-KE')}`;
+};
 
 /**
- * Returns true if a price string is a legacy dollar price (e.g. "$3.50")
+ * Calculate total from cart items
  */
-export function isLegacyPrice(priceStr) {
-  return String(priceStr).trim().startsWith('$')
-}
+export const calculateTotal = (items) => {
+  return items.reduce((sum, item) => {
+    const price = parsePrice(item.price);
+    const quantity = item.quantity || 1;
+    return sum + (price * quantity);
+  }, 0);
+};
+
+/**
+ * Calculate tax (16% VAT in Kenya)
+ */
+export const calculateTax = (subtotal, taxRate = 0.16) => {
+  return subtotal * taxRate;
+};
+
+/**
+ * Calculate grand total with delivery and tax
+ */
+export const calculateGrandTotal = (subtotal, deliveryFee = 0, taxRate = 0.16) => {
+  const tax = calculateTax(subtotal, taxRate);
+  return subtotal + deliveryFee + tax;
+};

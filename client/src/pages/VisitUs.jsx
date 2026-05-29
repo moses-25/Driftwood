@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { submitContactForm } from '../services/api'
 import visitBg from '../assets/visit.jpeg'
 
 const isCurrentlyOpen = () => {
@@ -22,13 +23,7 @@ export default function VisitUs() {
     e.preventDefault()
     setStatus('loading')
     try {
-      const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:5000'
-      const res = await fetch(`${apiBase}/api/contact`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
-      })
-      if (!res.ok) throw new Error('Failed')
+      await submitContactForm(form)
       setStatus('success')
       setForm({ name: '', email: '', phone: '', message: '' })
     } catch {
