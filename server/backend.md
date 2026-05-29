@@ -19,6 +19,7 @@ This guide will walk you through building a complete backend system for Driftwoo
 
 **Project Structure:**
 ```
+
 server/
 ├── app.py              # Main Flask application
 ├── config.py           # Configuration settings
