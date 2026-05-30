@@ -279,6 +279,23 @@ docker run -p 5000:5000 driftwood-backend
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
+## 📚 Documentation
+
+Comprehensive documentation is available in the [`/docs`](./docs) folder:
+
+### Quick Links
+- **[Complete Project Status](./docs/COMPLETE_PROJECT_STATUS.md)** - Full system overview
+- **[Security Quick Fix](./docs/SECURITY_QUICK_FIX.md)** - Security guidelines
+- **[Image Upload Guide](./docs/START_HERE_IMAGES.md)** - Add product images
+- **[All Documentation](./docs/README.md)** - Complete documentation index
+
+### Documentation Categories
+- **Getting Started:** Setup guides and checklists
+- **Feature Fixes:** Bug fixes and improvements
+- **Image Upload:** Product image management
+- **Security:** Security best practices
+- **API Reference:** Endpoint documentation
+
 ## Support
 
 For questions or support, please open an issue in the GitHub repository or contact the development team.
