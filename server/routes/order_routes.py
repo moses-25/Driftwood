@@ -38,6 +38,13 @@ def create_order():
         if not data:
             return jsonify({'success': False, 'error': 'No data provided'}), 400
         
+        # Log the incoming data for debugging
+        print(f"\n{'='*50}")
+        print(f"ORDER CREATION REQUEST")
+        print(f"{'='*50}")
+        print(f"Data received: {data}")
+        print(f"{'='*50}\n")
+        
         # Get user ID if authenticated (optional for guest checkout)
         user_id = None
         try:
@@ -69,6 +76,13 @@ def create_order():
         }), status_code
         
     except Exception as e:
+        print(f"\n{'='*50}")
+        print(f"ORDER CREATION ERROR")
+        print(f"{'='*50}")
+        print(f"Error: {str(e)}")
+        import traceback
+        print(f"Traceback:\n{traceback.format_exc()}")
+        print(f"{'='*50}\n")
         return jsonify({'success': False, 'error': str(e)}), 500
 
 @order_bp.route('/orders/<int:order_id>', methods=['GET'])

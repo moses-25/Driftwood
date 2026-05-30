@@ -18,6 +18,9 @@ from .analytics_routes import analytics_bp
 from .inventory_routes import inventory_bp
 from .notification_routes import notification_bp
 
+# Contact form routes
+from .contact_routes import contact_bp
+
 # Legacy routes (to be deprecated)
 # from .menu_routes import menu_bp  # Replaced by product_routes
 # from .customer_routes import customer_bp  # Replaced by user_routes
@@ -42,7 +45,10 @@ def register_routes(app):
     app.register_blueprint(review_bp, url_prefix='/api')
     app.register_blueprint(analytics_bp, url_prefix='/api')
     app.register_blueprint(inventory_bp, url_prefix='/api')
-    app.register_blueprint(notification_bp, url_prefix='/api')
+    app.register_blueprint(notification_bp)  # Already has /api/notifications prefix
+    
+    # Contact form routes
+    app.register_blueprint(contact_bp, url_prefix='/api')
     
     # Simple health check route
     @app.route('/api/health')

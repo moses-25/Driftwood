@@ -56,21 +56,34 @@ const Checkout = () => {
     setIsPlacingOrder(true)
     setOrderError('')
     try {
+      console.log('Cart items:', items)
+      
       const orderItems = items.map(item => ({
         product_id: item.id,
         quantity: item.quantity,
         customizations: item.customizations || {},
       }))
+      
+      console.log('Order items to send:', orderItems)
+      
+      // Check if any items have invalid IDs (string IDs from static data)
+      const hasInvalidIds = orderItems.some(item => typeof item.product_id === 'string')
+      console.log('Has invalid IDs?', hasInvalidIds)
+      console.log('Product ID types:', orderItems.map(item => ({ id: item.product_id, type: typeof item.product_id })))
+      
+      if (hasInvalidIds) {
+        console.log('THROWING ERROR: Invalid product IDs detected')
+        throw new Error('Some items in your cart are not available for online ordering. Please clear your cart and add items again.')
+      }
       const total = items.reduce((s, i) => s + parsePrice(i.price) * i.quantity, 0)
       const deliveryFee = deliveryMethod === 'delivery' ? 399 : 0
+      const totalAmount = total + deliveryFee
       
       const orderData = {
         items: orderItems,
         order_type: deliveryMethod,
         payment_method: paymentMethod === 'mpesa' ? 'mpesa' : 'cash',
-        customer_name: contact.fullName,
-        customer_email: contact.email,
-        customer_phone: contact.phone,
+        // Don't send total_amount - let backend calculate from database prices
         delivery_address: deliveryMethod === 'delivery'
           ? `${deliveryAddress.street}${deliveryAddress.apartment ? `, ${deliveryAddress.apartment}` : ''}, ${deliveryAddress.county}`
           : undefined,
@@ -80,13 +93,19 @@ const Checkout = () => {
       
       const result = await createOrder(orderData)
       if (cancelledRef.current) return
+      
+      console.log('Order created successfully:', result)
+      
       setOrderResult(result.data)
       clearCart()
       setCurrentStep(3)
     } catch (err) {
       if (cancelledRef.current) return
+      console.error('Order creation failed:', err)
+      console.error('Error message:', err.message)
       setOrderError(err.message || 'Failed to place order')
     } finally {
+      console.log('Finally block - setting isPlacingOrder to false')
       if (!cancelledRef.current) setIsPlacingOrder(false)
     }
   }

@@ -91,10 +91,16 @@ const Menu = () => {
   
   // Use backend products if available, otherwise fall back to static data
   const menuItems = useMemo(() => {
-    if (loading || error || backendProducts.length === 0) {
+    // Always use backend products if they're loaded
+    if (backendProducts && backendProducts.length > 0) {
+      return backendProducts;
+    }
+    // Only use static data if still loading or there's an error
+    if (loading || error) {
       return staticMenuItems;
     }
-    return backendProducts;
+    // If backend returned empty array, use static data
+    return staticMenuItems;
   }, [backendProducts, loading, error]);
 
   const filtered = menuItems.filter((item) => item.category === activeTab);

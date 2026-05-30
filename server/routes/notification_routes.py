@@ -87,3 +87,44 @@ def test_notification():
     except Exception as e:
         logger.error(f"Error sending test notification: {str(e)}")
         return error_response("Failed to send test notification", 500)
+
+
+@notification_bp.route('/newsletter/subscribe', methods=['POST'])
+def subscribe_newsletter():
+    """
+    Subscribe to newsletter
+    Body: email
+    """
+    try:
+        data = request.get_json()
+        
+        if not data or 'email' not in data:
+            return error_response("Email is required", 400)
+        
+        email = data.get('email', '').strip()
+        
+        # Basic email validation
+        import re
+        email_pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+        if not re.match(email_pattern, email):
+            return error_response("Invalid email format", 400)
+        
+        # Send confirmation email
+        from services.email_service import EmailService
+        email_service = EmailService()
+        
+        success = email_service.send_newsletter_subscription(email)
+        
+        if success:
+            logger.info(f"Newsletter subscription successful for {email}")
+            return success_response(
+                data={'email': email, 'subscribed': True},
+                message="Successfully subscribed to newsletter!"
+            )
+        else:
+            logger.error(f"Failed to send newsletter subscription email to {email}")
+            return error_response("Failed to subscribe. Please try again later.", 500)
+        
+    except Exception as e:
+        logger.error(f"Error subscribing to newsletter: {str(e)}")
+        return error_response("Failed to subscribe to newsletter", 500)
