@@ -1,4 +1,20 @@
 /**
+ * Get placeholder image based on category
+ */
+const getPlaceholderImage = (categoryName) => {
+  // Return a data URL for a simple placeholder SVG
+  const color = {
+    'Hot Coffee': '#8B4513',
+    'Cold Coffee': '#4682B4',
+    'Pastries': '#DEB887',
+    'Specials': '#DAA520',
+    'Merchandise': '#696969',
+  }[categoryName] || '#8B4513';
+
+  return `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200'%3E%3Crect fill='${encodeURIComponent(color)}' width='200' height='200' opacity='0.2'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-size='16' fill='${encodeURIComponent(color)}' opacity='0.6'%3ENo Image%3C/text%3E%3C/svg%3E`;
+};
+
+/**
  * Transform backend product data to frontend menu item format
  */
 export const transformProductToMenuItem = (product) => {
@@ -17,7 +33,7 @@ export const transformProductToMenuItem = (product) => {
     name: product.name,
     description: product.description,
     price: `KES ${product.price.toFixed(0)}`,
-    image: product.image_url || null, // Will use placeholder if null
+    image: product.image_url || getPlaceholderImage(product.category_name),
     tag: product.tag || null,
     // Additional fields that might be useful
     isAvailable: product.is_available,

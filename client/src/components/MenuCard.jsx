@@ -1,6 +1,11 @@
 import { motion } from 'framer-motion'
 
 const MenuCard = ({ item, isSelected, onSelect, onAddToCart }) => {
+  const handleImageError = (e) => {
+    // If image fails to load, use a placeholder
+    e.target.src = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200'%3E%3Crect fill='%238B4513' width='200' height='200' opacity='0.2'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-size='16' fill='%238B4513' opacity='0.6'%3ENo Image%3C/text%3E%3C/svg%3E`;
+  };
+
   return (
     <motion.div
       whileHover={{ y: -5 }}
@@ -17,6 +22,7 @@ const MenuCard = ({ item, isSelected, onSelect, onAddToCart }) => {
         <img
           src={item.image}
           alt={item.name}
+          onError={handleImageError}
           className="w-[95%] h-[95%] object-contain object-center transition-transform duration-500 hover:scale-110"
           style={{ filter: "drop-shadow(0 8px 16px rgba(0,0,0,0.6))" }}
         />
