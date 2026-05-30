@@ -1,2 +1,29 @@
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
+
+# Environment variables
+.env
+.env.local
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+instance/
+
+# Testing and coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Uploads
+uploads/
+
+# Logs
+*.log
+
+# IDE
+.vscode/
+.idea/

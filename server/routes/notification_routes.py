@@ -5,7 +5,7 @@ API endpoints for notification management
 
 from flask import Blueprint, request, jsonify
 from services.notification_service import NotificationService
-from utils.decorators import jwt_required, role_required
+from utils.decorators import jwt_required as jwt_required_decorator, role_required
 from utils.response_formatter import success_response, error_response
 from flask_jwt_extended import get_jwt_identity
 import logging
@@ -16,7 +16,7 @@ notification_bp = Blueprint('notifications', __name__, url_prefix='/api/notifica
 
 
 @notification_bp.route('/preferences', methods=['GET'])
-@jwt_required
+@jwt_required_decorator
 def get_preferences():
     """Get current user's notification preferences"""
     try:
@@ -35,7 +35,7 @@ def get_preferences():
 
 
 @notification_bp.route('/preferences', methods=['PUT'])
-@jwt_required
+@jwt_required_decorator
 def update_preferences():
     """
     Update notification preferences
@@ -58,7 +58,7 @@ def update_preferences():
 
 
 @notification_bp.route('/test', methods=['POST'])
-@jwt_required
+@jwt_required_decorator
 @role_required(['admin'])
 def test_notification():
     """

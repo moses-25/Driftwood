@@ -219,7 +219,7 @@ export default function Footer() {
                 >
                   {subStatus === 'loading' ? 'Subscribing…' : 'Subscribe'}
                 </button>
-                {subStatus === 'success' && <p className="text-caramel text-xs text-center">✓ You're subscribed!</p>}
+                {subStatus === 'success' && <p className="text-green-400 text-xs text-center">✓ You're subscribed!</p>}
                 {subStatus === 'error' && <p className="text-red-400 text-xs text-center">Something went wrong. Try again.</p>}
               </div>
             </div>

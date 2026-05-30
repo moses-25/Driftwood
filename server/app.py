@@ -8,10 +8,8 @@ from database.connection import test_database_connection
 def test():
     is_connected = test_database_connection()
 
-    if is_connected:
-        print("Application started successfully.")
-    else:
-        print("Application could not start.")
+    if not is_connected:
+        raise RuntimeError("Database connection failed. Application cannot start.")
 
 def create_app():
     app = Flask(__name__)
@@ -34,7 +32,19 @@ def create_app():
     migrate.init_app(app, db)
     jwt.init_app(app)
     mail.init_app(app)
-    CORS(app)
+    
+    # Configure CORS with specific origin
+    client_origin = app.config.get('CLIENT_ORIGIN', 'http://localhost:5173')
+    CORS(app, resources={
+        r"/api/*": {
+            "origins": [client_origin],
+            "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+            "allow_headers": ["Content-Type", "Authorization"],
+            "expose_headers": ["Content-Type", "Authorization"],
+            "supports_credentials": True,
+            "max_age": 3600
+        }
+    })
     
     # Register routes
     register_routes(app)
