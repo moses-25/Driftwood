@@ -196,7 +196,8 @@ export const merchItems = [
   {
     id: 'm1',
     name: 'Driftwood Bucket Hat',
-    category: 'Accessories',
+    category: 'merch',
+    subcategory: 'Accessories',
     description: 'A wide-brim black bucket hat with "Driftwood cafe\'" embroidered in warm cream lettering. Features an adjustable chin strap cord for a secure, stylish fit — perfect for sunny mornings and café runs.',
     price: 'KES 2,200',
     tag: 'Bestseller',
@@ -205,7 +206,8 @@ export const merchItems = [
   {
     id: 'm2',
     name: 'Signature Canvas Tote',
-    category: 'Accessories',
+    category: 'merch',
+    subcategory: 'Accessories',
     description: 'A sturdy all-black canvas tote bearing the full Driftwood Café identity — EST. 2024, bold wordmark, and the tagline "Coffee · Community · Craft. Brewed with purpose." Spacious, reusable, and unmistakably Driftwood.',
     price: 'KES 1,800',
     tag: 'New',
@@ -214,7 +216,8 @@ export const merchItems = [
   {
     id: 'm3',
     name: 'Matte Black Ceramic Mug',
-    category: 'Drinkware',
+    category: 'merch',
+    subcategory: 'Drinkware',
     description: 'A smooth matte-black ceramic mug with "Driftwood cafe\'" printed in elegant cream-gold serif lettering. The perfect vessel for your morning ritual — understated, weighty, and built to be savoured.',
     price: 'KES 1,600',
     tag: null,
@@ -223,7 +226,8 @@ export const merchItems = [
   {
     id: 'm4',
     name: 'Driftwood Travel Tumbler',
-    category: 'Drinkware',
+    category: 'merch',
+    subcategory: 'Drinkware',
     description: 'An insulated matte-black travel tumbler with a ribbed silicone grip band, stainless steel rim, and secure flip-top lid. Keeps your brew hot on the go, branded with "Driftwood cafe\'" for the commuter who doesn\'t compromise.',
     price: 'KES 3,500',
     tag: 'Bestseller',
@@ -232,7 +236,8 @@ export const merchItems = [
   {
     id: 'm5',
     name: 'Coffee Into Code Tee — Navy',
-    category: 'Apparel',
+    category: 'merch',
+    subcategory: 'Apparel',
     description: 'A navy blue crew-neck tee featuring a playful illustrated graphic: "I Turn Coffee into Code" surrounded by steaming cups and coffee beans. Soft, comfortable, and made for the developer who runs on espresso.',
     price: 'KES 2,800',
     tag: null,
@@ -241,7 +246,8 @@ export const merchItems = [
   {
     id: 'm6',
     name: 'Coffee Into Code Tee — Grey',
-    category: 'Apparel',
+    category: 'merch',
+    subcategory: 'Apparel',
     description: 'A heather grey crew-neck tee with a bold, high-contrast "I Turn Coffee into Code" graphic print. Minimal, punchy, and unmistakably built for the caffeine-fuelled creative. A Driftwood cult classic.',
     price: 'KES 2,800',
     tag: 'New',
