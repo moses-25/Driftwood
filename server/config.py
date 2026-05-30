@@ -31,6 +31,7 @@ class Config:
     MAIL_USE_TLS = os.environ.get('MAIL_USE_TLS', 'true').lower() in ['true', 'on', '1']
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
+    OWNER_EMAIL = os.environ.get('OWNER_EMAIL')
     
     # File upload
     UPLOAD_FOLDER = os.environ.get('UPLOAD_FOLDER') or 'uploads'

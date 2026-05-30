@@ -96,6 +96,11 @@ class PaymentService:
             logger.info(f"Initiating M-Pesa payment for order {order.order_number}")
             
             response = requests.post(api_url, json=payload, headers=headers)
+            
+            # Log the response for debugging
+            logger.info(f"M-Pesa API Response Status: {response.status_code}")
+            logger.info(f"M-Pesa API Response Body: {response.text}")
+            
             response.raise_for_status()
             
             result = response.json()

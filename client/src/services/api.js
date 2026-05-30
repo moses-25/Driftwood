@@ -165,7 +165,7 @@ export const submitContactForm = async (formData) => {
 };
 
 export const subscribeNewsletter = async (email) => {
-  return apiRequest('/api/newsletter', {
+  return apiRequest('/api/notifications/newsletter/subscribe', {
     method: 'POST',
     body: JSON.stringify({ email }),
   });
