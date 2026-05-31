@@ -105,7 +105,7 @@ const Menu = () => {
     if (backendProducts && backendProducts.length > 0) {
       // Merge static merch images into backend products (DB has no image_url for merch)
       return backendProducts.map(p => {
-        if (p.category !== 'merch' || p.image) return p
+        if (p.category !== 'merch') return p
         const staticImage = merchImageMap[p.name.toLowerCase()]
         return staticImage ? { ...p, image: staticImage } : p
       })
