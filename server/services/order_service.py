@@ -38,8 +38,14 @@ class OrderService:
             if 'product_id' not in item or 'quantity' not in item:
                 return False, "Each item must have product_id and quantity", None
             
+            # Validate product_id is a positive integer
+            try:
+                product_id = int(item['product_id'])
+            except (ValueError, TypeError):
+                return False, f"Invalid product ID '{item['product_id']}'. Product IDs must be numbers.", None
+            
             # Get product
-            product = Product.query.get(item['product_id'])
+            product = Product.query.get(product_id)
             if not product:
                 return False, f"Product with ID {item['product_id']} not found", None
             
