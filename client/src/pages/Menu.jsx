@@ -93,22 +93,18 @@ const Menu = () => {
   
   // Use backend products for food/beverages, static data for merch
   const menuItems = useMemo(() => {
-    // For merch category, always use static data (merch won't change)
-    if (activeTab === 'merch') {
-      return merchItems;
-    }
-    
-    // For other categories, use backend products if available
+    // Use backend products for all categories when available
     if (backendProducts && backendProducts.length > 0) {
       return backendProducts;
     }
     
-    // Fallback to static data if still loading or there's an error
+    // Fallback to static data
+    if (activeTab === 'merch') {
+      return merchItems;
+    }
     if (loading || error) {
       return staticMenuItems;
     }
-    
-    // If backend returned empty array, use static data
     return staticMenuItems;
   }, [backendProducts, loading, error, activeTab]);
 
