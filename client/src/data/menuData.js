@@ -194,7 +194,7 @@ import merch6 from '../assets/Merch/M6.jpeg'
 
 export const merchItems = [
   {
-    id: 'm1',
+    id: 18,
     name: 'Driftwood Bucket Hat',
     category: 'merch',
     subcategory: 'Accessories',
@@ -204,7 +204,7 @@ export const merchItems = [
     image: merch1,
   },
   {
-    id: 'm2',
+    id: 19,
     name: 'Signature Canvas Tote',
     category: 'merch',
     subcategory: 'Accessories',
@@ -214,7 +214,7 @@ export const merchItems = [
     image: merch2,
   },
   {
-    id: 'm3',
+    id: 20,
     name: 'Matte Black Ceramic Mug',
     category: 'merch',
     subcategory: 'Drinkware',
@@ -224,7 +224,7 @@ export const merchItems = [
     image: merch3,
   },
   {
-    id: 'm4',
+    id: 21,
     name: 'Driftwood Travel Tumbler',
     category: 'merch',
     subcategory: 'Drinkware',
@@ -234,7 +234,7 @@ export const merchItems = [
     image: merch4,
   },
   {
-    id: 'm5',
+    id: 22,
     name: 'Coffee Into Code Tee — Navy',
     category: 'merch',
     subcategory: 'Apparel',
@@ -244,7 +244,7 @@ export const merchItems = [
     image: merch5,
   },
   {
-    id: 'm6',
+    id: 23,
     name: 'Coffee Into Code Tee — Grey',
     category: 'merch',
     subcategory: 'Apparel',
