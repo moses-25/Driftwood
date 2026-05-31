@@ -91,11 +91,24 @@ const Menu = () => {
   // Fetch products from backend
   const { products: backendProducts, loading, error } = useProducts();
   
-  // Use backend products for food/beverages, static data for merch
+  // Build a lookup of static merch images by product name (for when backend is used)
+  const merchImageMap = useMemo(() => {
+    const map = {}
+    for (const item of merchItems) {
+      map[item.name.toLowerCase()] = item.image
+    }
+    return map
+  }, [])
+
   const menuItems = useMemo(() => {
     // Use backend products for all categories when available
     if (backendProducts && backendProducts.length > 0) {
-      return backendProducts;
+      // Merge static merch images into backend products (DB has no image_url for merch)
+      return backendProducts.map(p => {
+        if (p.category !== 'merch' || p.image) return p
+        const staticImage = merchImageMap[p.name.toLowerCase()]
+        return staticImage ? { ...p, image: staticImage } : p
+      })
     }
     
     // Fallback to static data
@@ -106,7 +119,7 @@ const Menu = () => {
       return staticMenuItems;
     }
     return staticMenuItems;
-  }, [backendProducts, loading, error, activeTab]);
+  }, [backendProducts, loading, error, activeTab, merchImageMap]);
 
   const filtered = menuItems.filter((item) => item.category === activeTab);
   
