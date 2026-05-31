@@ -96,7 +96,6 @@ This message was sent via the Driftwood Cafe contact form.
         }), 200
         
     except Exception as e:
-        print(f"Error sending contact form email: {str(e)}")
         return jsonify({
             'error': 'Failed to send message',
             'message': 'An error occurred while processing your request. Please try again later.'

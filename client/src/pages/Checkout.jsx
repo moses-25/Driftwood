@@ -27,7 +27,8 @@ const Checkout = () => {
   const [isPlacingOrder, setIsPlacingOrder] = useState(false)
   const [orderResult, setOrderResult] = useState(null)
   const [orderError, setOrderError] = useState('')
-  const { user } = useAuth()
+  const [isProcessingPayment, setIsProcessingPayment] = useState(false)
+  const [paymentError, setPaymentError] = useState('')
   const cancelledRef = useRef(false)
 
   useEffect(() => {
@@ -56,33 +57,25 @@ const Checkout = () => {
     setIsPlacingOrder(true)
     setOrderError('')
     try {
-      console.log('Cart items:', items)
-      
       const orderItems = items.map(item => ({
         product_id: item.id,
         quantity: item.quantity,
         customizations: item.customizations || {},
       }))
       
-      console.log('Order items to send:', orderItems)
-      
       // Check if any items have invalid IDs (string IDs from static data)
       const hasInvalidIds = orderItems.some(item => typeof item.product_id === 'string')
-      console.log('Has invalid IDs?', hasInvalidIds)
-      console.log('Product ID types:', orderItems.map(item => ({ id: item.product_id, type: typeof item.product_id })))
       
       if (hasInvalidIds) {
-        console.log('THROWING ERROR: Invalid product IDs detected')
         throw new Error('Some items in your cart are not available for online ordering. Please clear your cart and add items again.')
       }
-      const total = items.reduce((s, i) => s + parsePrice(i.price) * i.quantity, 0)
+      
       const deliveryFee = deliveryMethod === 'delivery' ? 399 : 0
-      const totalAmount = total + deliveryFee
       
       const orderData = {
         items: orderItems,
         order_type: deliveryMethod,
-        payment_method: paymentMethod === 'mpesa' ? 'mpesa' : 'cash',
+        payment_method: paymentMethod,
         // Don't send total_amount - let backend calculate from database prices
         delivery_address: deliveryMethod === 'delivery'
           ? `${deliveryAddress.street}${deliveryAddress.apartment ? `, ${deliveryAddress.apartment}` : ''}, ${deliveryAddress.county}`
@@ -94,19 +87,52 @@ const Checkout = () => {
       const result = await createOrder(orderData)
       if (cancelledRef.current) return
       
-      console.log('Order created successfully:', result)
-      
       setOrderResult(result.data)
       clearCart()
-      setCurrentStep(3)
+      setCurrentStep(3) // Go to confirmation screen
     } catch (err) {
       if (cancelledRef.current) return
-      console.error('Order creation failed:', err)
-      console.error('Error message:', err.message)
       setOrderError(err.message || 'Failed to place order')
     } finally {
-      console.log('Finally block - setting isPlacingOrder to false')
       if (!cancelledRef.current) setIsPlacingOrder(false)
+    }
+  }
+
+  const handleProcessPayment = async () => {
+    if (!orderResult) return
+    
+    setIsProcessingPayment(true)
+    setPaymentError('')
+    
+    try {
+      if (paymentMethod === 'mpesa') {
+        // Import the payment API function
+        const { initiateMpesaPayment } = await import('../services/api')
+        
+        // Initiate M-Pesa payment
+        const paymentData = {
+          order_id: orderResult.id,
+          phone_number: contact.phone
+        }
+        
+        const result = await initiateMpesaPayment(paymentData)
+        
+        if (result.success) {
+          // Payment initiated successfully
+          setPaymentError('')
+          // You could show a message or poll for payment status
+          alert('M-Pesa payment initiated! Please check your phone to complete the payment.')
+        } else {
+          setPaymentError(result.error || 'Failed to initiate payment')
+        }
+      } else {
+        // Cash payment - no action needed
+        setPaymentError('')
+      }
+    } catch (err) {
+      setPaymentError(err.message || 'Failed to process payment')
+    } finally {
+      setIsProcessingPayment(false)
     }
   }
 
@@ -144,7 +170,16 @@ const Checkout = () => {
         <CheckoutProgress steps={STEPS} currentStep={currentStep} />
 
         {currentStep === 3 || orderResult ? (
-          <ConfirmationScreen contact={contact} deliveryMethod={deliveryMethod} paymentMethod={paymentMethod} orderResult={orderResult} onBackToMenu={handleBackToMenu} />
+          <ConfirmationScreen 
+            contact={contact} 
+            deliveryMethod={deliveryMethod} 
+            paymentMethod={paymentMethod} 
+            orderResult={orderResult} 
+            onBackToMenu={handleBackToMenu}
+            onProcessPayment={handleProcessPayment}
+            isProcessingPayment={isProcessingPayment}
+            paymentError={paymentError}
+          />
         ) : (
           <div className="mt-10 grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
             <div className="lg:col-span-3 space-y-5">
@@ -214,12 +249,17 @@ const InfoReviewCard = ({ contact, deliveryMethod, deliveryAddress, onEdit }) =>
   </div>
 )
 
-const ConfirmationScreen = ({ contact, deliveryMethod, paymentMethod, orderResult, onBackToMenu }) => {
+const ConfirmationScreen = ({ contact, deliveryMethod, paymentMethod, orderResult, onBackToMenu, onProcessPayment, isProcessingPayment, paymentError }) => {
   const paymentLabels = { mpesa: 'M-Pesa', cash: 'Cash on Delivery' }
   const orderNumber = orderResult?.order_number || ''
   const estimatedTime = orderResult?.estimated_ready_time
     ? new Date(orderResult.estimated_ready_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     : deliveryMethod === 'pickup' ? '15–20 min' : '30–45 min'
+  
+  const paymentStatus = orderResult?.payment_status || 'pending'
+  const isPaid = paymentStatus === 'paid'
+  const isPending = paymentStatus === 'pending'
+  
   return (
     <div className="mt-10 max-w-xl mx-auto text-center">
       <div className="bg-white/6 rounded-2xl border border-white/10 p-10">
@@ -250,6 +290,71 @@ const ConfirmationScreen = ({ contact, deliveryMethod, paymentMethod, orderResul
             </div>
           ))}
         </div>
+
+        {/* Payment Section */}
+        {paymentMethod === 'mpesa' && isPending && (
+          <div className="mb-6">
+            <div className="bg-caramel/10 border border-caramel/30 rounded-xl p-5 mb-4">
+              <div className="flex items-center gap-3 mb-3">
+                <svg className="w-5 h-5 text-caramel" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <h3 className="text-white font-bold text-lg font-science-gothic">Complete Payment</h3>
+              </div>
+              <p className="text-white/60 text-sm mb-4 font-tinos">
+                Click below to receive an M-Pesa STK push on your phone ({contact.phone})
+              </p>
+              <button
+                onClick={onProcessPayment}
+                disabled={isProcessingPayment}
+                className="w-full bg-caramel hover:bg-copper text-white font-bold py-3 px-6 rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 font-tinos"
+              >
+                {isProcessingPayment ? (
+                  <>
+                    <svg className="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Processing...
+                  </>
+                ) : (
+                  <>
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                    </svg>
+                    Pay with M-Pesa
+                  </>
+                )}
+              </button>
+              {paymentError && (
+                <p className="text-red-400 text-sm mt-3">{paymentError}</p>
+              )}
+            </div>
+          </div>
+        )}
+
+        {paymentMethod === 'cash' && (
+          <div className="mb-6 bg-green-500/10 border border-green-500/30 rounded-xl p-4">
+            <div className="flex items-center gap-2 justify-center text-green-400">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+              </svg>
+              <span className="font-semibold font-tinos">Cash payment - Pay on delivery</span>
+            </div>
+          </div>
+        )}
+
+        {isPaid && (
+          <div className="mb-6 bg-green-500/10 border border-green-500/30 rounded-xl p-4">
+            <div className="flex items-center gap-2 justify-center text-green-400">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+              </svg>
+              <span className="font-semibold font-tinos">Payment completed successfully!</span>
+            </div>
+          </div>
+        )}
+
         <button onClick={onBackToMenu} className="inline-flex items-center gap-2 bg-white hover:bg-caramel text-espresso hover:text-white font-bold py-3 px-8 rounded-xl transition-all duration-200 text-base font-tinos">
           Back to Menu
         </button>

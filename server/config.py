@@ -33,6 +33,9 @@ class Config:
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
     OWNER_EMAIL = os.environ.get('OWNER_EMAIL')
     
+    # Client origin for CORS
+    CLIENT_ORIGIN = os.environ.get('CLIENT_ORIGIN', 'http://localhost:5173')
+    
     # File upload
     UPLOAD_FOLDER = os.environ.get('UPLOAD_FOLDER') or 'uploads'
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16MB max file size
