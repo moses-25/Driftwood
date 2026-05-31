@@ -63,13 +63,6 @@ const Checkout = () => {
         customizations: item.customizations || {},
       }))
       
-      // Check if any items have invalid IDs (string IDs from static data)
-      const hasInvalidIds = orderItems.some(item => typeof item.product_id === 'string')
-      
-      if (hasInvalidIds) {
-        throw new Error('Some items in your cart are not available for online ordering. Please clear your cart and add items again.')
-      }
-      
       const deliveryFee = deliveryMethod === 'delivery' ? 399 : 0
       
       const orderData = {
