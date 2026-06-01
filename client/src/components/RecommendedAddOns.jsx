@@ -36,9 +36,13 @@ const RecommendedAddOns = () => {
     return staticMenuItems
   }, [backendProducts, loading, error])
 
+  // Filter recommendations to only include items with numeric IDs (orderable online)
   const recommendedItems = useMemo(() => {
     const cartItemIds = new Set(items.map(item => item.id))
-    const available = menuItems.filter(item => !cartItemIds.has(item.id))
+    const available = menuItems.filter(item => {
+      if (typeof item.id !== 'number') return false
+      return !cartItemIds.has(item.id)
+    })
     return [...available]
       .sort((a, b) => ((hashId(a.id) * seed) % 1) - ((hashId(b.id) * seed) % 1))
       .slice(0, 4)

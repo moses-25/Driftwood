@@ -57,17 +57,23 @@ const Checkout = () => {
     setIsPlacingOrder(true)
     setOrderError('')
     try {
-      const orderItems = items.map(item => ({
-        product_id: item.id,
-        quantity: item.quantity,
-        customizations: item.customizations || {},
-      }))
+      const orderItems = items
+        .filter(item => typeof item.id === 'number')
+        .map(item => ({
+          product_id: item.id,
+          quantity: item.quantity,
+          customizations: item.customizations || {},
+        }))
       
-      // Check if any items have invalid IDs (string IDs from static data)
-      const hasInvalidIds = orderItems.some(item => typeof item.product_id === 'string')
+      const skippedItems = items.filter(item => typeof item.id !== 'number')
+      if (skippedItems.length > 0) {
+        setOrderError(
+          `"${skippedItems.map(i => i.name).join(', ')}" can't be ordered online. They've been skipped.`
+        )
+      }
       
-      if (hasInvalidIds) {
-        throw new Error('Some items in your cart are not available for online ordering. Please clear your cart and add items again.')
+      if (orderItems.length === 0) {
+        throw new Error('None of the items in your cart can be ordered online.')
       }
       
       const deliveryFee = deliveryMethod === 'delivery' ? 399 : 0
