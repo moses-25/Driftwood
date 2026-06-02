@@ -1,6 +1,6 @@
-import { useState, useRef, useMemo, useEffect } from "react";
+import { useState, useRef, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { menuItems as staticMenuItems } from "../data/menuData";
+import { menuItems as staticMenuItems, merchItems } from "../data/menuData";
 import MenuCard from "../components/MenuCard";
 import { useCart } from "../hooks/useCart";
 import { useProducts } from "../hooks/useProducts";
@@ -10,6 +10,7 @@ const TABS = [
   { key: "hot",      label: "Hot Drinks" },
   { key: "pastries", label: "Pastries"   },
   { key: "specials", label: "Specials"   },
+  { key: "merch",    label: "Merch"      },
 ];
 
 const CoffeeBeanDeco = ({ style, size = 28 }) => (
@@ -83,35 +84,59 @@ const WATERMARKS = [
 const Menu = () => {
   const [activeTab, setActiveTab] = useState("cold");
   const [quantity, setQuantity] = useState(1);
+  const [selectedItemId, setSelectedItemId] = useState(null);
   const { addToCart } = useCart();
   const carouselRef = useRef(null);
   
   // Fetch products from backend
   const { products: backendProducts, loading, error } = useProducts();
   
-  // Use backend products if available, otherwise fall back to static data
-  const menuItems = useMemo(() => {
-    // Always use backend products if they're loaded
-    if (backendProducts && backendProducts.length > 0) {
-      return backendProducts;
+  // Build a lookup of static merch images by product name (for when backend is used)
+  const merchImageMap = useMemo(() => {
+    const map = {}
+    for (const item of merchItems) {
+      map[item.name.toLowerCase()] = item.image
     }
-    // Only use static data if still loading or there's an error
+    return map
+  }, [])
+
+  const menuItems = useMemo(() => {
+    // Use backend products for all categories when available
+    if (backendProducts && backendProducts.length > 0) {
+      // Merge static merch images into backend products (DB has no image_url for merch)
+      return backendProducts.map(p => {
+        if (p.category !== 'merch') return p
+        const staticImage = merchImageMap[p.name.toLowerCase()]
+        return staticImage ? { ...p, image: staticImage } : p
+      })
+    }
+    
+    // Fallback to static data
+    if (activeTab === 'merch') {
+      return merchItems;
+    }
     if (loading || error) {
       return staticMenuItems;
     }
-    // If backend returned empty array, use static data
     return staticMenuItems;
-  }, [backendProducts, loading, error]);
+  }, [backendProducts, loading, error, activeTab, merchImageMap]);
 
   const filtered = menuItems.filter((item) => item.category === activeTab);
   
   const selectedItem = useMemo(() => {
+    // If a specific item is selected, use that
+    if (selectedItemId) {
+      const item = menuItems.find((i) => i.id === selectedItemId);
+      if (item) return item;
+    }
+    // Otherwise, use the first item of the active category
     return menuItems.find((i) => i.category === activeTab) || null;
-  }, [activeTab, menuItems]);
+  }, [activeTab, menuItems, selectedItemId]);
 
   const handleTabChange = (newTab) => {
     setActiveTab(newTab);
     setQuantity(1);
+    setSelectedItemId(null); // Reset selected item when changing tabs
   };
 
   const handleAddToCart = () => {
@@ -125,12 +150,13 @@ const Menu = () => {
   };
 
   const handleSelectItem = (item) => {
-    // For manual selection, we need to update the activeTab to match the item's category
+    // Update the selected item ID to display it in the main area
+    setSelectedItemId(item.id);
+    // If the item is from a different category, switch tabs
     if (item.category !== activeTab) {
-      handleTabChange(item.category);
-    } else {
-      setQuantity(1);
+      setActiveTab(item.category);
     }
+    setQuantity(1);
   };
 
   return (

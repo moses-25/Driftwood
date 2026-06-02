@@ -1,6 +1,7 @@
-import { useReducer, useEffect } from 'react'
-import { CartContext } from './CartContextDefinition'
+import { createContext, useReducer, useEffect } from 'react'
 import { makeCartItemId } from '../utils/cartUtils'
+
+export const CartContext = createContext()
 
 const STORAGE_KEY = 'driftwood_cart'
 const TTL_MS = 24 * 60 * 60 * 1000 // 24 hours

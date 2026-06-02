@@ -100,9 +100,31 @@ Thumbs.db
 venv/
 env/
 
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
 # IDE and tool specific
 .kombai/
 .qodo/
 managed_context/
 test_suite_analysis/
 .kiro
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+instance/
+
+# Coverage and testing
+.coverage
+.pytest_cache/
+htmlcov/
+
+# Uploads
+uploads/
+*.log

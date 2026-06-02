@@ -17,7 +17,7 @@ const PAYMENT_METHODS = [
     ),
   },
   {
-    id: 'cod',
+    id: 'cash',
     label: 'Cash on Delivery',
     description: 'Pay when your order arrives',
     badge: null,

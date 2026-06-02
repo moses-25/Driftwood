@@ -1,0 +1,2 @@
+web: gunicorn --bind 0.0.0.0:$PORT --workers 4 wsgi:application
+release: flask db upgrade
