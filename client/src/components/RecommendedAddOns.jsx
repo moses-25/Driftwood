@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { useCart } from '../hooks/useCart'
-import { menuItems } from '../data/menuData'
+import { useProducts } from '../hooks/useProducts'
+import { menuItems as staticMenuItems } from '../data/menuData'
 import { formatPrice, parsePrice } from '../utils/price'
 
 /**
@@ -20,14 +21,32 @@ function hashId(id) {
 const RecommendedAddOns = () => {
   const { addToCart, items } = useCart()
   const [seed] = useState(() => Math.random())
+  
+  // Fetch products from backend (same as Menu page)
+  const { products: backendProducts, loading, error } = useProducts()
+  
+  // Use backend products if available, otherwise fall back to static data
+  const menuItems = useMemo(() => {
+    if (backendProducts && backendProducts.length > 0) {
+      return backendProducts
+    }
+    if (loading || error) {
+      return staticMenuItems
+    }
+    return staticMenuItems
+  }, [backendProducts, loading, error])
 
+  // Filter recommendations to only include items with numeric IDs (orderable online)
   const recommendedItems = useMemo(() => {
     const cartItemIds = new Set(items.map(item => item.id))
-    const available = menuItems.filter(item => !cartItemIds.has(item.id))
+    const available = menuItems.filter(item => {
+      if (typeof item.id !== 'number') return false
+      return !cartItemIds.has(item.id)
+    })
     return [...available]
       .sort((a, b) => ((hashId(a.id) * seed) % 1) - ((hashId(b.id) * seed) % 1))
       .slice(0, 4)
-  }, [items, seed])
+  }, [items, seed, menuItems])
 
   if (recommendedItems.length === 0) return null
 
