@@ -1,0 +1,62 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  # Test Backend
+  test-backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      
+      - name: Install dependencies
+        working-directory: ./server
+        run: |
+          pip install -r requirements.txt
+          pip install -r requirements-dev.txt
+      
+      - name: Run tests
+        working-directory: ./server
+        run: |
+          pytest tests/ -v
+
+  # Test Frontend
+  test-frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      
+      - name: Install dependencies
+        working-directory: ./client
+        run: npm ci
+      
+      - name: Lint
+        working-directory: ./client
+        run: npm run lint
+      
+      - name: Build
+        working-directory: ./client
+        run: npm run build
+
+  # Deploy notification
+  deploy-success:
+    needs: [test-backend, test-frontend]
+    runs-on: ubuntu-latest
+    if: success()
+    steps:
+      - name: Deployment successful
+        run: echo "All tests passed! Ready for deployment."
