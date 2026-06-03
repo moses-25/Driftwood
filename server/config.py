@@ -2,7 +2,9 @@ import os
 from dotenv import load_dotenv
 from datetime import timedelta
 
-load_dotenv()
+# Only load .env in development (when DATABASE_URL is not set)
+if not os.environ.get('DATABASE_URL'):
+    load_dotenv()
 
 class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'dev-secret-key-change-in-production'
