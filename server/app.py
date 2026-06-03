@@ -6,10 +6,11 @@ from extensions import db, migrate, jwt, mail
 from routes import register_routes
 
 
-def test_database_connection():
+def test_database_connection(app):
     try:
-        with db.engine.connect() as connection:
-            connection.execute(text("SELECT 1"))
+        with app.app_context():
+            with db.engine.connect() as connection:
+                connection.execute(text("SELECT 1"))
         print("Database connected successfully!")
         return True
     except Exception as error:
@@ -55,6 +56,6 @@ def create_app():
     # Register routes
     register_routes(app)
     
-    if not test_database_connection():
+    if not test_database_connection(app):
         raise RuntimeError("Database connection failed. Application cannot start.")
     return app
