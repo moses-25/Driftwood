@@ -119,10 +119,10 @@ Key: DATABASE_URL
 Value: [Paste the Internal Database URL you copied earlier]
 
 Key: SECRET_KEY
-Value: WFgX_fDNus80I-TGtAINRHedf9pcnUPPqC6ETD5oU_0
+Value: 
 
 Key: JWT_SECRET_KEY
-Value: L7rheGewekl__QTzbevfRk_hpyKKFcJ7mCjg5e7mYoU
+Value: 
 ```
 
 #### Application URLs (Temporary - we'll update later)
@@ -158,7 +158,7 @@ Key: MAIL_USERNAME
 Value: mosesotieno8363@gmail.com
 
 Key: MAIL_PASSWORD
-Value: wbdonnclpnnkfsds
+Value: 
 ```
 
 #### M-Pesa Configuration (Sandbox for now)
@@ -170,16 +170,16 @@ Key: MPESA_BASE_URL
 Value: https://sandbox.safaricom.co.ke
 
 Key: MPESA_CONSUMER_KEY
-Value: BKPAAoynBEB0uXcAlNT4sjC0htO5DNA7W9kmREr3I6SGfwdn
+Value: 
 
 Key: MPESA_CONSUMER_SECRET
-Value: rrwUMiAqroBsozDQVIn8GfsTRQi93XP2mxu1MQLilBgMSOANYdE1l203DK1Cg1Pj
+Value: 
 
 Key: MPESA_SHORTCODE
 Value: 174379
 
 Key: MPESA_PASSKEY
-Value: bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919
+Value: '
 
 Key: MPESA_CALLBACK_URL
 Value: https://driftwood-backend.onrender.com/api/payment/mpesa/callback
