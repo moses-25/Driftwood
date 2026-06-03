@@ -1,15 +1,22 @@
 from flask import Flask
 from flask_cors import CORS
+from sqlalchemy import text
 from config import Config
 from extensions import db, migrate, jwt, mail
 from routes import register_routes
-from database.connection import test_database_connection
 
-def test():
-    is_connected = test_database_connection()
 
-    if not is_connected:
-        raise RuntimeError("Database connection failed. Application cannot start.")
+def test_database_connection(app):
+    try:
+        with app.app_context():
+            with db.engine.connect() as connection:
+                connection.execute(text("SELECT 1"))
+        print("Database connected successfully!")
+        return True
+    except Exception as error:
+        print("Database connection failed!")
+        print(f"Error: {error}")
+        return False
 
 def create_app():
     app = Flask(__name__)
@@ -49,5 +56,6 @@ def create_app():
     # Register routes
     register_routes(app)
     
-    test()
+    if not test_database_connection(app):
+        raise RuntimeError("Database connection failed. Application cannot start.")
     return app
