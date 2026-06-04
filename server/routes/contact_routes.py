@@ -8,16 +8,26 @@ contact_bp = Blueprint('contact', __name__)
 
 @contact_bp.route('/contact/test-email', methods=['GET'])
 def test_email():
+    import smtplib
     cfg = _get_smtp_config()
-    try:
-        with smtplib.SMTP(cfg['host'], cfg['port'], timeout=10) as server:
-            server.starttls()
-            server.login(cfg['user'], cfg['password'])
-            server.sendmail(cfg['user'], [cfg['user']],
-                f"From: {cfg['user']}\nTo: {cfg['user']}\nSubject: Test from Render\n\nThis is a test.".encode())
-        return jsonify({'status': 'ok', 'message': 'Email sent successfully'}), 200
-    except Exception as e:
-        return jsonify({'status': 'error', 'error': str(e)}), 500
+    results = []
+    for label, host, port in [('STARTTLS', 'smtp.gmail.com', 587), ('SSL', 'smtp.gmail.com', 465)]:
+        try:
+            if label == 'SSL':
+                with smtplib.SMTP_SSL(host, port, timeout=10) as server:
+                    server.login(cfg['user'], cfg['password'])
+                    server.sendmail(cfg['user'], [cfg['user']],
+                        f"From: {cfg['user']}\nTo: {cfg['user']}\nSubject: Test from Render\n\nThis is a test.".encode())
+            else:
+                with smtplib.SMTP(host, port, timeout=10) as server:
+                    server.starttls()
+                    server.login(cfg['user'], cfg['password'])
+                    server.sendmail(cfg['user'], [cfg['user']],
+                        f"From: {cfg['user']}\nTo: {cfg['user']}\nSubject: Test from Render\n\nThis is a test.".encode())
+            results.append(f'{label}: SUCCESS')
+        except Exception as e:
+            results.append(f'{label}: {e}')
+    return jsonify({'results': results}), 200 if any('SUCCESS' in r for r in results) else 500
 
 
 @contact_bp.route('/contact', methods=['POST'])

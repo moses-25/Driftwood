@@ -23,42 +23,44 @@ def _get_smtp_config():
 
 
 def send_email(to, subject, body, html=None):
-    """
-    Send email via SMTP with timeout
-    
-    Args:
-        to: Recipient email address
-        subject: Email subject
-        body: Plain text body (unused, html preferred)
-        html: HTML body
-    
-    Returns:
-        Boolean indicating success
-    """
     cfg = _get_smtp_config()
     if not cfg['user'] or not cfg['password']:
         logger.warning("Email not configured, skipping email send")
         return False
 
-    try:
-        content = html or body
-        msg = (f"From: {cfg['user']}\n"
+    content = html or body
+    msg_str = (f"From: {cfg['user']}\n"
                f"To: {to}\n"
                f"Subject: {subject}\n"
                f"MIME-Version: 1.0\n"
                f"Content-Type: text/html\n\n"
                f"{content}")
 
-        with smtplib.SMTP(cfg['host'], cfg['port'], timeout=SMTP_TIMEOUT) as server:
-            server.starttls()
-            server.login(cfg['user'], cfg['password'])
-            server.sendmail(cfg['user'], [to], msg.encode())
+    attempts = [
+        ('STARTTLS', cfg['host'], 587),
+        ('SSL', cfg['host'], 465),
+    ]
 
-        logger.info(f"Email sent to {to}: {subject}")
-        return True
-    except Exception as e:
-        logger.error(f"Failed to send email: {str(e)}")
-        return False
+    for label, host, port in attempts:
+        try:
+            if label == 'SSL':
+                with smtplib.SMTP_SSL(host, port, timeout=SMTP_TIMEOUT) as server:
+                    server.login(cfg['user'], cfg['password'])
+                    server.sendmail(cfg['user'], [to], msg_str.encode())
+            else:
+                with smtplib.SMTP(host, port, timeout=SMTP_TIMEOUT) as server:
+                    server.starttls()
+                    server.login(cfg['user'], cfg['password'])
+                    server.sendmail(cfg['user'], [to], msg_str.encode())
+
+            logger.info(f"Email sent to {to} via {label} ({host}:{port})")
+            return True
+        except Exception as e:
+            logger.warning(f"SMTP {label} ({host}:{port}) failed: {e}")
+            continue
+
+    logger.error(f"All SMTP attempts failed for {to}")
+    return False
 
 
 def render_email_template(template_name, context):
