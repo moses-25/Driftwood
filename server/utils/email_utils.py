@@ -4,61 +4,78 @@ Helper functions for sending emails
 """
 
 from flask import render_template_string
-import smtplib
 import logging
 import os
 
 logger = logging.getLogger(__name__)
 
 SMTP_TIMEOUT = 10
+RESEND_API = 'https://api.resend.com/emails'
 
 
-def _get_smtp_config():
-    return {
+def send_email(to, subject, body, html=None):
+    resend_key = os.getenv('RESEND_API_KEY')
+
+    if resend_key and resend_key != 'your_resend_api_key_here':
+        return _send_via_resend(resend_key, to, subject, html or body)
+    return _send_via_smtp(to, subject, html or body)
+
+
+def _send_via_resend(api_key, to, subject, content):
+    try:
+        import requests
+        resp = requests.post(RESEND_API,
+            headers={'Authorization': f'Bearer {api_key}', 'Content-Type': 'application/json'},
+            json={'from': 'onboarding@resend.dev', 'to': [to], 'subject': subject, 'html': content},
+            timeout=15)
+        if resp.ok:
+            logger.info(f"Email sent via Resend to {to}: {subject}")
+            return True
+        logger.warning(f"Resend error {resp.status_code}: {resp.text}")
+        return False
+    except Exception as e:
+        logger.error(f"Resend request failed: {e}")
+        return False
+
+
+def _send_via_smtp(to, subject, content):
+    import smtplib
+    cfg = {
         'host': os.getenv('MAIL_SERVER', 'smtp.gmail.com'),
         'port': int(os.getenv('MAIL_PORT', '587')),
         'user': os.getenv('MAIL_USERNAME'),
         'password': os.getenv('MAIL_PASSWORD'),
     }
-
-
-def send_email(to, subject, body, html=None):
-    """
-    Send email via SMTP with timeout
-    
-    Args:
-        to: Recipient email address
-        subject: Email subject
-        body: Plain text body (unused, html preferred)
-        html: HTML body
-    
-    Returns:
-        Boolean indicating success
-    """
-    cfg = _get_smtp_config()
     if not cfg['user'] or not cfg['password']:
-        logger.warning("Email not configured, skipping email send")
+        logger.warning("SMTP not configured, skipping email send")
         return False
 
-    try:
-        content = html or body
-        msg = (f"From: {cfg['user']}\n"
+    msg_str = (f"From: {cfg['user']}\n"
                f"To: {to}\n"
                f"Subject: {subject}\n"
                f"MIME-Version: 1.0\n"
                f"Content-Type: text/html\n\n"
                f"{content}")
 
-        with smtplib.SMTP(cfg['host'], cfg['port'], timeout=SMTP_TIMEOUT) as server:
-            server.starttls()
-            server.login(cfg['user'], cfg['password'])
-            server.sendmail(cfg['user'], [to], msg.encode())
+    for label, host, port in [('STARTTLS', cfg['host'], 587), ('SSL', cfg['host'], 465)]:
+        try:
+            if label == 'SSL':
+                with smtplib.SMTP_SSL(host, port, timeout=SMTP_TIMEOUT) as server:
+                    server.login(cfg['user'], cfg['password'])
+                    server.sendmail(cfg['user'], [to], msg_str.encode())
+            else:
+                with smtplib.SMTP(host, port, timeout=SMTP_TIMEOUT) as server:
+                    server.starttls()
+                    server.login(cfg['user'], cfg['password'])
+                    server.sendmail(cfg['user'], [to], msg_str.encode())
+            logger.info(f"Email sent via SMTP {label} ({host}:{port})")
+            return True
+        except Exception as e:
+            logger.warning(f"SMTP {label} failed: {e}")
+            continue
 
-        logger.info(f"Email sent to {to}: {subject}")
-        return True
-    except Exception as e:
-        logger.error(f"Failed to send email: {str(e)}")
-        return False
+    logger.error(f"All SMTP attempts failed")
+    return False
 
 
 def render_email_template(template_name, context):
