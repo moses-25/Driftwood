@@ -1,3 +1,6 @@
+import logo from '../assets/logo.png'
+import heroVideo from '../assets/hero.mp4?url'
+
 export default function Hero() {
   return (
     <div id="home" className="relative w-full h-[60vh] md:h-screen md:max-h-[90vh] overflow-hidden pt-16 md:pt-20">
@@ -5,13 +8,13 @@ export default function Hero() {
       {/* Background Video - full screen */}
       <div className="absolute inset-0 bg-black">
         <video
-          src="/2.mp4"
+          src={heroVideo}
           autoPlay
           loop
           muted
           playsInline
           preload="metadata"
-          poster="/Driftwood.png"
+          poster={logo}
           aria-hidden="true"
           className="w-full h-full object-cover md:scale-90"
           style={{
