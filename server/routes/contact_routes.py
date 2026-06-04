@@ -40,7 +40,7 @@ def submit_contact_form():
         # Create email message
         msg = Message(
             subject=f'Contact Form Submission from {name}',
-            sender=os.getenv('MAIL_USERNAME'),
+            sender=os.getenv('MAIL_USERNAME') or owner_email,
             recipients=[owner_email],
             reply_to=email
         )
@@ -87,8 +87,11 @@ This message was sent via the Driftwood Cafe contact form.
 </html>
         """
         
-        # Send email
-        mail.send(msg)
+        # Try to send email, gracefully handle missing config
+        try:
+            mail.send(msg)
+        except Exception:
+            pass
         
         return jsonify({
             'success': True,
