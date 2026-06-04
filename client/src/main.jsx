@@ -8,3 +8,4 @@ createRoot(document.getElementById('root')).render(
     <App />
   </StrictMode>,
 )
+/* Build trigger - recompile with correct VITE_API_URL */
