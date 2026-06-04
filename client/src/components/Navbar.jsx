@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { useCart } from '../hooks/useCart'
 import { useRouter } from '../hooks/useRouter'
 import SearchModal from './SearchModal'
+import logo from '../assets/logo.png'
 
 const navLinks = [
   { label: 'Home',     href: '#home' },
@@ -68,7 +69,7 @@ export default function Navbar({ pendingScrollRef }) {
           aria-label="Driftwood Café — Home"
         >
           <img
-            src="/Driftwood.png"
+            src={logo}
             alt="Driftwood Café logo"
             className="h-10 w-auto transition-transform duration-300 group-hover:scale-105"
           />
@@ -129,7 +130,9 @@ export default function Navbar({ pendingScrollRef }) {
             }`}
             aria-label={`Cart${totalItems > 0 ? `, ${totalItems} items` : ''}`}
           >
-            <span className="text-lg" aria-hidden="true">🛍️</span>
+            <span className="text-lg" aria-hidden="true">🛒
+
+            </span>
             <span>Cart</span>
             {totalItems > 0 && (
               <span className="absolute -top-1.5 -right-1.5 bg-caramel text-softwhite text-[10px] font-bold rounded-full h-5 w-5 flex items-center justify-center shadow-gold" aria-hidden="true">

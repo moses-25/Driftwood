@@ -55,6 +55,14 @@ def create_app():
     
     # Register routes
     register_routes(app)
+
+    @app.after_request
+    def add_cors_headers(response):
+        response.headers.setdefault('Access-Control-Allow-Origin', client_origin)
+        response.headers.setdefault('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
+        response.headers.setdefault('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+        response.headers.setdefault('Access-Control-Allow-Credentials', 'true')
+        return response
     
     if not test_database_connection(app):
         raise RuntimeError("Database connection failed. Application cannot start.")

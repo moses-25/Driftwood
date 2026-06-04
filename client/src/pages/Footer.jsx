@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { subscribeNewsletter } from '../services/api'
+import logo from '../assets/logo.png'
 import PrivacyPolicyModal from '../components/PrivacyPolicyModal'
 import TermsOfServiceModal from '../components/TermsOfServiceModal'
 
@@ -131,7 +132,7 @@ export default function Footer() {
             {/* Brand */}
             <div className="flex flex-col gap-5">
               <div className="flex items-center gap-2.5">
-                <img src="/Driftwood.png" alt="Driftwood Café" className="h-9 w-auto" />
+                <img src={logo} alt="Driftwood Café" className="h-9 w-auto" />
                 <span className="text-lg font-fjalla">
                   <span className="text-caramel">Driftwood</span>
                   <span className="text-softwhite"> Café</span>
