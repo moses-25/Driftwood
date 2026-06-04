@@ -130,7 +130,9 @@ export default function Navbar({ pendingScrollRef }) {
             }`}
             aria-label={`Cart${totalItems > 0 ? `, ${totalItems} items` : ''}`}
           >
-            <span className="text-lg" aria-hidden="true">🛍️</span>
+            <span className="text-lg" aria-hidden="true">🛒
+
+            </span>
             <span>Cart</span>
             {totalItems > 0 && (
               <span className="absolute -top-1.5 -right-1.5 bg-caramel text-softwhite text-[10px] font-bold rounded-full h-5 w-5 flex items-center justify-center shadow-gold" aria-hidden="true">
