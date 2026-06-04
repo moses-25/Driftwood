@@ -3,75 +3,59 @@ Email Utilities
 Helper functions for sending emails
 """
 
-from flask import current_app, render_template_string
-from flask_mail import Mail, Message
+from flask import render_template_string
+import smtplib
 import logging
+import os
 
 logger = logging.getLogger(__name__)
 
-mail = Mail()
+SMTP_TIMEOUT = 10
 
 
-def configure_email(app):
-    """
-    Configure email service
-    
-    Args:
-        app: Flask application instance
-    """
-    mail.init_app(app)
-    logger.info("Email service configured")
-
-
-def validate_email_config():
-    """
-    Validate email configuration
-    
-    Returns:
-        Boolean indicating if email is properly configured
-    """
-    required_settings = ['MAIL_SERVER', 'MAIL_USERNAME', 'MAIL_PASSWORD']
-    
-    for setting in required_settings:
-        if not current_app.config.get(setting):
-            logger.warning(f"Email configuration missing: {setting}")
-            return False
-    
-    return True
+def _get_smtp_config():
+    return {
+        'host': os.getenv('MAIL_SERVER', 'smtp.gmail.com'),
+        'port': int(os.getenv('MAIL_PORT', '587')),
+        'user': os.getenv('MAIL_USERNAME'),
+        'password': os.getenv('MAIL_PASSWORD'),
+    }
 
 
 def send_email(to, subject, body, html=None):
     """
-    Send email
+    Send email via SMTP with timeout
     
     Args:
         to: Recipient email address
         subject: Email subject
-        body: Plain text body
-        html: HTML body (optional)
+        body: Plain text body (unused, html preferred)
+        html: HTML body
     
     Returns:
         Boolean indicating success
     """
+    cfg = _get_smtp_config()
+    if not cfg['user'] or not cfg['password']:
+        logger.warning("Email not configured, skipping email send")
+        return False
+
     try:
-        if not validate_email_config():
-            logger.warning("Email not configured, skipping email send")
-            return False
-        
-        msg = Message(
-            subject=subject,
-            sender=current_app.config.get('MAIL_USERNAME'),
-            recipients=[to] if isinstance(to, str) else to
-        )
-        
-        msg.body = body
-        if html:
-            msg.html = html
-        
-        mail.send(msg)
+        content = html or body
+        msg = (f"From: {cfg['user']}\n"
+               f"To: {to}\n"
+               f"Subject: {subject}\n"
+               f"MIME-Version: 1.0\n"
+               f"Content-Type: text/html\n\n"
+               f"{content}")
+
+        with smtplib.SMTP(cfg['host'], cfg['port'], timeout=SMTP_TIMEOUT) as server:
+            server.starttls()
+            server.login(cfg['user'], cfg['password'])
+            server.sendmail(cfg['user'], [to], msg.encode())
+
         logger.info(f"Email sent to {to}: {subject}")
         return True
-        
     except Exception as e:
         logger.error(f"Failed to send email: {str(e)}")
         return False
