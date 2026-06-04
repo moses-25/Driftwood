@@ -15,19 +15,18 @@ RESEND_API = 'https://api.resend.com/emails'
 
 def send_email(to, subject, body, html=None):
     resend_key = os.getenv('RESEND_API_KEY')
-    from_email = os.getenv('MAIL_USERNAME') or 'onboarding@resend.dev'
 
     if resend_key and resend_key != 'your_resend_api_key_here':
-        return _send_via_resend(resend_key, from_email, to, subject, html or body)
+        return _send_via_resend(resend_key, to, subject, html or body)
     return _send_via_smtp(to, subject, html or body)
 
 
-def _send_via_resend(api_key, from_email, to, subject, content):
+def _send_via_resend(api_key, to, subject, content):
     try:
         import requests
         resp = requests.post(RESEND_API,
             headers={'Authorization': f'Bearer {api_key}', 'Content-Type': 'application/json'},
-            json={'from': from_email, 'to': [to], 'subject': subject, 'html': content},
+            json={'from': 'onboarding@resend.dev', 'to': [to], 'subject': subject, 'html': content},
             timeout=15)
         if resp.ok:
             logger.info(f"Email sent via Resend to {to}: {subject}")
