@@ -1,8 +1,23 @@
 from flask import Blueprint, request, jsonify
-from utils.email_utils import send_email
+from utils.email_utils import send_email, _get_smtp_config
+import smtplib
 import os
 
 contact_bp = Blueprint('contact', __name__)
+
+
+@contact_bp.route('/contact/test-email', methods=['GET'])
+def test_email():
+    cfg = _get_smtp_config()
+    try:
+        with smtplib.SMTP(cfg['host'], cfg['port'], timeout=10) as server:
+            server.starttls()
+            server.login(cfg['user'], cfg['password'])
+            server.sendmail(cfg['user'], [cfg['user']],
+                f"From: {cfg['user']}\nTo: {cfg['user']}\nSubject: Test from Render\n\nThis is a test.".encode())
+        return jsonify({'status': 'ok', 'message': 'Email sent successfully'}), 200
+    except Exception as e:
+        return jsonify({'status': 'error', 'error': str(e)}), 500
 
 
 @contact_bp.route('/contact', methods=['POST'])
