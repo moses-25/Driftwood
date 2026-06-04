@@ -5,13 +5,6 @@ import os
 contact_bp = Blueprint('contact', __name__)
 
 
-@contact_bp.route('/contact/test-email', methods=['GET'])
-def test_email():
-    ok = send_email('mosesotieno8363@gmail.com', 'Test from Render',
-        'This is a test email from the Driftwood backend.')
-    return jsonify({'sent': ok}), 200 if ok else 500
-
-
 @contact_bp.route('/contact', methods=['POST'])
 def submit_contact_form():
     try:
