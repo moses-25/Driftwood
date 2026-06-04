@@ -1,6 +1,5 @@
 from flask import Blueprint, request, jsonify
-from utils.email_utils import send_email, _get_smtp_config
-import smtplib
+from utils.email_utils import send_email
 import os
 
 contact_bp = Blueprint('contact', __name__)
@@ -8,26 +7,9 @@ contact_bp = Blueprint('contact', __name__)
 
 @contact_bp.route('/contact/test-email', methods=['GET'])
 def test_email():
-    import smtplib
-    cfg = _get_smtp_config()
-    results = []
-    for label, host, port in [('STARTTLS', 'smtp.gmail.com', 587), ('SSL', 'smtp.gmail.com', 465)]:
-        try:
-            if label == 'SSL':
-                with smtplib.SMTP_SSL(host, port, timeout=10) as server:
-                    server.login(cfg['user'], cfg['password'])
-                    server.sendmail(cfg['user'], [cfg['user']],
-                        f"From: {cfg['user']}\nTo: {cfg['user']}\nSubject: Test from Render\n\nThis is a test.".encode())
-            else:
-                with smtplib.SMTP(host, port, timeout=10) as server:
-                    server.starttls()
-                    server.login(cfg['user'], cfg['password'])
-                    server.sendmail(cfg['user'], [cfg['user']],
-                        f"From: {cfg['user']}\nTo: {cfg['user']}\nSubject: Test from Render\n\nThis is a test.".encode())
-            results.append(f'{label}: SUCCESS')
-        except Exception as e:
-            results.append(f'{label}: {e}')
-    return jsonify({'results': results}), 200 if any('SUCCESS' in r for r in results) else 500
+    ok = send_email('mosesotieno8363@gmail.com', 'Test from Render',
+        'This is a test email from the Driftwood backend.')
+    return jsonify({'sent': ok}), 200 if ok else 500
 
 
 @contact_bp.route('/contact', methods=['POST'])

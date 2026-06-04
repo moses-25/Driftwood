@@ -4,31 +4,53 @@ Helper functions for sending emails
 """
 
 from flask import render_template_string
-import smtplib
 import logging
 import os
 
 logger = logging.getLogger(__name__)
 
 SMTP_TIMEOUT = 10
+RESEND_API = 'https://api.resend.com/emails'
 
 
-def _get_smtp_config():
-    return {
+def send_email(to, subject, body, html=None):
+    resend_key = os.getenv('RESEND_API_KEY')
+    from_email = os.getenv('MAIL_USERNAME') or 'onboarding@resend.dev'
+
+    if resend_key and resend_key != 'your_resend_api_key_here':
+        return _send_via_resend(resend_key, from_email, to, subject, html or body)
+    return _send_via_smtp(to, subject, html or body)
+
+
+def _send_via_resend(api_key, from_email, to, subject, content):
+    try:
+        import requests
+        resp = requests.post(RESEND_API,
+            headers={'Authorization': f'Bearer {api_key}', 'Content-Type': 'application/json'},
+            json={'from': from_email, 'to': [to], 'subject': subject, 'html': content},
+            timeout=15)
+        if resp.ok:
+            logger.info(f"Email sent via Resend to {to}: {subject}")
+            return True
+        logger.warning(f"Resend error {resp.status_code}: {resp.text}")
+        return False
+    except Exception as e:
+        logger.error(f"Resend request failed: {e}")
+        return False
+
+
+def _send_via_smtp(to, subject, content):
+    import smtplib
+    cfg = {
         'host': os.getenv('MAIL_SERVER', 'smtp.gmail.com'),
         'port': int(os.getenv('MAIL_PORT', '587')),
         'user': os.getenv('MAIL_USERNAME'),
         'password': os.getenv('MAIL_PASSWORD'),
     }
-
-
-def send_email(to, subject, body, html=None):
-    cfg = _get_smtp_config()
     if not cfg['user'] or not cfg['password']:
-        logger.warning("Email not configured, skipping email send")
+        logger.warning("SMTP not configured, skipping email send")
         return False
 
-    content = html or body
     msg_str = (f"From: {cfg['user']}\n"
                f"To: {to}\n"
                f"Subject: {subject}\n"
@@ -36,12 +58,7 @@ def send_email(to, subject, body, html=None):
                f"Content-Type: text/html\n\n"
                f"{content}")
 
-    attempts = [
-        ('STARTTLS', cfg['host'], 587),
-        ('SSL', cfg['host'], 465),
-    ]
-
-    for label, host, port in attempts:
+    for label, host, port in [('STARTTLS', cfg['host'], 587), ('SSL', cfg['host'], 465)]:
         try:
             if label == 'SSL':
                 with smtplib.SMTP_SSL(host, port, timeout=SMTP_TIMEOUT) as server:
@@ -52,14 +69,13 @@ def send_email(to, subject, body, html=None):
                     server.starttls()
                     server.login(cfg['user'], cfg['password'])
                     server.sendmail(cfg['user'], [to], msg_str.encode())
-
-            logger.info(f"Email sent to {to} via {label} ({host}:{port})")
+            logger.info(f"Email sent via SMTP {label} ({host}:{port})")
             return True
         except Exception as e:
-            logger.warning(f"SMTP {label} ({host}:{port}) failed: {e}")
+            logger.warning(f"SMTP {label} failed: {e}")
             continue
 
-    logger.error(f"All SMTP attempts failed for {to}")
+    logger.error(f"All SMTP attempts failed")
     return False
 
 
