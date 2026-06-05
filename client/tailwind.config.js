@@ -20,6 +20,7 @@ export default {
         display: ['Playfair Display', 'Cormorant Garamond', 'Georgia', 'serif'],
         sans:    ['Inter', 'Poppins', 'system-ui', 'sans-serif'],
         mono:    ['JetBrains Mono', 'Fira Code', 'monospace'],
+        rancho:  ['Rancho', 'cursive'],
       },
       borderRadius: {
         '4xl': '2rem',
