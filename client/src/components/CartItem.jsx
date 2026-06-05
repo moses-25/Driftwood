@@ -25,7 +25,7 @@ const CartItem = ({ item }) => {
 
   return (
     <div
-      className={`grid grid-cols-[2fr_1fr_1fr_1fr] items-center px-5 py-4 transition-all duration-300 ${
+      className={`grid md:grid-cols-[2fr_1fr_1fr_1fr] items-center px-5 py-4 gap-3 md:gap-0 transition-all duration-300 ${
         isRemoving ? 'opacity-0 scale-95' : ''
       }`}
     >
@@ -77,44 +77,47 @@ const CartItem = ({ item }) => {
         </div>
       </div>
 
-      {/* Price */}
-      <div className="text-center text-espresso/70 text-base font-tinos">
-        {formatPrice(parsePrice(item.price))}
-      </div>
+      {/* Mobile: price, quantity, subtotal in a row. Desktop: grid cells */}
+      <div className="flex items-center justify-between md:contents">
+        {/* Price */}
+        <div className="text-espresso/70 text-sm md:text-base font-tinos md:text-center">
+          {formatPrice(parsePrice(item.price))}
+        </div>
 
-      {/* Quantity */}
-      <div className="flex items-center justify-center gap-3">
-        <button
-          onClick={() => handleQuantityChange(-1)}
-          disabled={item.quantity <= 1}
-          className="w-7 h-7 rounded-full border border-espresso/20 flex items-center justify-center text-espresso/60 hover:border-caramel hover:text-caramel transition-all disabled:opacity-30 disabled:cursor-not-allowed"
-          aria-label="Decrease quantity"
-        >
-          <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M20 12H4" />
-          </svg>
-        </button>
+        {/* Quantity */}
+        <div className="flex items-center justify-center gap-3">
+          <button
+            onClick={() => handleQuantityChange(-1)}
+            disabled={item.quantity <= 1}
+            className="w-7 h-7 rounded-full border border-espresso/20 flex items-center justify-center text-espresso/60 hover:border-caramel hover:text-caramel transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+            aria-label="Decrease quantity"
+          >
+            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M20 12H4" />
+            </svg>
+          </button>
 
-        <span
-          className="w-6 text-center font-semibold text-espresso text-sm font-tinos"
-        >
-          {item.quantity}
-        </span>
+          <span
+            className="w-6 text-center font-semibold text-espresso text-sm font-tinos"
+          >
+            {item.quantity}
+          </span>
 
-        <button
-          onClick={() => handleQuantityChange(1)}
-          className="w-7 h-7 rounded-full border border-espresso/20 flex items-center justify-center text-espresso/60 hover:border-caramel hover:text-caramel transition-all"
-          aria-label="Increase quantity"
-        >
-          <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M12 4v16m8-8H4" />
-          </svg>
-        </button>
-      </div>
+          <button
+            onClick={() => handleQuantityChange(1)}
+            className="w-7 h-7 rounded-full border border-espresso/20 flex items-center justify-center text-espresso/60 hover:border-caramel hover:text-caramel transition-all"
+            aria-label="Increase quantity"
+          >
+            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M12 4v16m8-8H4" />
+            </svg>
+          </button>
+        </div>
 
-      {/* Subtotal */}
-      <div className="text-center font-semibold text-espresso text-sm font-tinos">
-        {formatPrice(itemTotal)}
+        {/* Subtotal */}
+        <div className="font-semibold text-espresso text-sm font-tinos md:text-center">
+          {formatPrice(itemTotal)}
+        </div>
       </div>
     </div>
   )
