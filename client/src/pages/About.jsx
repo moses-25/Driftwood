@@ -7,7 +7,8 @@ export default function About() {
     <section id="about" className="relative overflow-hidden bg-cream py-24 px-6 text-espresso">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(197,138,70,0.10),_transparent_30%),radial-gradient(circle_at_bottom_right,_rgba(164,90,58,0.08),_transparent_30%)] pointer-events-none" />
       <div className="relative max-w-7xl mx-auto">
-        <div className="grid gap-16 lg:grid-cols-[1.2fr_0.8fr] items-center">
+        {/* Main Story Section */}
+        <div className="grid gap-16 lg:grid-cols-[1.2fr_0.8fr] items-center mb-20">
 
           {/* Left - Story Content */}
           <div className="space-y-8">
@@ -31,7 +32,7 @@ export default function About() {
                 </p>
 
                 {/* Body paragraphs */}
-                <div className="space-y-4 pt-2 border-t border-warmbeige/60">
+                <div className="space-y-4 pt-6 border-t border-warmbeige/60">
                   <p className="text-lg text-espresso/70 leading-8 font-medium">
                     Our journey started with a passion for sourcing the finest beans from
                     sustainable farms around the world. Each cup we serve represents dedication
@@ -64,24 +65,28 @@ export default function About() {
                   <img src={beans} alt="Coffee beans"
                     className="h-[320px] w-full object-cover" />
                 </div>
-                <div className="relative overflow-hidden rounded-[2rem] border border-warmbeige/20 bg-gradient-to-br from-espresso to-darkroast p-8 shadow-luxury">
-                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(197,138,70,0.25),_transparent_40%)]" />
-                  <div className="relative space-y-4">
-                    <p className="text-sm uppercase tracking-[0.3em] text-caramel font-mono">Signature Blend</p>
-                    <h3 className="font-display text-3xl font-semibold text-softwhite">House Roast</h3>
-                    <p className="text-warmbeige/70 leading-7">
+                <div className="relative overflow-hidden rounded-lg border-4 border-caramel/80 bg-gradient-to-b from-amber-100 via-amber-50 to-yellow-50 p-8 shadow-2xl" style={{backgroundImage: 'repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(139,69,19,.05) 2px, rgba(139,69,19,.05) 4px)'}}>
+                  <div className="absolute top-4 right-4 w-16 h-16 border-3 border-caramel/40 rounded-full" />
+                  <div className="relative space-y-5">
+                    <div className="space-y-1">
+                      <p className="text-xs uppercase tracking-widest text-amber-900 font-serif font-bold" style={{letterSpacing: '0.15em'}}>~ Established 2026 ~</p>
+                      <p className="text-xs uppercase tracking-[0.4em] text-amber-800 font-mono font-bold">Premium Blend</p>
+                    </div>
+                    <h3 className="font-serif text-4xl font-bold text-amber-950 leading-tight">House Roast</h3>
+                    <p className="text-amber-900 leading-7 text-sm font-serif italic">
                       Delicate citrus notes, caramel sweetness, and a velvety finish.
                     </p>
-                    <div className="rounded-full bg-caramel/10 border border-caramel/20 px-4 py-2 text-sm text-caramel">
-                      Coastal calm in a cup.
+                    <div className="pt-2 border-t-2 border-caramel/60">
+                      <p className="text-xs text-amber-900 font-serif italic font-semibold">✦ Coastal calm in a cup. ✦</p>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
           </FadeUp>
-
         </div>
+
+
       </div>
     </section>
   )
