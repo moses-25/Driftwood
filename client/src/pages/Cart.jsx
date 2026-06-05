@@ -54,7 +54,7 @@ const Cart = () => {
           {/* Left — items table */}
           <div>
             {/* Table header */}
-            <div className="grid grid-cols-[2fr_1fr_1fr_1fr] bg-caramel rounded-xl px-5 py-3 mb-1">
+            <div className="hidden md:grid grid-cols-[2fr_1fr_1fr_1fr] bg-caramel rounded-xl px-5 py-3 mb-1">
               {['Product', 'Price', 'Quantity', 'Subtotal'].map(h => (
                 <span
                   key={h}
