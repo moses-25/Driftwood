@@ -65,33 +65,6 @@ const CheckoutOrderSummary = ({ deliveryMethod }) => {
         </div>
       </div>
 
-      {/* Estimated time */}
-      <div className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/10 mb-5">
-        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-caramel/15 text-caramel">
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <circle cx="12" cy="12" r="10" strokeWidth="2" />
-            <polyline points="12,6 12,12 16,14" strokeWidth="2" strokeLinecap="round" />
-          </svg>
-        </div>
-        <div>
-          <p className="text-sm text-white/35 font-tinos">
-            Estimated {deliveryMethod === 'pickup' ? 'pickup' : 'delivery'} time
-          </p>
-          <p className="text-base font-semibold text-white font-tinos">{estimatedTime}</p>
-        </div>
-      </div>
-
-      {/* Trust badges */}
-      <div className="flex items-center justify-center gap-5 text-sm text-white/30 font-tinos">
-        {[['Secure', 'M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z'], ['Protected', 'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z'], ['Trusted', 'M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z']].map(([label, path]) => (
-          <div key={label} className="flex items-center gap-1">
-            <svg className="w-3.5 h-3.5 text-caramel" fill={label === 'Secure' ? 'currentColor' : 'none'} stroke={label === 'Secure' ? 'none' : 'currentColor'} viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={path} />
-            </svg>
-            {label}
-          </div>
-        ))}
-      </div>
     </div>
   )
 }
