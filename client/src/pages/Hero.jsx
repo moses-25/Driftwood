@@ -57,7 +57,7 @@ export default function Hero() {
 
         {/* Subheading */}
         <p className="text-lg md:text-xl text-slate-200 max-w-2xl leading-relaxed font-oswald font-normal">
-          A warm sanctuary where every cup tells a story.<br />
+          warm sanctuary where every cup tells a story.<br />
           <span className="text-white font-bold">Crafted with care, served with love.</span>
         </p>
       </div>
