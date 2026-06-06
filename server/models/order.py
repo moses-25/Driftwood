@@ -11,6 +11,7 @@ class Order(db.Model):
     
     # Order details
     total_amount = db.Column(db.Numeric(10, 2), nullable=False)
+    tax_amount = db.Column(db.Numeric(10, 2), default=0.0)
     order_type = db.Column(db.String(20), nullable=False)  # pickup, delivery
     status = db.Column(db.String(20), default='pending')  # pending, confirmed, preparing, ready, completed, cancelled
     
@@ -55,6 +56,7 @@ class Order(db.Model):
             'order_number': self.order_number,
             'user': self.user.to_dict() if self.user else None,
             'total_amount': self.safe_float(self.total_amount),
+            'tax_amount': self.safe_float(self.tax_amount) if self.tax_amount is not None else 0.0,
             'order_type': self.order_type,
             'status': self.status,
             'payment_method': self.payment_method,

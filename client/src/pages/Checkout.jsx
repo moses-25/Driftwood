@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import CheckoutProgress from '../components/checkout/CheckoutProgress'
 import ContactSection from '../components/checkout/ContactSection'
 import DeliveryMethodSection from '../components/checkout/DeliveryMethodSection'
@@ -8,7 +8,7 @@ import CheckoutOrderSummary from '../components/checkout/CheckoutOrderSummary'
 import { useCart } from '../hooks/useCart'
 import { useAuth } from '../hooks/useAuth'
 import { useRouter } from '../hooks/useRouter'
-import { createOrder } from '../services/api'
+import { createOrder, queryPaymentStatus } from '../services/api'
 import { parsePrice } from '../utils/price'
 import EmptyCart from '../components/EmptyCart'
 
@@ -29,6 +29,10 @@ const Checkout = () => {
   const [orderError, setOrderError] = useState('')
   const [isProcessingPayment, setIsProcessingPayment] = useState(false)
   const [paymentError, setPaymentError] = useState('')
+  const [paymentPolling, setPaymentPolling] = useState(false)
+  const [paymentStatus, setPaymentStatus] = useState(null) // 'pending', 'paid', 'failed'
+  const [paymentMessage, setPaymentMessage] = useState('')
+  const pollingRef = useRef(null)
   const cancelledRef = useRef(false)
 
   useEffect(() => {
@@ -104,6 +108,30 @@ const Checkout = () => {
     }
   }
 
+  const pollMpesaStatus = useCallback(async (checkoutRequestId) => {
+    try {
+      const result = await queryPaymentStatus(checkoutRequestId)
+      if (cancelledRef.current) return
+
+      if (result.success && result.data) {
+        const status = result.data.status
+        if (status === 'completed') {
+          setPaymentStatus('paid')
+          setPaymentMessage('Payment completed successfully!')
+          setPaymentPolling(false)
+          clearInterval(pollingRef.current)
+        } else if (result.data.result_code && result.data.result_code !== '0') {
+          setPaymentStatus('failed')
+          setPaymentMessage(result.data.result_desc || 'Payment failed. Please try again.')
+          setPaymentPolling(false)
+          clearInterval(pollingRef.current)
+        }
+      }
+    } catch {
+      // Ignore polling errors — just retry on next interval
+    }
+  }, [])
+
   const handleProcessPayment = async () => {
     if (!orderResult) return
     
@@ -112,10 +140,8 @@ const Checkout = () => {
     
     try {
       if (paymentMethod === 'mpesa') {
-        // Import the payment API function
         const { initiateMpesaPayment } = await import('../services/api')
         
-        // Initiate M-Pesa payment
         const paymentData = {
           order_id: orderResult.id,
           phone_number: contact.phone
@@ -124,16 +150,37 @@ const Checkout = () => {
         const result = await initiateMpesaPayment(paymentData)
         
         if (result.success) {
-          // Payment initiated successfully
           setPaymentError('')
-          // You could show a message or poll for payment status
-          alert('M-Pesa payment initiated! Please check your phone to complete the payment.')
+          setPaymentStatus('pending')
+          setPaymentMessage('Payment initiated! Check your phone to complete the M-Pesa STK push.')
+          setPaymentPolling(true)
+          
+          // Start polling for payment status
+          const checkoutRequestId = result.data?.checkout_request_id
+          if (checkoutRequestId) {
+            pollingRef.current = setInterval(() => {
+              pollMpesaStatus(checkoutRequestId)
+            }, 3000)
+            
+            // Stop polling after 90 seconds
+            setTimeout(() => {
+              if (pollingRef.current) {
+                clearInterval(pollingRef.current)
+                pollingRef.current = null
+                setPaymentPolling(false)
+                if (paymentStatus !== 'paid' && paymentStatus !== 'failed') {
+                  setPaymentMessage('Payment confirmation timed out. Check your M-Pesa messages and contact support if needed.')
+                  setPaymentStatus('failed')
+                }
+              }
+            }, 90000)
+          }
         } else {
           setPaymentError(result.error || 'Failed to initiate payment')
         }
       } else {
-        // Cash payment - no action needed
         setPaymentError('')
+        setPaymentMessage('Cash payment - Pay on delivery')
       }
     } catch (err) {
       setPaymentError(err.message || 'Failed to process payment')
@@ -141,6 +188,13 @@ const Checkout = () => {
       setIsProcessingPayment(false)
     }
   }
+
+  // Cleanup polling on unmount
+  useEffect(() => {
+    return () => {
+      if (pollingRef.current) clearInterval(pollingRef.current)
+    }
+  }, [])
 
   const handleBackToMenu = () => {
     navigate('#home')
@@ -185,6 +239,9 @@ const Checkout = () => {
             onProcessPayment={handleProcessPayment}
             isProcessingPayment={isProcessingPayment}
             paymentError={paymentError}
+            paymentPolling={paymentPolling}
+            paymentStatus={paymentStatus}
+            paymentMessage={paymentMessage}
           />
         ) : (
           <div className="mt-10 grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
@@ -255,16 +312,15 @@ const InfoReviewCard = ({ contact, deliveryMethod, deliveryAddress, onEdit }) =>
   </div>
 )
 
-const ConfirmationScreen = ({ contact, deliveryMethod, paymentMethod, orderResult, onBackToMenu, onProcessPayment, isProcessingPayment, paymentError }) => {
+const ConfirmationScreen = ({ contact, deliveryMethod, paymentMethod, orderResult, onBackToMenu, onProcessPayment, isProcessingPayment, paymentError, paymentPolling, paymentStatus, paymentMessage }) => {
   const paymentLabels = { mpesa: 'M-Pesa', cash: 'Cash on Delivery' }
   const orderNumber = orderResult?.order_number || ''
   const estimatedTime = orderResult?.estimated_ready_time
     ? new Date(orderResult.estimated_ready_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     : deliveryMethod === 'pickup' ? '15–20 min' : '30–45 min'
   
-  const paymentStatus = orderResult?.payment_status || 'pending'
-  const isPaid = paymentStatus === 'paid'
-  const isPending = paymentStatus === 'pending'
+  const isPaid = paymentStatus === 'paid' || orderResult?.payment_status === 'paid'
+  const isPending = paymentStatus === 'pending' || orderResult?.payment_status === 'pending'
   
   return (
     <div className="mt-10 max-w-xl mx-auto text-center">
@@ -298,7 +354,7 @@ const ConfirmationScreen = ({ contact, deliveryMethod, paymentMethod, orderResul
         </div>
 
         {/* Payment Section */}
-        {paymentMethod === 'mpesa' && isPending && (
+        {paymentMethod === 'mpesa' && !isPaid && !paymentPolling && paymentStatus !== 'failed' && (
           <div className="mb-6">
             <div className="bg-caramel/10 border border-caramel/30 rounded-xl p-5 mb-4">
               <div className="flex items-center gap-3 mb-3">
@@ -335,6 +391,54 @@ const ConfirmationScreen = ({ contact, deliveryMethod, paymentMethod, orderResul
               {paymentError && (
                 <p className="text-red-400 text-sm mt-3">{paymentError}</p>
               )}
+            </div>
+          </div>
+        )}
+
+        {/* M-Pesa polling in progress */}
+        {paymentPolling && paymentStatus === 'pending' && (
+          <div className="mb-6">
+            <div className="bg-caramel/10 border border-caramel/30 rounded-xl p-5">
+              <div className="flex items-center gap-3 mb-3">
+                <svg className="animate-spin h-5 w-5 text-caramel" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <h3 className="text-white font-bold text-lg font-science-gothic">Waiting for Payment</h3>
+              </div>
+              <p className="text-white/60 text-sm font-tinos">{paymentMessage}</p>
+            </div>
+          </div>
+        )}
+
+        {/* M-Pesa payment failed */}
+        {paymentStatus === 'failed' && !paymentPolling && (
+          <div className="mb-6">
+            <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-5">
+              <div className="flex items-center gap-3 mb-3">
+                <svg className="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <h3 className="text-white font-bold text-lg font-science-gothic">Payment Failed</h3>
+              </div>
+              <p className="text-white/60 text-sm mb-4 font-tinos">{paymentMessage || 'Payment did not go through. Please try again.'}</p>
+              <button
+                onClick={onProcessPayment}
+                disabled={isProcessingPayment}
+                className="w-full bg-caramel hover:bg-copper text-white font-bold py-3 px-6 rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 font-tinos"
+              >
+                {isProcessingPayment ? (
+                  <>
+                    <svg className="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Retrying...
+                  </>
+                ) : (
+                  <>Retry Payment</>
+                )}
+              </button>
             </div>
           </div>
         )}

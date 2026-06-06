@@ -5,6 +5,7 @@ Handles all payment-related API endpoints
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from services.payment_service import PaymentService
+from services.inventory_service import InventoryService
 from models.order import Order
 from models.payment import Payment
 from models.user import User
@@ -144,6 +145,20 @@ def mpesa_callback():
             order.payment_status = 'paid'
             order.payment_reference = parsed['mpesa_receipt']
             order.status = 'confirmed'  # Auto-confirm order on successful payment
+            
+            # Deduct stock immediately on payment confirmation
+            for item in order.order_items:
+                product = item.product
+                if product.track_inventory:
+                    try:
+                        InventoryService.deduct_stock(
+                            product_id=product.id,
+                            quantity=item.quantity,
+                            order_id=order.id
+                        )
+                        logger.info(f"Stock deducted for product {product.id}: -{item.quantity} (payment confirmed)")
+                    except Exception as e:
+                        logger.warning(f"Failed to deduct stock for product {product.id}: {str(e)}")
             
         else:
             # Payment failed

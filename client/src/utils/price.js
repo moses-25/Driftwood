@@ -3,11 +3,13 @@
  * Handles formats like "KES 350", "350", "$3.50", etc.
  */
 export const parsePrice = (priceString) => {
-  if (typeof priceString === 'number') return priceString;
+  if (typeof priceString === 'number' && !Number.isNaN(priceString)) return priceString;
   
   // Remove currency symbols and commas, extract numbers
   const match = String(priceString).match(/[\d,]+\.?\d*/);
-  return match ? parseFloat(match[0].replace(/,/g, '')) : 0;
+  if (!match) return 0;
+  const parsed = parseFloat(match[0].replace(/,/g, ''));
+  return Number.isNaN(parsed) ? 0 : parsed;
 };
 
 /**

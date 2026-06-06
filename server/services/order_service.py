@@ -14,6 +14,8 @@ import logging
 logger = logging.getLogger(__name__)
 
 
+TAX_RATE = 0.16
+
 class OrderService:
     """Service class for order operations"""
     
@@ -83,14 +85,14 @@ class OrderService:
     @staticmethod
     def calculate_order_total(validated_items, delivery_fee=0):
         """
-        Calculate order total from validated items
+        Calculate order total from validated items including tax
         
         Args:
             validated_items: List of validated order items
             delivery_fee: Delivery fee (default: 0)
             
         Returns:
-            Decimal: Total order amount
+            dict: {subtotal, delivery_fee, tax_amount, total}
         """
         subtotal = Decimal('0.00')
         
@@ -98,8 +100,16 @@ class OrderService:
             item_total = Decimal(str(item['unit_price'])) * item['quantity']
             subtotal += item_total
         
-        total = subtotal + Decimal(str(delivery_fee))
-        return total
+        delivery_fee_decimal = Decimal(str(delivery_fee))
+        tax_amount = (subtotal * Decimal(str(TAX_RATE))).quantize(Decimal('0.01'))
+        total = subtotal + delivery_fee_decimal + tax_amount
+        
+        return {
+            'subtotal': subtotal,
+            'delivery_fee': delivery_fee_decimal,
+            'tax_amount': tax_amount,
+            'total': total
+        }
     
     @staticmethod
     def create_order(user_id, items, order_data):
@@ -147,25 +157,34 @@ class OrderService:
             if order_data['order_type'] == 'delivery':
                 delivery_fee = Decimal(str(order_data.get('delivery_fee', 0)))
             
-            # Calculate total
-            total_amount = OrderService.calculate_order_total(validated_items, delivery_fee)
+            # Calculate total with tax
+            calc = OrderService.calculate_order_total(validated_items, delivery_fee)
             
             # Verify total matches (if provided)
             if order_data.get('total_amount') is not None:
                 provided_total = Decimal(str(order_data['total_amount']))
-                if abs(provided_total - total_amount) > Decimal('0.01'):
-                    return None, f"Total amount mismatch. Expected: {total_amount}, Provided: {provided_total}", 400
+                if abs(provided_total - calc['total']) > Decimal('0.01'):
+                    return None, f"Total amount mismatch. Expected: {calc['total']}, Provided: {provided_total}", 400
+            
+            # Determine payment status based on method
+            payment_status = 'pending'
+            if order_data['payment_method'] == 'cash':
+                payment_status = 'pending'  # COD — staff marks as paid on completion
             
             # Create order
             order = Order(
                 user_id=user_id,
-                total_amount=total_amount,
+                total_amount=calc['total'],
+                tax_amount=calc['tax_amount'],
                 order_type=order_data['order_type'],
                 payment_method=order_data['payment_method'],
+                payment_status=payment_status,
                 delivery_address=order_data.get('delivery_address'),
                 delivery_instructions=order_data.get('delivery_instructions'),
                 delivery_fee=delivery_fee,
-                estimated_ready_time=datetime.utcnow() + timedelta(minutes=20)  # Default 20 min
+                estimated_ready_time=datetime.utcnow() + timedelta(
+                    minutes=45 if order_data['order_type'] == 'delivery' else 20
+                )
             )
             
             db.session.add(order)
@@ -357,6 +376,10 @@ class OrderService:
             
             old_status = order.status
             order.status = new_status
+            
+            # Mark cash payments as paid when order is completed
+            if new_status == 'completed' and order.payment_method == 'cash':
+                order.payment_status = 'paid'
             
             # Deduct stock when order is completed
             if new_status == 'completed' and old_status != 'completed':
