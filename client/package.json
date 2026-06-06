@@ -20,6 +20,7 @@
     "@fontsource/jetbrains-mono": "^5.2.8",
     "@fontsource/luckiest-guy": "^5.2.8",
     "@fontsource/poppins": "^5.2.7",
+    "@fontsource/rancho": "^5.2.7",
     "@fontsource/science-gothic": "^5.2.1",
     "@fontsource/tinos": "^5.2.7",
     "@tailwindcss/vite": "^4.2.4",
